@@ -3,14 +3,29 @@ import { SectionId } from '../types';
 import SectionTitle from './SectionTitle';
 import { Mail, Linkedin, Github, Twitter, CheckCircle, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { isValidEmail, sanitizeInput } from '../utils/validation';
 
 const Contact: React.FC = () => {
     const [formState, setFormState] = useState({ name: '', email: '', message: '' });
     const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!formState.name || !formState.email || !formState.message) {
+
+        const sanitizedName = sanitizeInput(formState.name);
+        const sanitizedEmail = sanitizeInput(formState.email);
+        const sanitizedMessage = sanitizeInput(formState.message);
+
+        if (!sanitizedName || !sanitizedEmail || !sanitizedMessage) {
+            setErrorMessage('Please fill in all fields.');
+            setStatus('error');
+            setTimeout(() => setStatus('idle'), 3000);
+            return;
+        }
+
+        if (!isValidEmail(sanitizedEmail)) {
+            setErrorMessage('Invalid email format.');
             setStatus('error');
             setTimeout(() => setStatus('idle'), 3000);
             return;
@@ -45,6 +60,7 @@ const Contact: React.FC = () => {
                                     onChange={(e) => setFormState({ ...formState, name: e.target.value })}
                                     className="w-full bg-transparent border-b border-white/20 py-3 text-white font-exo focus:outline-none focus:border-neon-lime transition-colors placeholder-gray-700"
                                     placeholder="ENTER YOUR NAME"
+                                    maxLength={100}
                                 />
                             </div>
                             <div className="group">
@@ -55,6 +71,7 @@ const Contact: React.FC = () => {
                                     onChange={(e) => setFormState({ ...formState, email: e.target.value })}
                                     className="w-full bg-transparent border-b border-white/20 py-3 text-white font-exo focus:outline-none focus:border-neon-lime transition-colors placeholder-gray-700"
                                     placeholder="ENTER YOUR EMAIL"
+                                    maxLength={100}
                                 />
                             </div>
                         </div>
@@ -66,13 +83,14 @@ const Contact: React.FC = () => {
                                 onChange={(e) => setFormState({ ...formState, message: e.target.value })}
                                 className="w-full bg-transparent border-b border-white/20 py-3 text-white font-exo focus:outline-none focus:border-neon-lime transition-colors placeholder-gray-700 resize-none"
                                 placeholder="PROJECT DETAILS..."
+                                maxLength={500}
                             ></textarea>
                         </div>
 
                         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                             {status === 'error' && (
                                 <div className="text-red-500 flex items-center gap-2 text-sm font-exo animate-pulse">
-                                    <AlertCircle size={16} /> Please fill in all fields.
+                                    <AlertCircle size={16} /> {errorMessage}
                                 </div>
                             )}
 
