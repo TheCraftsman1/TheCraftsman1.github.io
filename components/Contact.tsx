@@ -38,8 +38,9 @@ const Contact: React.FC = () => {
                     <form className="space-y-8" onSubmit={handleSubmit}>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div className="group">
-                                <label className="block text-xs font-exo uppercase tracking-wider text-gray-500 mb-2 group-focus-within:text-neon-lime transition-colors">Name</label>
+                                <label htmlFor="name" className="block text-xs font-exo uppercase tracking-wider text-gray-500 mb-2 group-focus-within:text-neon-lime transition-colors">Name</label>
                                 <input
+                                    id="name"
                                     type="text"
                                     value={formState.name}
                                     onChange={(e) => setFormState({ ...formState, name: e.target.value })}
@@ -48,8 +49,9 @@ const Contact: React.FC = () => {
                                 />
                             </div>
                             <div className="group">
-                                <label className="block text-xs font-exo uppercase tracking-wider text-gray-500 mb-2 group-focus-within:text-neon-lime transition-colors">Email</label>
+                                <label htmlFor="email" className="block text-xs font-exo uppercase tracking-wider text-gray-500 mb-2 group-focus-within:text-neon-lime transition-colors">Email</label>
                                 <input
+                                    id="email"
                                     type="email"
                                     value={formState.email}
                                     onChange={(e) => setFormState({ ...formState, email: e.target.value })}
@@ -59,8 +61,9 @@ const Contact: React.FC = () => {
                             </div>
                         </div>
                         <div className="group">
-                            <label className="block text-xs font-exo uppercase tracking-wider text-gray-500 mb-2 group-focus-within:text-neon-lime transition-colors">Message</label>
+                            <label htmlFor="message" className="block text-xs font-exo uppercase tracking-wider text-gray-500 mb-2 group-focus-within:text-neon-lime transition-colors">Message</label>
                             <textarea
+                                id="message"
                                 rows={4}
                                 value={formState.message}
                                 onChange={(e) => setFormState({ ...formState, message: e.target.value })}
@@ -90,10 +93,10 @@ const Contact: React.FC = () => {
                             Based in India • Available for Freelance
                         </div>
                         <div className="flex gap-6">
-                            <a href="https://github.com/TheCraftsman1" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-neon-lime hover:scale-125 transition-all duration-300"><Github size={20} /></a>
-                            <a href="https://in.linkedin.com/in/sree-vishnu-kanchipati-479422331" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-neon-lime hover:scale-125 transition-all duration-300"><Linkedin size={20} /></a>
-                            <a href="https://leetcode.com/u/dPqPqsFd0k/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-neon-lime hover:scale-125 transition-all duration-300"><Twitter size={20} /></a>
-                            <a href="mailto:vishnukanchipati@gmail.com" className="text-gray-400 hover:text-neon-lime hover:scale-125 transition-all duration-300"><Mail size={20} /></a>
+                            <a href="https://github.com/TheCraftsman1" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile" className="text-gray-400 hover:text-neon-lime hover:scale-125 transition-all duration-300"><Github size={20} /></a>
+                            <a href="https://in.linkedin.com/in/sree-vishnu-kanchipati-479422331" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile" className="text-gray-400 hover:text-neon-lime hover:scale-125 transition-all duration-300"><Linkedin size={20} /></a>
+                            <a href="https://leetcode.com/u/dPqPqsFd0k/" target="_blank" rel="noopener noreferrer" aria-label="LeetCode Profile" className="text-gray-400 hover:text-neon-lime hover:scale-125 transition-all duration-300"><Twitter size={20} /></a>
+                            <a href="mailto:vishnukanchipati@gmail.com" aria-label="Send Email" className="text-gray-400 hover:text-neon-lime hover:scale-125 transition-all duration-300"><Mail size={20} /></a>
                         </div>
                     </div>
                 </div>
