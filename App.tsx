@@ -24,21 +24,28 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    const handleScroll = () => {
-      const sections = Object.values(SectionId);
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          if (rect.top >= -300 && rect.top <= 300) {
-            setActiveSection(section);
-            break;
+    // Optimization: Use IntersectionObserver instead of scroll event listener
+    // to prevent layout thrashing and improve scroll performance.
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id as SectionId);
           }
-        }
+        });
+      },
+      { rootMargin: '-20% 0px -70% 0px' }
+    );
+
+    const sections = Object.values(SectionId);
+    sections.forEach((section) => {
+      const element = document.getElementById(section);
+      if (element) {
+        observer.observe(element);
       }
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    });
+
+    return () => observer.disconnect();
   }, []);
 
   return (
