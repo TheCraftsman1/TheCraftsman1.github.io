@@ -90,10 +90,10 @@ const Contact: React.FC = () => {
                             Based in India • Available for Freelance
                         </div>
                         <div className="flex gap-6">
-                            <a href="https://github.com/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-neon-lime hover:scale-125 transition-all duration-300"><Github size={20} /></a>
-                            <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-neon-lime hover:scale-125 transition-all duration-300"><Linkedin size={20} /></a>
-                            <a href="https://leetcode.com/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-neon-lime hover:scale-125 transition-all duration-300"><Twitter size={20} /></a>
-                            <a href="mailto:vishnu@example.com" className="text-gray-400 hover:text-neon-lime hover:scale-125 transition-all duration-300"><Mail size={20} /></a>
+                            <a href="https://github.com/TheCraftsman1" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-neon-lime hover:scale-125 transition-all duration-300"><Github size={20} /></a>
+                            <a href="https://in.linkedin.com/in/sree-vishnu-kanchipati-479422331" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-neon-lime hover:scale-125 transition-all duration-300"><Linkedin size={20} /></a>
+                            <a href="https://leetcode.com/u/dPqPqsFd0k/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-neon-lime hover:scale-125 transition-all duration-300"><Twitter size={20} /></a>
+                            <a href="mailto:vishnukanchipati@gmail.com" className="text-gray-400 hover:text-neon-lime hover:scale-125 transition-all duration-300"><Mail size={20} /></a>
                         </div>
                     </div>
                 </div>
