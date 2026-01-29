@@ -7,6 +7,7 @@ export interface Project {
   image: string;
   tech: string[];
   fullDetails: string;
+  github?: string;
 }
 
 export interface SkillCategory {

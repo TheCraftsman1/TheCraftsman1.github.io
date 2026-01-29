@@ -49,6 +49,149 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+/* Enhanced Glassmorphism Variants */
+.glass-panel-intense {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.glass-panel-gradient {
+  background: linear-gradient(135deg,
+      rgba(204, 255, 0, 0.05) 0%,
+      rgba(0, 240, 255, 0.05) 100%);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Gradient Border Utility */
+.gradient-border {
+  position: relative;
+  background: linear-gradient(var(--carbon-gray), var(--carbon-gray)) padding-box,
+    linear-gradient(135deg, var(--neon-lime) 0%, var(--neon-cyan) 100%) border-box;
+  border: 2px solid transparent;
+  border-radius: 4px;
+}
+
+.gradient-border-animated {
+  position: relative;
+  background: linear-gradient(var(--carbon-gray), var(--carbon-gray)) padding-box,
+    linear-gradient(135deg, var(--neon-lime) 0%, var(--neon-cyan) 100%) border-box;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  background-size: 100% 100%, 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+/* Gradient Text */
+.text-gradient-lime-cyan {
+  background: linear-gradient(135deg, var(--neon-lime) 0%, var(--neon-cyan) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-cyan-purple {
+  background: linear-gradient(90deg, #7c7cff, #00ffd5);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-hero {
+  background: linear-gradient(135deg, #00ffd5 0%, #7c7cff 50%, #ff6b9d 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Floating Animations */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes float-slow {
+
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-15px) rotate(2deg);
+  }
+}
+
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(204, 255, 0, 0.2);
+    opacity: 0.8;
+  }
+
+  50% {
+    box-shadow: 0 0 40px rgba(204, 255, 0, 0.4);
+    opacity: 1;
+  }
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 100% 100%, 0% 0%;
+  }
+
+  50% {
+    background-position: 100% 100%, 100% 100%;
+  }
+
+  100% {
+    background-position: 100% 100%, 0% 0%;
+  }
+}
+
+@keyframes circuit-pulse {
+
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float-slow 8s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.animate-circuit {
+  animation: circuit-pulse 2s ease-in-out infinite;
+}
+
 .text-glow {
   text-shadow: 0 0 10px rgba(204, 255, 0, 0.5);
 }
@@ -66,7 +209,10 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-/* Force hide cursor everywhere */
-* {
-  cursor: none !important;
+
+/* Hide cursor only on desktop (non-touch devices) */
+@media (hover: hover) and (pointer: fine) {
+  * {
+    cursor: none !important;
+  }
 }

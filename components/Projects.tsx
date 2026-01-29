@@ -10,30 +10,33 @@ import { motion, AnimatePresence } from 'framer-motion';
 const projects: Project[] = [
   {
     id: '1',
-    title: 'EDUFAC',
-    category: 'Mobile App',
-    description: 'Student-Faculty File Sharing App built with Flutter.',
-    fullDetails: 'EDUFAC streamlines communication between students and faculty. Features include real-time file sharing, notifications, and a secure login system. Built using Flutter for cross-platform compatibility and Firebase for the backend.',
-    image: 'https://picsum.photos/800/600?random=1',
-    tech: ['Flutter', 'Dart', 'Firebase']
+    title: 'Vikify',
+    category: 'Android App',
+    description: 'Premium music streaming app with Spotify integration and offline mode.',
+    fullDetails: 'Vikify is a feature-rich Android music player built with Kotlin and ExoPlayer. It features Spotify playlist import, YouTube music integration, synchronized lyrics, and a stunning dark-themed UI. The app uses Firebase for analytics and crash reporting, with smooth animations powered by Material Design 3.',
+    image: '/projects/vikify.png',
+    tech: ['Kotlin', 'ExoPlayer', 'Firebase', 'Spotify API'],
+    github: 'https://github.com/TheCraftsman1/vikify'
   },
   {
     id: '2',
-    title: 'SkyCast AI',
-    category: 'AI System',
-    description: 'AI-Based Weather Data Visualization System using JavaFX.',
-    fullDetails: 'An advanced desktop application that visualizes historical weather data and predicts future trends using simple AI regression models. The UI is crafted with JavaFX for a responsive, modern desktop experience.',
-    image: 'https://picsum.photos/800/600?random=2',
-    tech: ['JavaFX', 'AI/ML', 'Java']
+    title: 'Secure-AI-Pipeline',
+    category: 'DevSecOps',
+    description: 'Enterprise-grade CI/CD pipeline with integrated security scanning.',
+    fullDetails: 'A comprehensive DevSecOps solution for AI/ML projects. Features automated SAST/DAST scanning, container security analysis, vulnerability trending, and compliance status monitoring. Built with TypeScript and integrated with GitHub Actions for seamless workflow automation.',
+    image: '/projects/secure-pipeline.png',
+    tech: ['TypeScript', 'Docker', 'GitHub Actions', 'Security'],
+    github: 'https://github.com/TheCraftsman1/Secure-AI-pipeline'
   },
   {
     id: '3',
-    title: 'TollSim',
-    category: 'Simulation',
-    description: 'Toll Booth Simulation System with Java GUI.',
-    fullDetails: 'A comprehensive simulation of toll plaza operations. It handles vehicle queuing, automatic fee calculation based on vehicle type, and statistical reporting. Features a custom Java Swing GUI.',
-    image: 'https://picsum.photos/800/600?random=3',
-    tech: ['Java', 'Swing', 'Algorithms']
+    title: 'Fake News Detector',
+    category: 'AI/ML',
+    description: 'Machine learning model to detect misinformation in news articles.',
+    fullDetails: 'An NLP-powered fake news detection system using TensorFlow and BERT/RoBERTa models. The system analyzes article text for misinformation patterns, provides confidence scores, and tracks factuality trends across sources. Features a neural network attention visualization for interpretability.',
+    image: '/projects/fake-news.png',
+    tech: ['Python', 'TensorFlow', 'NLP', 'BERT'],
+    github: 'https://github.com/TheCraftsman1/fake-news'
   }
 ];
 
@@ -44,7 +47,7 @@ const Projects: React.FC = () => {
     <section id={SectionId.PROJECTS} className="py-32 bg-carbon-black relative">
       <div className="max-w-7xl mx-auto px-6">
         <ScrollReveal>
-          <SectionTitle title="Grand Prix" subtitle="Featured Works" />
+          <SectionTitle title="Work" subtitle="Featured Projects" />
         </ScrollReveal>
 
         <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -150,12 +153,16 @@ const Projects: React.FC = () => {
                 </div>
 
                 <div className="flex gap-4 mt-8 pt-8 border-t border-white/10">
-                  <button className="flex-1 bg-neon-lime text-black py-4 font-orbitron font-bold uppercase hover:bg-white transition-colors flex items-center justify-center gap-2 clip-path-slant">
-                    Launch <ExternalLink size={18} />
-                  </button>
-                  <button className="flex-1 bg-transparent border border-white/20 text-white py-4 font-orbitron font-bold uppercase hover:bg-white/10 transition-colors flex items-center justify-center gap-2 clip-path-slant">
-                    Code <Github size={18} />
-                  </button>
+                  {selectedProject.github && (
+                    <a
+                      href={selectedProject.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 bg-neon-lime text-black py-4 font-orbitron font-bold uppercase hover:bg-white transition-colors flex items-center justify-center gap-2 clip-path-slant"
+                    >
+                      View Code <Github size={18} />
+                    </a>
+                  )}
                 </div>
               </div>
             </motion.div>

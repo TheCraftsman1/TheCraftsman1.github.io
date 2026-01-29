@@ -3,6 +3,7 @@ import React from 'react';
 import { SectionId } from '../types';
 import SectionTitle from './SectionTitle';
 import ScrollReveal from './ScrollReveal';
+import TechyBackground from './TechyBackground';
 import { RotateCcw } from 'lucide-react';
 import CountUp from 'react-countup';
 import { motion } from 'framer-motion';
@@ -10,6 +11,9 @@ import { motion } from 'framer-motion';
 const About: React.FC = () => {
     return (
         <section id={SectionId.ABOUT} className="relative py-32 bg-carbon-gray overflow-hidden">
+            {/* Techy background decoration */}
+            <TechyBackground variant="dots" opacity={0.15} />
+
             {/* Decorative skewed stripe */}
             <div className="absolute top-0 right-0 w-1/2 h-full bg-carbon-black -skew-x-12 translate-x-1/3 border-l border-white/5"></div>
 
@@ -29,10 +33,12 @@ const About: React.FC = () => {
                     >
                         <div className="absolute -inset-4 bg-neon-lime/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         <div className="relative aspect-[3/4] bg-neutral-900 border-2 border-white/10 overflow-hidden transform transition-transform duration-500 group-hover:rotate-y-6 group-hover:rotate-x-6 preserve-3d shadow-2xl">
-                            {/* Placeholder for Profile Image */}
-                            <div className="w-full h-full bg-gradient-to-br from-gray-800 to-black flex items-center justify-center">
-                                <span className="text-white/20 font-orbitron text-4xl font-bold">VK</span>
-                            </div>
+                            {/* Profile Image */}
+                            <img
+                                src="/profile-image.jpg"
+                                alt="Vishnu Kanchipati"
+                                className="w-full h-full object-cover"
+                            />
 
                             {/* Tech Overlay */}
                             <div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/90 via-black/50 to-transparent translate-z-10">
@@ -87,7 +93,7 @@ const About: React.FC = () => {
                                 whileInView={{ opacity: 1, scale: 1 }}
                                 transition={{ duration: 0.5, delay: 0.8 }}
                                 viewport={{ once: true }}
-                                className="p-6 bg-white/5 border border-white/10 hover:border-neon-lime transition-colors group backdrop-blur-sm"
+                                className="p-6 glass-panel-gradient gradient-border hover:border-neon-lime transition-all duration-300 group hover:shadow-[0_0_30px_rgba(204,255,0,0.15)]"
                             >
                                 <h4 className="font-orbitron text-4xl text-white font-bold group-hover:text-neon-lime transition-colors">
                                     <CountUp end={20} duration={2.5} suffix="+" enableScrollSpy scrollSpyOnce />
@@ -99,7 +105,7 @@ const About: React.FC = () => {
                                 whileInView={{ opacity: 1, scale: 1 }}
                                 transition={{ duration: 0.5, delay: 1.0 }}
                                 viewport={{ once: true }}
-                                className="p-6 bg-white/5 border border-white/10 hover:border-neon-lime transition-colors group backdrop-blur-sm"
+                                className="p-6 glass-panel-gradient gradient-border hover:border-neon-lime transition-all duration-300 group hover:shadow-[0_0_30px_rgba(204,255,0,0.15)]"
                             >
                                 <h4 className="font-orbitron text-4xl text-white font-bold group-hover:text-neon-lime transition-colors">
                                     <CountUp end={100} duration={3} suffix="%" enableScrollSpy scrollSpyOnce />

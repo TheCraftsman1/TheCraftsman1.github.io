@@ -1,9 +1,7 @@
 import React from 'react';
-import { ArrowDown, ChevronRight } from 'lucide-react';
+import { ArrowDown, ChevronRight, Mail, Download } from 'lucide-react';
 import { SectionId } from '../types';
-import { Canvas } from '@react-three/fiber';
-import { Environment } from '@react-three/drei';
-import CoderHelmet from './CoderHelmet';
+import TechyBackground from './TechyBackground';
 import { motion } from 'framer-motion';
 
 interface HeroProps {
@@ -12,102 +10,160 @@ interface HeroProps {
 }
 
 const Hero: React.FC<HeroProps> = ({ scrollToSection, startAnimation }) => {
+  const skills = ['B.Tech CSE', 'Java', 'Flutter', 'Web Dev', 'DSA'];
+
   return (
-    <section id={SectionId.HERO} className="relative w-full h-screen flex items-center justify-center overflow-hidden bg-carbon-black perspective-1000">
-      {/* Dynamic Background Layers */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gray-900 via-black to-black"></div>
+    <section id={SectionId.HERO} className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-carbon-black">
+      {/* Background Layers */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_#1a1a2e_0%,_#0a0a0a_70%)]"></div>
 
-      {/* Animated Grid Floor */}
-      <div className="absolute inset-0 opacity-20 transform perspective-3d rotate-x-60 scale-150 origin-top">
-        <div className="w-full h-full bg-grid-pattern bg-[length:50px_50px] animate-[gridScroll_20s_linear_infinite]"></div>
+      {/* Animated gradient blob */}
+      <div className="absolute top-1/4 -left-20 w-96 h-96 bg-gradient-to-r from-purple-600/20 to-cyan-500/20 rounded-full blur-[100px] animate-float-slow"></div>
+      <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-gradient-to-r from-cyan-500/20 to-purple-600/20 rounded-full blur-[100px] animate-float"></div>
+
+      {/* Techy circuit background */}
+      <TechyBackground variant="circuit" opacity={0.15} />
+
+      {/* Grid pattern overlay */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="w-full h-full bg-grid-pattern bg-[length:60px_60px]"></div>
       </div>
 
-      {/* Speed Lines / Particles */}
-      <div className="absolute inset-0 overflow-hidden opacity-30 pointer-events-none">
-        <div className="absolute top-1/4 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-neon-lime to-transparent blur-sm animate-[speedLine_3s_infinite]"></div>
-        <div className="absolute top-3/4 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white to-transparent blur-sm animate-[speedLine_4s_infinite_reverse]"></div>
-      </div>
+      {/* Main Content */}
+      <div className="relative z-10 max-w-6xl mx-auto px-6 flex flex-col lg:flex-row items-center justify-between gap-12">
 
-      {/* 
-        LAYER 1: HUGE BACKGROUND TEXT (Behind Image)
-      */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center z-[1] pointer-events-none select-none overflow-hidden">
+        {/* Left: Text Content */}
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={startAnimation ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, ease: "easeOut" }}
-          className="flex flex-col items-center leading-none"
+          className="flex-1 text-center lg:text-left"
+          initial={{ opacity: 0, x: -50 }}
+          animate={startAnimation ? { opacity: 1, x: 0 } : {}}
+          transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <h1 className="text-[18vw] md:text-[22vw] font-orbitron font-black uppercase tracking-tighter text-white/20 whitespace-nowrap blur-[2px] animate-pulse">
-            VISHNU
-          </h1>
-          <h1 className="text-[12vw] md:text-[15vw] font-orbitron font-black uppercase tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white/50 to-transparent -mt-[4vw]">
-            KANCHIPATI
-          </h1>
-        </motion.div>
-      </div>
-
-      {/* 
-        LAYER 2: HERO IMAGE / HELMET
-      */}
-      <div className="absolute inset-0 flex items-center justify-center z-[5] pointer-events-none">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9, y: 50 }}
-          animate={startAnimation ? { opacity: 1, scale: 1, y: 0 } : {}}
-          transition={{ duration: 1.5, ease: "easeOut", delay: 0.5 }}
-          className="relative w-full md:w-[80vw] h-[60vh] md:h-[80vh] max-w-none flex justify-center items-center"
-        >
-          {/* Backlight / Rim Light Effect */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vh] bg-neon-lime/20 blur-[100px] rounded-full mix-blend-screen"></div>
-
-          {/* 3D Coder Helmet Layer */}
-          <div className="absolute inset-0 w-full h-full z-10 pointer-events-auto">
-            <Canvas camera={{ position: [0, 0, 4.5], fov: 45 }}>
-              <ambientLight intensity={0.5} />
-              <pointLight position={[10, 10, 10]} intensity={1} />
-              <Environment preset="city" />
-              <group position={[0.5, 0, 0]}>
-                <CoderHelmet />
-              </group>
-            </Canvas>
-          </div>
-        </motion.div>
-      </div>
-
-      {/* 
-        LAYER 3: FOREGROUND CONTENT
-      */}
-      <div className="relative z-10 w-full h-full flex flex-col justify-between py-10 pointer-events-none">
-
-        {/* Top: Logo */}
-        <div className="w-full flex justify-center pt-10">
-          <div className="relative w-16 h-16 md:w-24 md:h-24 pointer-events-auto">
-            <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-[0_0_15px_rgba(204,255,0,0.6)]">
-              <circle cx="50" cy="50" r="45" fill="none" stroke="white" strokeWidth="1" className="opacity-30 animate-[spin_10s_linear_infinite]" strokeDasharray="40, 10, 40, 10" />
-              <path d="M 20 25 L 35 75 L 50 25" fill="none" stroke="#CCFF00" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M 60 25 L 60 75" fill="none" stroke="#CCFF00" strokeWidth="4" strokeLinecap="round" />
-              <path d="M 60 55 L 80 25" fill="none" stroke="#CCFF00" strokeWidth="4" strokeLinecap="round" />
-              <path d="M 60 55 L 80 75" fill="none" stroke="#CCFF00" strokeWidth="4" strokeLinecap="round" />
-            </svg>
-          </div>
-        </div>
-
-        {/* Bottom: CTA & Subtitle */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={startAnimation ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, delay: 1.5 }}
-          className="flex flex-col items-center pb-20 pointer-events-auto"
-        >
-          <button
-            onClick={() => scrollToSection(SectionId.PROJECTS)}
-            className="group relative px-12 py-5 bg-transparent overflow-hidden clip-path-slant border border-white/20 hover:border-neon-lime transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(204,255,0,0.3)]"
+          {/* Greeting */}
+          <motion.p
+            className="text-gray-400 font-exo text-lg md:text-xl mb-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={startAnimation ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <div className="absolute inset-0 bg-neon-lime translate-y-[101%] group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
-            <span className="relative z-10 font-orbitron font-bold text-white group-hover:text-black uppercase tracking-widest flex items-center gap-2 text-lg">
-              Explore My World <ChevronRight className="w-5 h-5" />
-            </span>
-          </button>
+            Hi, I'm
+          </motion.p>
+
+          {/* Name with gradient */}
+          <motion.h1
+            className="text-5xl md:text-7xl lg:text-8xl font-orbitron font-black uppercase tracking-tight mb-4"
+            initial={{ opacity: 0, y: 30 }}
+            animate={startAnimation ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.3 }}
+          >
+            <span className="text-gradient-cyan-purple">Vishnu</span>
+          </motion.h1>
+
+          {/* Statement */}
+          <motion.p
+            className="text-xl md:text-2xl lg:text-3xl font-exo text-white mb-6 leading-relaxed"
+            initial={{ opacity: 0, y: 20 }}
+            animate={startAnimation ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.5 }}
+          >
+            I build <span className="text-gradient-lime-cyan font-bold">software</span>, not just projects.
+          </motion.p>
+
+          {/* Skills badges */}
+          <motion.div
+            className="flex flex-wrap justify-center lg:justify-start gap-3 mb-10"
+            initial={{ opacity: 0, y: 20 }}
+            animate={startAnimation ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.7 }}
+          >
+            {skills.map((skill, index) => (
+              <motion.span
+                key={skill}
+                className="px-4 py-2 glass-panel text-sm font-exo text-gray-300 hover:text-white hover:border-cyan-400/50 transition-all duration-300"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={startAnimation ? { opacity: 1, scale: 1 } : {}}
+                transition={{ duration: 0.4, delay: 0.8 + index * 0.1 }}
+                whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(0,240,255,0.3)" }}
+              >
+                {skill}
+              </motion.span>
+            ))}
+          </motion.div>
+
+          {/* Dual CTAs */}
+          <motion.div
+            className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+            initial={{ opacity: 0, y: 20 }}
+            animate={startAnimation ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 1 }}
+          >
+            {/* Primary: View Projects */}
+            <button
+              onClick={() => scrollToSection(SectionId.PROJECTS)}
+              className="group relative px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 overflow-hidden rounded-lg hover:shadow-[0_0_30px_rgba(124,124,255,0.4)] transition-all duration-300 hover:scale-105"
+            >
+              <span className="relative z-10 font-orbitron font-bold text-white uppercase tracking-wider flex items-center justify-center gap-2">
+                View Projects <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </span>
+            </button>
+
+            {/* Secondary: Download Resume */}
+            <a
+              href="/vishnu-resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group px-8 py-4 glass-panel-intense border border-white/20 hover:border-cyan-400/50 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(0,240,255,0.2)] text-center"
+            >
+              <span className="font-orbitron font-bold text-white uppercase tracking-wider flex items-center justify-center gap-2">
+                Resume <Download className="w-5 h-5 group-hover:translate-y-1 transition-transform" />
+              </span>
+            </a>
+          </motion.div>
+
+          {/* Email */}
+          <motion.div
+            className="mt-6 flex justify-center lg:justify-start"
+            initial={{ opacity: 0 }}
+            animate={startAnimation ? { opacity: 1 } : {}}
+            transition={{ duration: 0.8, delay: 1.2 }}
+          >
+            <a
+              href="mailto:vishnukanchipati@gmail.com"
+              className="flex items-center gap-2 text-gray-400 hover:text-cyan-400 transition-colors font-exo"
+            >
+              <Mail className="w-4 h-4" />
+              vishnukanchipati@gmail.com
+            </a>
+          </motion.div>
+        </motion.div>
+
+        {/* Right: Your Photo */}
+        <motion.div
+          className="flex-1 flex justify-center lg:justify-end"
+          initial={{ opacity: 0, x: 50, scale: 0.9 }}
+          animate={startAnimation ? { opacity: 1, x: 0, scale: 1 } : {}}
+          transition={{ duration: 1, ease: "easeOut", delay: 0.5 }}
+        >
+          <div className="relative">
+            {/* Soft glow behind image */}
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-cyan-500/20 blur-[100px] scale-150"></div>
+
+            {/* Image with gradient mask for blending */}
+            <div className="relative overflow-hidden rounded-xl">
+              {/* Bottom fade to blend with background */}
+              <div className="absolute inset-0 z-20 pointer-events-none bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent"></div>
+              {/* Side fades */}
+              <div className="absolute inset-0 z-20 pointer-events-none bg-gradient-to-r from-[#0a0a0a]/50 via-transparent to-[#0a0a0a]/50"></div>
+
+              <motion.img
+                src="/vishnu-hero.jpg"
+                alt="Vishnu Kanchipati"
+                className="relative z-10 w-80 h-80 md:w-[400px] md:h-[400px] object-cover"
+                animate={{ y: [0, -6, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+              />
+            </div>
+          </div>
         </motion.div>
       </div>
 
@@ -115,37 +171,20 @@ const Hero: React.FC<HeroProps> = ({ scrollToSection, startAnimation }) => {
       <motion.div
         initial={{ opacity: 0 }}
         animate={startAnimation ? { opacity: 1 } : {}}
-        transition={{ duration: 1, delay: 3 }}
-        className="absolute bottom-5 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-20"
+        transition={{ duration: 1, delay: 2 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-20"
       >
-        <span className="text-[10px] uppercase font-exo tracking-[0.2em] text-white/50 animate-pulse">Scroll</span>
+        <span className="text-[10px] uppercase font-exo tracking-[0.2em] text-white/50">Scroll</span>
         <motion.div
-          animate={{ y: [0, 10, 0] }}
+          animate={{ y: [0, 8, 0] }}
           transition={{ duration: 1.5, repeat: Infinity }}
         >
-          <ArrowDown size={14} className="text-neon-lime" />
+          <ArrowDown size={16} className="text-cyan-400" />
         </motion.div>
       </motion.div>
 
       <style>{`
         .perspective-1000 { perspective: 1000px; }
-        .perspective-3d { transform-style: preserve-3d; }
-        
-        @keyframes gridScroll {
-          0% { transform: rotateX(60deg) scale(2) translateY(0); }
-          100% { transform: rotateX(60deg) scale(2) translateY(50px); }
-        }
-        
-        @keyframes speedLine {
-          0% { transform: translateX(-100%); opacity: 0; }
-          50% { opacity: 1; }
-          100% { transform: translateX(100%); opacity: 0; }
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
       `}</style>
     </section>
   );

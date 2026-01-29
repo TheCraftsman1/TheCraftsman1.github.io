@@ -19,16 +19,15 @@ const Navbar: React.FC<NavbarProps> = ({ scrollToSection, activeSection }) => {
   }, []);
 
   const navItems = [
-    { id: SectionId.HERO, label: 'Start' },
-    { id: SectionId.ABOUT, label: 'Profile' },
+    { id: SectionId.HERO, label: 'Home' },
+    { id: SectionId.ABOUT, label: 'About' },
     { id: SectionId.PROJECTS, label: 'Work' },
-    { id: SectionId.STATS, label: 'Telemetry' },
-    { id: SectionId.OFF_TRACK, label: 'Off Track' },
-    { id: SectionId.CONTACT, label: 'Connect' },
+    { id: SectionId.STATS, label: 'Skills' },
+    { id: SectionId.CONTACT, label: 'Contact' },
   ];
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${isScrolled ? 'bg-black/90 backdrop-blur-md py-3 border-b border-white/10' : 'bg-transparent py-6'}`}>
+    <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${isScrolled ? 'glass-panel-intense py-3 border-b border-neon-lime/20 shadow-[0_4px_30px_rgba(204,255,0,0.1)]' : 'bg-transparent py-6'}`}>
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
         {/* Logo */}
         <div

@@ -19,7 +19,7 @@ const Telemetry: React.FC = () => {
 
             <div className="max-w-7xl mx-auto px-6 relative z-10">
                 <ScrollReveal>
-                    <SectionTitle title="Telemetry" subtitle="Performance Data" />
+                    <SectionTitle title="Skills" subtitle="Tech Stack" />
                 </ScrollReveal>
 
                 <div className="mt-16 grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -28,16 +28,16 @@ const Telemetry: React.FC = () => {
                     <ScrollReveal animation="slide-right" delay={200} className="space-y-6">
                         <div className="bg-black/50 border border-white/10 p-6 clip-path-slant-right hover:border-neon-lime transition-colors group">
                             <div className="flex items-center justify-between mb-4">
-                                <h3 className="text-gray-400 font-exo uppercase text-xs tracking-widest">Projects Completed</h3>
+                                <h3 className="text-gray-400 font-exo uppercase text-xs tracking-widest">GitHub Repos</h3>
                                 <Activity className="text-neon-lime w-4 h-4" />
                             </div>
                             <div className="text-5xl font-orbitron font-bold text-white group-hover:text-neon-lime transition-colors">
-                                20<span className="text-2xl align-top">+</span>
+                                6<span className="text-2xl align-top">+</span>
                             </div>
                             <div className="mt-4 h-1 w-full bg-gray-800">
                                 <motion.div
                                     initial={{ width: 0 }}
-                                    whileInView={{ width: "80%" }}
+                                    whileInView={{ width: "60%" }}
                                     transition={{ duration: 1.5, ease: "easeOut" }}
                                     viewport={{ once: true }}
                                     className="h-full bg-neon-lime animate-pulse"
@@ -47,16 +47,16 @@ const Telemetry: React.FC = () => {
 
                         <div className="bg-black/50 border border-white/10 p-6 clip-path-slant-right hover:border-neon-lime transition-colors group">
                             <div className="flex items-center justify-between mb-4">
-                                <h3 className="text-gray-400 font-exo uppercase text-xs tracking-widest">Code Efficiency</h3>
+                                <h3 className="text-gray-400 font-exo uppercase text-xs tracking-widest">Years Coding</h3>
                                 <Zap className="text-neon-lime w-4 h-4" />
                             </div>
                             <div className="text-5xl font-orbitron font-bold text-white group-hover:text-neon-lime transition-colors">
-                                98<span className="text-2xl align-top">%</span>
+                                2<span className="text-2xl align-top">+</span>
                             </div>
                             <div className="mt-4 h-1 w-full bg-gray-800">
                                 <motion.div
                                     initial={{ width: 0 }}
-                                    whileInView={{ width: "98%" }}
+                                    whileInView={{ width: "40%" }}
                                     transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
                                     viewport={{ once: true }}
                                     className="h-full bg-neon-lime"

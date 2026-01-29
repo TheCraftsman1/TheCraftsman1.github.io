@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { SectionId } from '../types';
 import SectionTitle from './SectionTitle';
-import { Mail, Linkedin, Github, Twitter, CheckCircle, AlertCircle } from 'lucide-react';
+import TechyBackground from './TechyBackground';
+import { Mail, Linkedin, Github, Code, CheckCircle, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { isValidEmail, sanitizeInput } from '../utils/validation';
 
@@ -32,20 +33,42 @@ const Contact: React.FC = () => {
         }
 
         setStatus('submitting');
-        // Simulate API call
-        setTimeout(() => {
-            setStatus('success');
-            setFormState({ name: '', email: '', message: '' });
-            setTimeout(() => setStatus('idle'), 5000);
-        }, 1500);
+
+        // Submit to Formspree
+        fetch('https://formspree.io/f/vishnukanchipati@gmail.com', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: sanitizedName,
+                email: sanitizedEmail,
+                message: sanitizedMessage
+            })
+        })
+            .then(response => {
+                if (response.ok) {
+                    setStatus('success');
+                    setFormState({ name: '', email: '', message: '' });
+                    setTimeout(() => setStatus('idle'), 5000);
+                } else {
+                    throw new Error('Failed to send');
+                }
+            })
+            .catch(() => {
+                setErrorMessage('Failed to send message. Please try again.');
+                setStatus('error');
+                setTimeout(() => setStatus('idle'), 3000);
+            });
     };
 
     return (
         <section id={SectionId.CONTACT} className="py-24 bg-black relative border-t border-white/10">
-            <div className="max-w-4xl mx-auto px-6">
+            {/* Techy background decoration */}
+            <TechyBackground variant="circuit" opacity={0.2} />
+
+            <div className="max-w-4xl mx-auto px-6 relative z-10">
                 <SectionTitle title="Contact" subtitle="Get In Touch" />
 
-                <div className="mt-16 bg-carbon-gray p-8 md:p-12 relative border border-white/5">
+                <div className="mt-16 glass-panel-intense p-8 md:p-12 relative">
                     {/* Neon Corner Accents */}
                     <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-neon-lime"></div>
                     <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-neon-lime"></div>
@@ -113,7 +136,7 @@ const Contact: React.FC = () => {
                         <div className="flex gap-6">
                             <a href="https://github.com/TheCraftsman1" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile" className="text-gray-400 hover:text-neon-lime hover:scale-125 transition-all duration-300"><Github size={20} /></a>
                             <a href="https://in.linkedin.com/in/sree-vishnu-kanchipati-479422331" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile" className="text-gray-400 hover:text-neon-lime hover:scale-125 transition-all duration-300"><Linkedin size={20} /></a>
-                            <a href="https://leetcode.com/u/dPqPqsFd0k/" target="_blank" rel="noopener noreferrer" aria-label="LeetCode Profile" className="text-gray-400 hover:text-neon-lime hover:scale-125 transition-all duration-300"><Twitter size={20} /></a>
+                            <a href="https://leetcode.com/u/dPqPqsFd0k/" target="_blank" rel="noopener noreferrer" aria-label="LeetCode Profile" className="text-gray-400 hover:text-neon-lime hover:scale-125 transition-all duration-300"><Code size={20} /></a>
                             <a href="mailto:vishnukanchipati@gmail.com" aria-label="Send Email" className="text-gray-400 hover:text-neon-lime hover:scale-125 transition-all duration-300"><Mail size={20} /></a>
                         </div>
                     </div>
@@ -125,7 +148,7 @@ const Contact: React.FC = () => {
                         <div key={i} className="w-2 h-8 bg-white skew-x-[-20deg]"></div>
                     ))}
                 </div>
-                <p className="text-center text-gray-600 font-exo text-xs mt-6 uppercase tracking-widest">© 2024 Vishnu Kanchipati. All Rights Reserved.</p>
+                <p className="text-center text-gray-600 font-exo text-xs mt-6 uppercase tracking-widest">© 2026 Vishnu Kanchipati. All Rights Reserved.</p>
             </div>
 
             {/* Success Modal */}

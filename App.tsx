@@ -5,7 +5,7 @@ import Hero from './components/Hero';
 import About from './components/About';
 import Projects from './components/Projects';
 import Telemetry from './components/Skills'; // Renamed in UI but keeping file name
-import OffTrack from './components/OffTrack';
+
 import Contact from './components/Contact';
 import Navbar from './components/Navbar';
 import CustomCursor from './components/CustomCursor';
@@ -61,7 +61,7 @@ const App: React.FC = () => {
           <About />
           <Projects />
           <Telemetry />
-          <OffTrack />
+
           <Contact />
         </main>
       </div>

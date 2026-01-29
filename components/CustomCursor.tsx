@@ -3,8 +3,17 @@ import React, { useEffect, useState } from 'react';
 const CustomCursor: React.FC = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(true); // Default to touch to avoid flash
 
   useEffect(() => {
+    // Detect if device has a fine pointer (mouse)
+    const hasFineMouse = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    setIsTouchDevice(!hasFineMouse);
+  }, []);
+
+  useEffect(() => {
+    if (isTouchDevice) return;
+
     const updatePosition = (e: MouseEvent) => {
       setPosition({ x: e.clientX, y: e.clientY });
     };
@@ -24,7 +33,10 @@ const CustomCursor: React.FC = () => {
       window.removeEventListener('mousemove', updatePosition);
       window.removeEventListener('mouseover', handleMouseOver);
     };
-  }, []);
+  }, [isTouchDevice]);
+
+  // Don't render on touch devices
+  if (isTouchDevice) return null;
 
   return (
     <div
