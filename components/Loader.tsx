@@ -28,17 +28,16 @@ const Loader: React.FC<LoaderProps> = ({ onComplete }) => {
   }, [onComplete]);
 
   return (
-    <div 
-      className={`fixed inset-0 z-[10000] bg-black flex flex-col items-center justify-center transition-transform duration-1000 ease-in-expo ${
-        isExiting ? '-translate-y-full' : 'translate-y-0'
-      }`}
+    <div
+      className={`fixed inset-0 z-[10000] bg-black flex flex-col items-center justify-center transition-transform duration-1000 ease-in-expo ${isExiting ? '-translate-y-full' : 'translate-y-0'
+        }`}
     >
       <div className="relative w-64 md:w-96">
         {/* Speedometer / RPM Arc */}
         <div className="absolute bottom-0 left-0 w-full h-full overflow-hidden">
-            <div className="w-full h-full border-t-2 border-gray-800 rounded-t-full opacity-50"></div>
+          <div className="w-full h-full border-t-2 border-gray-800 rounded-t-full opacity-50"></div>
         </div>
-        
+
         <div className="text-center mb-4 relative z-10">
           <h1 className="text-6xl font-orbitron font-black text-white tracking-tighter">
             {Math.floor(progress)}<span className="text-neon-lime text-2xl">%</span>
@@ -48,7 +47,7 @@ const Loader: React.FC<LoaderProps> = ({ onComplete }) => {
 
         {/* Progress Bar */}
         <div className="h-1 w-full bg-gray-900 relative overflow-hidden">
-          <div 
+          <div
             className="h-full bg-neon-lime shadow-[0_0_20px_#CCFF00] transition-all duration-200 ease-out"
             style={{ width: `${progress}%` }}
           ></div>
@@ -56,8 +55,8 @@ const Loader: React.FC<LoaderProps> = ({ onComplete }) => {
 
         {/* Decor */}
         <div className="mt-2 flex justify-between text-[10px] text-gray-500 font-exo">
-            <span>TMP: 98°C</span>
-            <span>RPM: 12000</span>
+          <span>TMP: 98°C</span>
+          <span>RPM: 12000</span>
         </div>
       </div>
     </div>

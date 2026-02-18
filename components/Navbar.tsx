@@ -22,7 +22,7 @@ const Navbar: React.FC<NavbarProps> = ({ scrollToSection, activeSection }) => {
     { id: SectionId.HERO, label: 'Home' },
     { id: SectionId.ABOUT, label: 'About' },
     { id: SectionId.PROJECTS, label: 'Work' },
-    { id: SectionId.STATS, label: 'Skills' },
+    { id: SectionId.SKILLS, label: 'Skills' },
     { id: SectionId.CONTACT, label: 'Contact' },
   ];
 

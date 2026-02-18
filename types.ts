@@ -18,8 +18,9 @@ export interface SkillCategory {
 export enum SectionId {
   HERO = 'hero',
   ABOUT = 'about',
+  EXPERIENCE = 'experience',
   PROJECTS = 'projects',
-  STATS = 'stats',
-  OFF_TRACK = 'off-track',
+  SKILLS = 'skills',
+  TESTIMONIALS = 'testimonials',
   CONTACT = 'contact'
 }

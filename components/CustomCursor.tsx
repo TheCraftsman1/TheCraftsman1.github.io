@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, memo } from 'react';
 
-const CustomCursor: React.FC = () => {
+const CustomCursor: React.FC = memo(() => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
-  const [isTouchDevice, setIsTouchDevice] = useState(true); // Default to touch to avoid flash
+  const [isTouchDevice, setIsTouchDevice] = useState(true);
+  const rafRef = useRef<number | null>(null);
+  const targetPosition = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     // Detect if device has a fine pointer (mouse)
@@ -15,7 +17,16 @@ const CustomCursor: React.FC = () => {
     if (isTouchDevice) return;
 
     const updatePosition = (e: MouseEvent) => {
-      setPosition({ x: e.clientX, y: e.clientY });
+      // Store target position
+      targetPosition.current = { x: e.clientX, y: e.clientY };
+
+      // Throttle with RAF
+      if (!rafRef.current) {
+        rafRef.current = requestAnimationFrame(() => {
+          setPosition({ ...targetPosition.current });
+          rafRef.current = undefined;
+        });
+      }
     };
 
     const handleMouseOver = (e: MouseEvent) => {
@@ -26,12 +37,13 @@ const CustomCursor: React.FC = () => {
       }
     };
 
-    window.addEventListener('mousemove', updatePosition);
-    window.addEventListener('mouseover', handleMouseOver);
+    window.addEventListener('mousemove', updatePosition, { passive: true });
+    window.addEventListener('mouseover', handleMouseOver, { passive: true });
 
     return () => {
       window.removeEventListener('mousemove', updatePosition);
       window.removeEventListener('mouseover', handleMouseOver);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, [isTouchDevice]);
 
@@ -66,6 +78,6 @@ const CustomCursor: React.FC = () => {
       </div>
     </div>
   );
-};
+});
 
 export default CustomCursor;
