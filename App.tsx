@@ -8,6 +8,7 @@ import Loader from './components/Loader';
 import SmoothScroll from './components/SmoothScroll';
 import SoundToggle from './components/SoundToggle';
 import ScrollProgress from './components/ScrollProgress';
+import AmbientBackground from './components/AmbientBackground';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Performance: Lazy-load below-the-fold components to reduce initial JS payload and RAM allocation
@@ -85,6 +86,9 @@ const App: React.FC = () => {
 
       {/* Noise Overlay */}
       <div className="noise-overlay" />
+
+      {/* Interactive Global Ambient Background */}
+      <AmbientBackground />
 
       {/* Scroll Progress */}
       <ScrollProgress />
