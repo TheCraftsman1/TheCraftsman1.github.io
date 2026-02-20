@@ -6,7 +6,12 @@ export interface Project {
   description: string;
   image: string;
   tech: string[];
-  fullDetails: string;
+  fullDetails: string; // Legacy fallback
+  caseStudy?: {
+    problem: string;
+    architecture: string;
+    metrics: string[];
+  };
   github?: string;
 }
 

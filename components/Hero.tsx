@@ -5,6 +5,7 @@ import { SectionId } from '../types';
 import TechyBackground from './TechyBackground';
 import Hero3D from './Hero3D';
 import MagneticButton from './MagneticButton';
+import StageSpotlight from './StageSpotlight';
 
 interface HeroProps {
   scrollToSection: (id: SectionId) => void;
@@ -13,6 +14,7 @@ interface HeroProps {
 
 const Hero: React.FC<HeroProps> = ({ scrollToSection, startAnimation }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [isGlowOn, setIsGlowOn] = useState(false);
   const { scrollY, scrollYProgress } = useScroll();
 
   // Parallax transforms
@@ -202,13 +204,24 @@ const Hero: React.FC<HeroProps> = ({ scrollToSection, startAnimation }) => {
           animate={startAnimation ? { opacity: 1, x: 0, scale: 1 } : {}}
           transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1], delay: 0.4 }}
         >
-          <div className="relative">
-            {/* Static glow */}
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/30 to-purple-600/30 rounded-3xl blur-[80px] scale-110" />
+          <div
+            className="relative cursor-pointer group"
+            onClick={() => setIsGlowOn(!isGlowOn)}
+          >
+            {/* Simple elegant spotlight - behind the photo */}
+            <StageSpotlight
+              isOn={isGlowOn}
+              intensity={1}
+              className="z-0"
+            />
+
+            {/* Animated gradient border - sharp */}
+            <div className="absolute -inset-[2px] rounded-2xl overflow-hidden">
+              <div className="absolute inset-[-100%] animate-gradient-rotate bg-[conic-gradient(from_0deg,#00f0ff_0%,#a855f7_25%,#00f0ff_50%,#a855f7_75%,#00f0ff_100%)]" />
+            </div>
 
             {/* Decorative frame */}
             <div className="absolute -inset-4 rounded-3xl border border-cyan-500/20 bg-gradient-to-b from-cyan-500/10 to-transparent" />
-            <div className="absolute -inset-1 rounded-3xl bg-gradient-to-tr from-cyan-500/20 via-transparent to-purple-500/20" />
 
             {/* Image container */}
             <div className="relative overflow-hidden rounded-2xl bg-gradient-to-b from-gray-900 to-black">
@@ -228,7 +241,7 @@ const Hero: React.FC<HeroProps> = ({ scrollToSection, startAnimation }) => {
               <img
                 src="/vishnu-hero.png"
                 alt="Vishnu Kanchipati"
-                className="relative z-10 w-72 h-auto md:w-96 lg:w-[420px] object-cover mix-blend-lighten"
+                className={`relative z-10 w-72 h-auto md:w-96 lg:w-[420px] object-cover transition-all duration-500 ${isGlowOn ? 'mix-blend-normal brightness-110 contrast-105' : 'mix-blend-lighten'}`}
                 onLoad={() => setImageLoaded(true)}
               />
             </div>

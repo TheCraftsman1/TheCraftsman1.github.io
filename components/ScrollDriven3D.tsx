@@ -1,6 +1,6 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Float, MeshDistortMaterial, Text, useScroll, PerspectiveCamera } from '@react-three/drei';
+import { Float, MeshDistortMaterial, useScroll, PerspectiveCamera } from '@react-three/drei';
 import * as THREE from 'three';
 
 // Scroll-driven 3D scene component
@@ -13,7 +13,41 @@ const ScrollScene: React.FC = () => {
     const skillsMeshRef = useRef<THREE.Mesh>(null);
     const contactMeshRef = useRef<THREE.Mesh>(null);
 
+    // Performance: Instanced mesh ref
+    const particlesRef = useRef<THREE.InstancedMesh>(null);
+
     const { viewport } = useThree();
+
+    // Initialize InstancedMesh positions and colors to consolidate 50 draw calls into 1
+    useEffect(() => {
+        if (particlesRef.current) {
+            const dummy = new THREE.Object3D();
+            const colors = [
+                new THREE.Color('#00f0ff'),
+                new THREE.Color('#ccff00'),
+                new THREE.Color('#7c7cff'),
+                new THREE.Color('#ff6b9d')
+            ];
+
+            for (let i = 0; i < 50; i++) {
+                dummy.position.set(
+                    (Math.random() - 0.5) * 20,
+                    (Math.random() - 0.5) * 20,
+                    -Math.random() * 30
+                );
+                const scale = 0.03 + Math.random() * 0.03;
+                dummy.scale.set(scale, scale, scale);
+                dummy.updateMatrix();
+
+                particlesRef.current.setMatrixAt(i, dummy.matrix);
+                particlesRef.current.setColorAt(i, colors[i % 4]);
+            }
+            particlesRef.current.instanceMatrix.needsUpdate = true;
+            if (particlesRef.current.instanceColor) {
+                particlesRef.current.instanceColor.needsUpdate = true;
+            }
+        }
+    }, []);
 
     useFrame((state, delta) => {
         const scrollOffset = scroll.offset;
@@ -126,24 +160,11 @@ const ScrollScene: React.FC = () => {
                 />
             </mesh>
 
-            {/* Floating particles throughout */}
-            {Array.from({ length: 50 }).map((_, i) => (
-                <mesh
-                    key={i}
-                    position={[
-                        (Math.random() - 0.5) * 20,
-                        (Math.random() - 0.5) * 20,
-                        -Math.random() * 30
-                    ]}
-                >
-                    <sphereGeometry args={[0.03 + Math.random() * 0.03]} />
-                    <meshStandardMaterial
-                        color={['#00f0ff', '#ccff00', '#7c7cff', '#ff6b9d'][i % 4]}
-                        emissive={['#00f0ff', '#ccff00', '#7c7cff', '#ff6b9d'][i % 4]}
-                        emissiveIntensity={0.8}
-                    />
-                </mesh>
-            ))}
+            {/* High Performance: Floating instances instead of multiple spheres */}
+            <instancedMesh ref={particlesRef} args={[null as any, null as any, 50]}>
+                <sphereGeometry args={[1]} />
+                <meshStandardMaterial emissiveIntensity={0.8} />
+            </instancedMesh>
         </group>
     );
 };
@@ -171,9 +192,10 @@ const SceneLighting: React.FC = () => {
 const ScrollDriven3D: React.FC = () => {
     return (
         <div className="fixed inset-0 z-0 pointer-events-none">
+            {/* Performance: Clamped DPR to 1.5 max */}
             <Canvas
                 gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
-                dpr={[1, 2]}
+                dpr={[1, 1.5]}
             >
                 <PerspectiveCamera makeDefault position={[0, 0, 8]} fov={50} />
                 <SceneLighting />

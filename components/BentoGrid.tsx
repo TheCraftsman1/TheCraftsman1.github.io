@@ -83,21 +83,29 @@ const BentoGrid: React.FC = () => {
                 return (
                     <motion.div
                         key={item.id}
-                        className={`bento-card group ${sizeClass}`}
-                        initial={{ opacity: 0, y: 20 }}
+                        className={`bento-card group ${sizeClass} relative glass-panel-2 overflow-hidden border border-white/5 hover:border-white/20 transition-all duration-500`}
+                        initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: index * 0.1, duration: 0.5 }}
+                        viewport={{ once: true, margin: '-50px' }}
+                        transition={{ delay: index * 0.1, duration: 0.6, type: 'spring', stiffness: 50 }}
+                        style={{ willChange: 'transform', transform: 'translateZ(0)' }}
                     >
+                        {/* Background subtle noise/glow */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
+                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-[radial-gradient(circle_at_50%_120%,rgba(204,255,0,0.1),transparent_50%)] transition-opacity duration-500 pointer-events-none" />
                         {/* Header */}
-                        <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-gray-400 font-exo text-xs uppercase tracking-widest">
+                        <div className="flex items-center justify-between mb-6 relative z-10">
+                            <h3 className="text-gray-400 font-exo text-xs uppercase tracking-widest font-bold">
                                 {item.title}
                             </h3>
                             {item.icon && (
-                                <span className="text-neon-lime group-hover:scale-110 transition-transform">
+                                <motion.span
+                                    className="text-neon-lime p-2 rounded-lg bg-neon-lime/10 border border-neon-lime/20"
+                                    whileHover={{ scale: 1.2, rotate: 5 }}
+                                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                                >
                                     {item.icon}
-                                </span>
+                                </motion.span>
                             )}
                         </div>
 
@@ -127,18 +135,23 @@ const BentoGrid: React.FC = () => {
                                             <span>{skill.name}</span>
                                             <span>{skill.value}%</span>
                                         </div>
-                                        <div className="h-1.5 w-full bg-gray-800 rounded-full overflow-hidden">
+                                        <div className="h-2 w-full bg-black/50 rounded-full overflow-hidden border border-white/5 relative">
+                                            {/* Glow track under the fill */}
+                                            <div className="absolute inset-0 bg-neon-lime/5 opacity-0 group-hover/skill:opacity-100 transition-opacity" />
                                             <motion.div
                                                 initial={{ width: 0 }}
                                                 whileInView={{ width: `${skill.value}%` }}
                                                 viewport={{ once: true }}
                                                 transition={{
-                                                    duration: 0.8,
+                                                    duration: 1,
                                                     delay: index * 0.1 + idx * 0.1,
-                                                    ease: 'easeOut'
+                                                    ease: [0.22, 1, 0.36, 1] // Custom easeOut Quint
                                                 }}
-                                                className="h-full bg-gradient-to-r from-neon-lime to-cyan-400 group-hover/skill:shadow-[0_0_10px_rgba(204,255,0,0.5)] transition-shadow"
-                                            />
+                                                className="h-full bg-gradient-to-r from-neon-lime to-cyan-400 shadow-[0_0_10px_rgba(204,255,0,0.5)] relative"
+                                            >
+                                                {/* Leading edge highlight */}
+                                                <div className="absolute right-0 top-0 bottom-0 w-2 bg-white/50 blur-[2px]" />
+                                            </motion.div>
                                         </div>
                                     </div>
                                 ))}

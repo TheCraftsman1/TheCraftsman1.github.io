@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, useMotionTemplate } from 'framer-motion';
 import { X, ExternalLink, Github, ChevronRight, ChevronLeft, ArrowUpRight } from 'lucide-react';
 import { Project } from '../types';
 
@@ -46,6 +46,12 @@ const ProjectCard: React.FC<{
         setIsHovered(false);
     };
 
+    // Dynamic Glare Effect Logic
+    const glareX = useTransform(x, [-0.5, 0.5], ['100%', '0%']);
+    const glareY = useTransform(y, [-0.5, 0.5], ['100%', '0%']);
+    const glareOpacity = useTransform(x, [-0.5, 0, 0.5], [0.1, 0.3, 0.1]);
+    const glareBackground = useMotionTemplate`radial-gradient(circle at ${glareX} ${glareY}, rgba(255,255,255,${glareOpacity}) 0%, transparent 50%)`;
+
     return (
         <motion.div
             className="horizontal-scroll-item"
@@ -64,6 +70,7 @@ const ProjectCard: React.FC<{
                     rotateX,
                     rotateY,
                     transformStyle: 'preserve-3d',
+                    willChange: 'transform', // Performance: hint to browser to GPU accelerate this
                 }}
                 onMouseMove={handleMouseMove}
                 onMouseEnter={() => setIsHovered(true)}
@@ -87,7 +94,8 @@ const ProjectCard: React.FC<{
                     </div>
 
                     {/* Main card content */}
-                    <div className="absolute inset-[1px] rounded-2xl bg-gradient-to-b from-neutral-800/90 to-neutral-900/95 backdrop-blur-xl overflow-hidden">
+                    {/* Performance: Reduced blur radius from xl to md to save compositor thread overhead during 3D tilts */}
+                    <div className="absolute inset-[1px] rounded-2xl bg-gradient-to-b from-neutral-800/95 to-neutral-900/98 backdrop-blur-md overflow-hidden" style={{ transform: 'translateZ(0)' }}>
                         {/* Image section */}
                         <div className="relative h-56 overflow-hidden">
                             {/* Image */}
@@ -97,9 +105,15 @@ const ProjectCard: React.FC<{
                                 className="w-full h-full object-cover"
                                 style={{
                                     transform: isHovered ? 'scale(1.1)' : 'scale(1)',
-                                    filter: isHovered ? 'grayscale(0)' : 'grayscale(0.3)',
-                                    transition: 'all 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
+                                    willChange: 'transform',
+                                    transition: 'transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
                                 }}
+                            />
+
+                            {/* Performance: Opacity overlay instead of CSS grayscale filter */}
+                            <div
+                                className="absolute inset-0 bg-neutral-900 mix-blend-saturation transition-opacity duration-700 pointer-events-none"
+                                style={{ opacity: isHovered ? 0 : 0.6 }}
                             />
 
                             {/* Gradient overlays */}
@@ -152,6 +166,15 @@ const ProjectCard: React.FC<{
 
                         {/* Content section */}
                         <div className="p-6 relative" style={{ transform: 'translateZ(30px)' }}>
+                            {/* Dynamic Interactive Sheen/Glare Overlay */}
+                            {isHovered && (
+                                <motion.div
+                                    className="absolute inset-0 pointer-events-none z-0 mix-blend-overlay"
+                                    style={{
+                                        background: glareBackground,
+                                    }}
+                                />
+                            )}
                             {/* Title */}
                             <motion.h3
                                 className="text-2xl font-orbitron font-bold text-white uppercase tracking-wide mb-3"
@@ -321,10 +344,10 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                         onClick={() => setSelectedProject(null)}
                     >
                         <motion.div
-                            initial={{ scale: 0.8, opacity: 0, y: 50, rotateX: -10 }}
-                            animate={{ scale: 1, opacity: 1, y: 0, rotateX: 0 }}
-                            exit={{ scale: 0.8, opacity: 0, y: 50, rotateX: 10 }}
-                            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                            initial={{ clipPath: 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)', y: 100, opacity: 0 }}
+                            animate={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', y: 0, opacity: 1 }}
+                            exit={{ clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)', y: -100, opacity: 0 }}
+                            transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
                             className="bg-neutral-900 border border-white/10 max-w-5xl w-full relative overflow-hidden max-h-[90vh] rounded-2xl"
                             style={{ perspective: 1000 }}
                             onClick={(e) => e.stopPropagation()}
@@ -373,22 +396,43 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                             </div>
 
                             {/* Content */}
-                            <div className="p-8 overflow-y-auto max-h-[calc(90vh-18rem)]">
-                                <motion.p
-                                    className="font-exo text-gray-300 leading-relaxed text-lg mb-8"
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.4 }}
-                                >
-                                    {selectedProject.fullDetails}
-                                </motion.p>
+                            <div className="p-8 overflow-y-auto max-h-[calc(90vh-18rem)] rounded-b-2xl" style={{ scrollbarWidth: 'thin', scrollbarColor: '#ccff00 transparent' }}>
+                                {selectedProject.caseStudy ? (
+                                    <div className="space-y-8 mb-8 font-exo">
+                                        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+                                            <h4 className="text-neon-lime text-xs uppercase font-bold tracking-[0.2em] mb-3">The Problem</h4>
+                                            <p className="leading-relaxed text-lg text-gray-300">{selectedProject.caseStudy.problem}</p>
+                                        </motion.div>
+                                        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
+                                            <h4 className="text-neon-lime text-xs uppercase font-bold tracking-[0.2em] mb-3">Architecture & Solution</h4>
+                                            <p className="leading-relaxed text-lg text-gray-300">{selectedProject.caseStudy.architecture}</p>
+                                        </motion.div>
+                                        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
+                                            <h4 className="text-neon-lime text-xs uppercase font-bold tracking-[0.2em] mb-3">Key Metrics</h4>
+                                            <ul className="list-disc pl-5 space-y-2 text-white/90 text-lg">
+                                                {selectedProject.caseStudy.metrics.map((metric, idx) => (
+                                                    <li key={idx} className="leading-relaxed">{metric}</li>
+                                                ))}
+                                            </ul>
+                                        </motion.div>
+                                    </div>
+                                ) : (
+                                    <motion.p
+                                        className="font-exo text-gray-300 leading-relaxed text-lg mb-8"
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: 0.4 }}
+                                    >
+                                        {selectedProject.fullDetails}
+                                    </motion.p>
+                                )}
 
                                 {/* Tech Stack */}
                                 <motion.div
                                     className="mb-8"
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.5 }}
+                                    transition={{ delay: selectedProject.caseStudy ? 0.7 : 0.5 }}
                                 >
                                     <h4 className="text-xs uppercase text-gray-500 mb-4 font-bold tracking-wider">
                                         Tech Stack
@@ -400,7 +444,7 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                                                 className="text-sm uppercase font-bold px-4 py-2 bg-white/5 text-white border border-white/10 rounded-full hover:border-neon-lime hover:text-neon-lime transition-colors cursor-default"
                                                 initial={{ opacity: 0, scale: 0.8 }}
                                                 animate={{ opacity: 1, scale: 1 }}
-                                                transition={{ delay: 0.5 + i * 0.05 }}
+                                                transition={{ delay: (selectedProject.caseStudy ? 0.7 : 0.5) + i * 0.05 }}
                                             >
                                                 {t}
                                             </motion.span>
@@ -413,7 +457,7 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                                     className="flex gap-4 pt-6 border-t border-white/10"
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.6 }}
+                                    transition={{ delay: selectedProject.caseStudy ? 0.8 : 0.6 }}
                                 >
                                     {selectedProject.github && (
                                         <motion.a

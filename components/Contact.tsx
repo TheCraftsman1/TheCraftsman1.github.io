@@ -34,14 +34,18 @@ const Contact: React.FC = () => {
 
         setStatus('submitting');
 
-        // Submit to Formspree
-        fetch('https://formspree.io/f/vishnukanchipati@gmail.com', {
+        // Submit via FormSubmit.co
+        fetch('https://formsubmit.co/ajax/vishnukanchipati@gmail.com', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
             body: JSON.stringify({
                 name: sanitizedName,
                 email: sanitizedEmail,
-                message: sanitizedMessage
+                message: sanitizedMessage,
+                _subject: "New Portfolio Message!"
             })
         })
             .then(response => {
@@ -75,42 +79,52 @@ const Contact: React.FC = () => {
 
                     <form className="space-y-8" onSubmit={handleSubmit}>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div className="group">
+                            <div className="group relative">
                                 <label htmlFor="name" className="block text-xs font-exo uppercase tracking-wider text-gray-500 mb-2 group-focus-within:text-neon-lime transition-colors">Name</label>
-                                <input
-                                    id="name"
-                                    type="text"
-                                    value={formState.name}
-                                    onChange={(e) => setFormState({ ...formState, name: e.target.value })}
-                                    className="w-full bg-transparent border-b border-white/20 py-3 text-white font-exo focus:outline-none focus:border-neon-lime transition-colors placeholder-gray-700"
-                                    placeholder="ENTER YOUR NAME"
-                                    maxLength={100}
-                                />
+                                <div className="relative">
+                                    <input
+                                        id="name"
+                                        type="text"
+                                        value={formState.name}
+                                        onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+                                        className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 py-4 text-white font-exo focus:outline-none focus:border-neon-lime focus:bg-white/[0.05] transition-all duration-300 placeholder-gray-700 backdrop-blur-sm"
+                                        placeholder="ENTER YOUR NAME"
+                                        maxLength={100}
+                                    />
+                                    {/* Focus Gradient Line underneath */}
+                                    <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-neon-lime to-cyan-400 group-focus-within:w-full transition-all duration-500 rounded-b-lg" />
+                                </div>
                             </div>
-                            <div className="group">
+                            <div className="group relative">
                                 <label htmlFor="email" className="block text-xs font-exo uppercase tracking-wider text-gray-500 mb-2 group-focus-within:text-neon-lime transition-colors">Email</label>
-                                <input
-                                    id="email"
-                                    type="email"
-                                    value={formState.email}
-                                    onChange={(e) => setFormState({ ...formState, email: e.target.value })}
-                                    className="w-full bg-transparent border-b border-white/20 py-3 text-white font-exo focus:outline-none focus:border-neon-lime transition-colors placeholder-gray-700"
-                                    placeholder="ENTER YOUR EMAIL"
-                                    maxLength={100}
-                                />
+                                <div className="relative">
+                                    <input
+                                        id="email"
+                                        type="email"
+                                        value={formState.email}
+                                        onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+                                        className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 py-4 text-white font-exo focus:outline-none focus:border-neon-lime focus:bg-white/[0.05] transition-all duration-300 placeholder-gray-700 backdrop-blur-sm"
+                                        placeholder="ENTER YOUR EMAIL"
+                                        maxLength={100}
+                                    />
+                                    <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-neon-lime to-cyan-400 group-focus-within:w-full transition-all duration-500 rounded-b-lg" />
+                                </div>
                             </div>
                         </div>
-                        <div className="group">
+                        <div className="group relative">
                             <label htmlFor="message" className="block text-xs font-exo uppercase tracking-wider text-gray-500 mb-2 group-focus-within:text-neon-lime transition-colors">Message</label>
-                            <textarea
-                                id="message"
-                                rows={4}
-                                value={formState.message}
-                                onChange={(e) => setFormState({ ...formState, message: e.target.value })}
-                                className="w-full bg-transparent border-b border-white/20 py-3 text-white font-exo focus:outline-none focus:border-neon-lime transition-colors placeholder-gray-700 resize-none"
-                                placeholder="PROJECT DETAILS..."
-                                maxLength={500}
-                            ></textarea>
+                            <div className="relative">
+                                <textarea
+                                    id="message"
+                                    rows={4}
+                                    value={formState.message}
+                                    onChange={(e) => setFormState({ ...formState, message: e.target.value })}
+                                    className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 py-4 text-white font-exo focus:outline-none focus:border-neon-lime focus:bg-white/[0.05] transition-all duration-300 placeholder-gray-700 resize-none backdrop-blur-sm"
+                                    placeholder="PROJECT DETAILS..."
+                                    maxLength={500}
+                                ></textarea>
+                                <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-neon-lime to-cyan-400 group-focus-within:w-full transition-all duration-500 rounded-b-lg" />
+                            </div>
                         </div>
 
                         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
@@ -120,12 +134,16 @@ const Contact: React.FC = () => {
                                 </div>
                             )}
 
-                            <button
+                            <motion.button
                                 disabled={status === 'submitting'}
-                                className="px-10 py-4 bg-neon-lime text-black font-orbitron font-bold uppercase tracking-wider hover:bg-white transition-all duration-300 hover:shadow-[0_0_20px_rgba(204,255,0,0.4)] clip-path-slant disabled:opacity-50 disabled:cursor-not-allowed ml-auto"
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="px-10 py-4 bg-neon-lime text-black font-orbitron font-bold uppercase tracking-wider transition-all duration-300 hover:shadow-[0_0_30px_rgba(204,255,0,0.6)] rounded-lg disabled:opacity-50 disabled:cursor-not-allowed ml-auto relative overflow-hidden group/btn"
                             >
-                                {status === 'submitting' ? 'Sending...' : 'Send Message'}
-                            </button>
+                                <span className="relative z-10">{status === 'submitting' ? 'Sending...' : 'Send Message'}</span>
+                                {/* Hover light sweep effect */}
+                                <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover/btn:animate-[shimmer_1s_infinite] skew-x-12" />
+                            </motion.button>
                         </div>
                     </form>
 

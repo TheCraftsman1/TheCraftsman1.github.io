@@ -1,19 +1,22 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { SectionId } from './types';
 import Hero from './components/Hero';
-import About from './components/About';
-import Projects from './components/Projects';
-import Telemetry from './components/Skills';
-import Contact from './components/Contact';
 import Navbar from './components/Navbar';
 import CustomCursor from './components/CustomCursor';
 import Loader from './components/Loader';
 import SmoothScroll from './components/SmoothScroll';
-import EasterEgg from './components/EasterEgg';
 import SoundToggle from './components/SoundToggle';
 import ScrollProgress from './components/ScrollProgress';
 import { motion, AnimatePresence } from 'framer-motion';
+
+// Performance: Lazy-load below-the-fold components to reduce initial JS payload and RAM allocation
+const About = lazy(() => import('./components/About'));
+const Experience = lazy(() => import('./components/Experience'));
+const Projects = lazy(() => import('./components/Projects'));
+const Telemetry = lazy(() => import('./components/Skills'));
+const Contact = lazy(() => import('./components/Contact'));
+const EasterEgg = lazy(() => import('./components/EasterEgg'));
 
 const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -22,35 +25,59 @@ const App: React.FC = () => {
   const scrollToSection = (id: SectionId) => {
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      const lenis = (window as any).lenis;
+      if (lenis) {
+        lenis.scrollTo(element, { offset: 0, duration: 1.5, easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+      } else {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
     setActiveSection(id);
   };
 
   useEffect(() => {
-    // Optimization: Use IntersectionObserver instead of scroll event listener
-    // to prevent layout thrashing and improve scroll performance.
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id as SectionId);
+    if (isLoading) return;
+
+    let ticking = false;
+
+    const updateActiveSection = () => {
+      let newlyActive: SectionId | null = null;
+      const sections = Object.values(SectionId);
+
+      // Dynamic DOM querying handles React.lazy automatically
+      sections.forEach((section) => {
+        const element = document.getElementById(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          // Trigger point is 40% from top of screen
+          const triggerPoint = window.innerHeight * 0.4;
+
+          if (rect.top <= triggerPoint && rect.bottom >= triggerPoint) {
+            newlyActive = section as SectionId;
           }
-        });
-      },
-      { rootMargin: '-20% 0px -70% 0px' }
-    );
+        }
+      });
 
-    const sections = Object.values(SectionId);
-    sections.forEach((section) => {
-      const element = document.getElementById(section);
-      if (element) {
-        observer.observe(element);
+      if (newlyActive) {
+        setActiveSection(prev => prev !== newlyActive ? (newlyActive as SectionId) : prev);
       }
-    });
+      ticking = false;
+    };
 
-    return () => observer.disconnect();
-  }, []);
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateActiveSection);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Initial check in case they loaded halfway down the page
+    setTimeout(updateActiveSection, 500);
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isLoading]);
 
   return (
     <SmoothScroll>
@@ -86,10 +113,14 @@ const App: React.FC = () => {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
               >
-                <About />
-                <Projects />
-                <Telemetry />
-                <Contact />
+                {/* Performance: Suspense boundary ensures Heavy 3D UI doesn't block the main thread */}
+                <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-neon-lime/50 font-mono text-sm tracking-widest uppercase">Initializing modules...</div>}>
+                  <About />
+                  <Experience />
+                  <Projects />
+                  <Telemetry />
+                  <Contact />
+                </Suspense>
               </motion.div>
             )}
           </AnimatePresence>
@@ -112,8 +143,10 @@ const App: React.FC = () => {
         </footer>
       </div>
 
-      {/* Easter Egg - Hidden game */}
-      <EasterEgg />
+      {/* Easter Egg - Hidden game (Lazy loaded) */}
+      <Suspense fallback={null}>
+        <EasterEgg />
+      </Suspense>
     </SmoothScroll>
   );
 };

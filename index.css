@@ -49,6 +49,21 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+/* Animated gradient rotation */
+@keyframes gradient-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-gradient-rotate {
+  animation: gradient-rotate 3s linear infinite;
+}
+
 /* Enhanced Glassmorphism Variants */
 .glass-panel-intense {
   background: rgba(255, 255, 255, 0.08);
