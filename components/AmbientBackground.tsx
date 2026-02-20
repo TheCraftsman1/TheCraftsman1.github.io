@@ -72,16 +72,16 @@ const AmbientBackground: React.FC = () => {
                         width: 800,
                         height: 800
                     },
-                    value: 60, // Light density to prevent clutter
+                    value: 80, // Increased density
                 },
                 opacity: {
-                    value: 0.3,
+                    value: 0.8, // Increased opacity
                 },
                 shape: {
                     type: "circle",
                 },
                 size: {
-                    value: { min: 1, max: 3 },
+                    value: { min: 1, max: 4 }, // Slightly larger
                     animation: {
                         enable: true,
                         speed: 1,
@@ -101,9 +101,9 @@ const AmbientBackground: React.FC = () => {
     }
 
     return (
-        <div className="fixed inset-0 z-0 pointer-events-auto mix-blend-screen opacity-60">
+        <div className="fixed inset-0 z-0 pointer-events-none opacity-100">
             {/* Dark gradient vignette over the particles to keep focus on center content */}
-            <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)] pointer-events-none" />
+            <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.9)_100%)] pointer-events-none" />
             <Particles
                 id="tsparticles-ambient"
                 particlesLoaded={particlesLoaded}
