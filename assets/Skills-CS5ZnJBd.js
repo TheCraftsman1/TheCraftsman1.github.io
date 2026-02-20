@@ -1,4 +1,4 @@
-import{c as n,j as e,m as t,h as c,S as p}from"./index-Cqbt9a6Y.js";import{S as m}from"./SectionTitle-BITaAHn4.js";import{S as i}from"./ScrollReveal-DMHA9wXG.js";import{S as o}from"./SectionWave-D1yw4Zej.js";/**
+import{c as n,j as e,m as t,h as c,S as p}from"./index-BxMxz1PO.js";import{S as m}from"./SectionTitle-Bo9m2a3F.js";import{S as i}from"./ScrollReveal-BabxR_jc.js";import{S as o}from"./SectionWave-CfjzjPNQ.js";/**
  * @license lucide-react v0.554.0 - ISC
  *
  * This source code is licensed under the ISC license.
