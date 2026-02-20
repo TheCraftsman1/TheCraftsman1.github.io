@@ -6,7 +6,6 @@ import Navbar from './components/Navbar';
 import CustomCursor from './components/CustomCursor';
 import Loader from './components/Loader';
 import SmoothScroll from './components/SmoothScroll';
-import SoundToggle from './components/SoundToggle';
 import ScrollProgress from './components/ScrollProgress';
 import AmbientBackground from './components/AmbientBackground';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -87,25 +86,14 @@ const App: React.FC = () => {
       {/* Noise Overlay */}
       <div className="noise-overlay" />
 
-      {/* Interactive Global Ambient Background */}
-      <AmbientBackground />
-
       {/* Scroll Progress */}
       <ScrollProgress />
 
       <div className={`min-h-screen bg-black text-white selection:bg-neon-lime selection:text-black overflow-x-hidden ${isLoading ? 'h-screen overflow-hidden' : ''}`}>
+        {/* Aurora Gradient Mesh — renders above section backgrounds */}
+        <AmbientBackground />
         <CustomCursor />
         <Navbar scrollToSection={scrollToSection} activeSection={activeSection} />
-
-        {/* Sound Toggle - Fixed position */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 2.5 }}
-          className="fixed bottom-6 right-6 z-50"
-        >
-          <SoundToggle />
-        </motion.div>
 
         <main>
           <Hero scrollToSection={scrollToSection} startAnimation={!isLoading} />
