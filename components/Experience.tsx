@@ -77,10 +77,10 @@ const TimelineItem: React.FC<{
         <div className={`relative flex items-center ${isEven ? 'flex-row' : 'flex-row-reverse'} mb-12 last:mb-0`} ref={lineRef}>
             {/* Timeline base line */}
             {!isLast && (
-                <div className="absolute left-1/2 top-12 w-[2px] h-full bg-white/5 -translate-x-1/2">
+                <div className="absolute left-1/2 top-12 w-[2px] h-full bg-slate-300/70 -translate-x-1/2">
                     {/* Animated Fill Line */}
                     <motion.div
-                        className="w-full bg-gradient-to-b from-neon-lime via-neon-cyan to-transparent"
+                        className="w-full bg-gradient-to-b from-sky-500 via-cyan-400 to-transparent"
                         style={{ height: lineHeight, originY: 0 }}
                     />
                 </div>
@@ -96,9 +96,9 @@ const TimelineItem: React.FC<{
           ${item.type === 'work' ? 'bg-gradient-to-br from-cyan-500 to-blue-600' :
                         item.type === 'education' ? 'bg-gradient-to-br from-purple-500 to-pink-600' :
                             'bg-gradient-to-br from-neon-lime to-green-500'}
-          shadow-[0_0_15px_rgba(0,0,0,0.5)] border-2 border-carbon-black`}
+          shadow-[0_0_15px_rgba(14,165,233,0.25)] border-2 border-white`}
             >
-                <span className="text-white">{item.icon}</span>
+                <span className="text-slate-900">{item.icon}</span>
             </motion.div>
 
             {/* Content card Wrapper */}
@@ -121,14 +121,14 @@ const TimelineItem: React.FC<{
                     }}
                     className="relative group cursor-crosshair"
                 >
-                    <div className="glass-panel-2 p-6 rounded-xl hover:border-white/20 border border-white/5 transition-colors duration-300 relative overflow-hidden bg-white/[0.02] backdrop-blur-md">
+                    <div className="glass-panel-2 p-6 rounded-xl hover:border-sky-300 border border-slate-200 transition-colors duration-300 relative overflow-hidden bg-white/90 backdrop-blur-md">
                         {/* Header */}
                         <div className="flex items-start justify-between mb-3 relative z-10" style={{ transform: 'translateZ(20px)' }}>
                             <div>
-                                <h3 className="text-xl font-orbitron font-bold text-white group-hover:text-neon-lime transition-colors">
+                                <h3 className="text-xl font-orbitron font-bold text-slate-900 group-hover:text-sky-500 transition-colors">
                                     {item.title}
                                 </h3>
-                                <div className="flex items-center gap-2 text-gray-400 text-sm mt-1">
+                                <div className="flex items-center gap-2 text-slate-600 text-sm mt-1">
                                     <Building2 className="w-4 h-4" />
                                     <span>{item.organization}</span>
                                 </div>
@@ -142,7 +142,7 @@ const TimelineItem: React.FC<{
                         </div>
 
                         {/* Meta */}
-                        <div className="flex flex-wrap gap-4 text-xs text-gray-500 mb-3 relative z-10" style={{ transform: 'translateZ(10px)' }}>
+                        <div className="flex flex-wrap gap-4 text-xs text-slate-500 mb-3 relative z-10" style={{ transform: 'translateZ(10px)' }}>
                             <div className="flex items-center gap-1">
                                 <Calendar className="w-3 h-3" />
                                 <span>{item.date}</span>
@@ -154,7 +154,7 @@ const TimelineItem: React.FC<{
                         </div>
 
                         {/* Description */}
-                        <p className="text-gray-400 text-sm leading-relaxed mb-4 relative z-10" style={{ transform: 'translateZ(10px)' }}>
+                        <p className="text-slate-600 text-sm leading-relaxed mb-4 relative z-10" style={{ transform: 'translateZ(10px)' }}>
                             {item.description}
                         </p>
 
@@ -164,7 +164,7 @@ const TimelineItem: React.FC<{
                                 {item.tags.map((tag) => (
                                     <span
                                         key={tag}
-                                        className="text-[10px] font-exo uppercase tracking-wider px-2 py-1 bg-white/5 text-gray-300 hover:text-white rounded border border-white/10 hover:border-white/30 transition-colors"
+                                        className="text-[10px] font-exo uppercase tracking-wider px-2 py-1 bg-sky-50 text-slate-600 hover:text-slate-900 rounded border border-slate-200 hover:border-sky-300 transition-colors"
                                     >
                                         {tag}
                                     </span>
@@ -187,11 +187,11 @@ const TimelineItem: React.FC<{
 
 const Experience: React.FC = () => {
     return (
-        <section id={SectionId.EXPERIENCE} className="py-32 bg-carbon-black relative overflow-hidden">
+        <section id={SectionId.EXPERIENCE} className="py-32 bg-slate-100 relative overflow-hidden">
             {/* Background decorations */}
             <div className="absolute inset-0 opacity-20">
-                <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-[100px]" />
-                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/20 rounded-full blur-[100px]" />
+                <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-300/30 rounded-full blur-[100px]" />
+                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-sky-300/30 rounded-full blur-[100px]" />
             </div>
 
             {/* Grid pattern */}
@@ -239,10 +239,10 @@ const Experience: React.FC = () => {
                             className="text-center p-6 glass-panel-2 rounded-xl"
                             style={{ willChange: 'transform', transform: 'translateZ(0)' }}
                         >
-                            <div className="text-4xl font-orbitron font-bold text-neon-lime mb-2">
+                            <div className="text-4xl font-orbitron font-bold text-sky-500 mb-2">
                                 {stat.value}
                             </div>
-                            <div className="text-xs font-exo uppercase tracking-wider text-gray-500">
+                            <div className="text-xs font-exo uppercase tracking-wider text-slate-500">
                                 {stat.label}
                             </div>
                         </motion.div>

@@ -38,26 +38,26 @@ const Hero: React.FC<HeroProps> = ({ scrollToSection, startAnimation }) => {
   return (
     <section
       id={SectionId.HERO}
-      className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-[#050505]"
+      className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-slate-50 via-white to-sky-50"
     >
       {/* 3D Background */}
       <Hero3D scrollYProgress={scrollYProgress} />
 
       {/* Animated Background Layers */}
       <motion.div
-        className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_#1a1a3e_0%,_#0a0a0a_70%)]"
+        className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(56,189,248,0.18)_0%,_rgba(255,255,255,0)_72%)]"
         style={{ y: y1 }}
       />
 
       {/* Static gradient orbs - removed animation for performance */}
-      <div className="absolute top-1/4 -left-32 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[120px]" />
-      <div className="absolute bottom-1/4 -right-32 w-[400px] h-[400px] bg-cyan-500/20 rounded-full blur-[120px]" />
+      <div className="absolute top-1/4 -left-32 w-[500px] h-[500px] bg-violet-300/25 rounded-full blur-[120px]" />
+      <div className="absolute bottom-1/4 -right-32 w-[400px] h-[400px] bg-sky-300/30 rounded-full blur-[120px]" />
 
       {/* Techy circuit background */}
-      <TechyBackground variant="circuit" opacity={0.12} />
+      <TechyBackground variant="circuit" opacity={0.08} />
 
       {/* Grid pattern - static for performance */}
-      <div className="absolute inset-0 opacity-[0.08] bg-[linear-gradient(rgba(0,240,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(0,240,255,0.1)_1px,transparent_1px)] bg-[size:80px_80px]" />
+      <div className="absolute inset-0 opacity-[0.09] bg-[linear-gradient(rgba(14,165,233,0.13)_1px,transparent_1px),linear-gradient(90deg,rgba(14,165,233,0.13)_1px,transparent_1px)] bg-[size:80px_80px]" />
 
       {/* Main Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-20">
@@ -68,7 +68,7 @@ const Hero: React.FC<HeroProps> = ({ scrollToSection, startAnimation }) => {
           style={{ y: y2, opacity }}
         >
           <motion.p
-            className="text-gray-400 font-exo text-lg md:text-xl mb-4 tracking-wide"
+            className="text-slate-500 font-exo text-lg md:text-xl mb-4 tracking-wide"
             initial={{ opacity: 0, y: 20 }}
             animate={startAnimation ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.3 }}
@@ -92,12 +92,12 @@ const Hero: React.FC<HeroProps> = ({ scrollToSection, startAnimation }) => {
 
           {/* Statement with kinetic text */}
           <motion.div
-            className="text-2xl md:text-3xl lg:text-4xl font-exo text-white mb-8 leading-relaxed"
+            className="text-2xl md:text-3xl lg:text-4xl font-exo text-slate-900 mb-8 leading-relaxed"
             initial={{ opacity: 0, y: 20 }}
             animate={startAnimation ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            <span className="text-gray-400">I build </span>
+            <span className="text-slate-500">I build </span>
             <span className="relative inline-block font-bold">
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-cyan-400">
                 software
@@ -122,7 +122,7 @@ const Hero: React.FC<HeroProps> = ({ scrollToSection, startAnimation }) => {
                 </defs>
               </svg>
             </span>
-            <span className="text-gray-400">, not just projects.</span>
+            <span className="text-slate-500">, not just projects.</span>
           </motion.div>
 
           {/* Skills with hover effects */}
@@ -135,9 +135,9 @@ const Hero: React.FC<HeroProps> = ({ scrollToSection, startAnimation }) => {
             {skills.map((skill, index) => (
               <span
                 key={skill.name}
-                className="group flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-lg backdrop-blur-sm text-sm font-mono text-gray-300 hover:text-cyan-400 hover:border-cyan-400/50 hover:bg-cyan-500/10 transition-all duration-300 cursor-default"
+                className="group flex items-center gap-2 px-4 py-2 bg-white/80 border border-slate-200 rounded-lg backdrop-blur-sm text-sm font-mono text-slate-600 hover:text-sky-600 hover:border-sky-300 hover:bg-sky-50 transition-all duration-300 cursor-default shadow-sm"
               >
-                <span className="text-cyan-500 group-hover:scale-110 transition-transform">
+                <span className="text-sky-500 group-hover:scale-110 transition-transform">
                   {skill.icon}
                 </span>
                 {skill.name}
@@ -154,10 +154,10 @@ const Hero: React.FC<HeroProps> = ({ scrollToSection, startAnimation }) => {
           >
             <MagneticButton
               onClick={handleScroll}
-              className="group relative px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl overflow-hidden shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 transition-all duration-300"
+               className="group relative px-8 py-4 bg-gradient-to-r from-sky-500 to-indigo-500 rounded-xl overflow-hidden shadow-lg shadow-sky-500/25 hover:shadow-sky-500/40 transition-all duration-300"
             >
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-purple-600 to-cyan-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-sky-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               />
               <span className="relative font-orbitron font-bold text-white uppercase tracking-wider flex items-center justify-center gap-2">
                 View Projects
@@ -167,9 +167,9 @@ const Hero: React.FC<HeroProps> = ({ scrollToSection, startAnimation }) => {
 
             <MagneticButton
               href="/vishnu-resume.pdf"
-              className="group px-8 py-4 bg-white/5 border border-white/20 rounded-xl hover:border-cyan-400/50 hover:bg-cyan-500/10 transition-all duration-300 backdrop-blur-sm"
+               className="group px-8 py-4 bg-white/80 border border-slate-200 rounded-xl hover:border-sky-300 hover:bg-sky-50 transition-all duration-300 backdrop-blur-sm"
             >
-              <span className="font-orbitron font-bold text-white uppercase tracking-wider flex items-center justify-center gap-2">
+              <span className="font-orbitron font-bold text-slate-900 uppercase tracking-wider flex items-center justify-center gap-2">
                 Resume
                 <Download className="w-5 h-5 group-hover:translate-y-1 transition-transform" />
               </span>
@@ -184,14 +184,14 @@ const Hero: React.FC<HeroProps> = ({ scrollToSection, startAnimation }) => {
           >
             <a
               href="mailto:vishnukanchipati@gmail.com"
-              className="group inline-flex items-center gap-3 text-gray-400 hover:text-cyan-400 transition-colors font-mono text-sm"
+               className="group inline-flex items-center gap-3 text-slate-500 hover:text-sky-600 transition-colors font-mono text-sm"
             >
-              <span className="p-2 rounded-lg bg-white/5 group-hover:bg-cyan-500/10 transition-colors">
+                <span className="p-2 rounded-lg bg-white/80 border border-slate-200 group-hover:bg-sky-50 transition-colors">
                 <Mail className="w-4 h-4" />
               </span>
               <span className="relative">
                 vishnukanchipati@gmail.com
-                <span className="absolute -bottom-1 left-0 w-0 h-px bg-cyan-400 group-hover:w-full transition-all duration-300" />
+                <span className="absolute -bottom-1 left-0 w-0 h-px bg-sky-500 group-hover:w-full transition-all duration-300" />
               </span>
             </a>
           </motion.div>
@@ -221,22 +221,22 @@ const Hero: React.FC<HeroProps> = ({ scrollToSection, startAnimation }) => {
             </div>
 
             {/* Decorative frame */}
-            <div className="absolute -inset-4 rounded-3xl border border-cyan-500/20 bg-gradient-to-b from-cyan-500/10 to-transparent" />
+            <div className="absolute -inset-4 rounded-3xl border border-sky-300/50 bg-gradient-to-b from-sky-200/40 to-transparent" />
 
             {/* Image container */}
-            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-b from-gray-900 to-black">
+            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-b from-slate-100 to-white shadow-xl shadow-sky-100">
               {/* Scanline overlay - static thin lines */}
               <div className="absolute inset-0 z-30 pointer-events-none bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.3)_50%)] bg-[length:100%_2px]" />
 
               {/* Gradient overlays */}
-              <div className="absolute inset-0 z-20 pointer-events-none bg-gradient-to-t from-[#050505] via-transparent to-transparent opacity-80" />
-              <div className="absolute inset-0 z-20 pointer-events-none bg-gradient-to-r from-[#050505]/60 via-transparent to-[#050505]/60" />
+              <div className="absolute inset-0 z-20 pointer-events-none bg-gradient-to-t from-slate-200/70 via-transparent to-transparent opacity-80" />
+              <div className="absolute inset-0 z-20 pointer-events-none bg-gradient-to-r from-slate-200/50 via-transparent to-slate-200/50" />
 
               {/* Corner accents */}
-              <div className="absolute top-4 left-4 w-8 h-8 border-l-2 border-t-2 border-cyan-400/50 z-30" />
-              <div className="absolute top-4 right-4 w-8 h-8 border-r-2 border-t-2 border-cyan-400/50 z-30" />
-              <div className="absolute bottom-4 left-4 w-8 h-8 border-l-2 border-b-2 border-cyan-400/50 z-30" />
-              <div className="absolute bottom-4 right-4 w-8 h-8 border-r-2 border-b-2 border-cyan-400/50 z-30" />
+              <div className="absolute top-4 left-4 w-8 h-8 border-l-2 border-t-2 border-sky-500/60 z-30" />
+              <div className="absolute top-4 right-4 w-8 h-8 border-r-2 border-t-2 border-sky-500/60 z-30" />
+              <div className="absolute bottom-4 left-4 w-8 h-8 border-l-2 border-b-2 border-sky-500/60 z-30" />
+              <div className="absolute bottom-4 right-4 w-8 h-8 border-r-2 border-b-2 border-sky-500/60 z-30" />
 
               <img
                 src="/vishnu-hero.png"
@@ -256,19 +256,19 @@ const Hero: React.FC<HeroProps> = ({ scrollToSection, startAnimation }) => {
         transition={{ duration: 1, delay: 1.8 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-20"
       >
-        <span className="text-[10px] uppercase font-mono tracking-[0.3em] text-white/40">
+          <span className="text-[10px] uppercase font-mono tracking-[0.3em] text-slate-500">
           Scroll to explore
         </span>
-        <div className="relative w-6 h-10 rounded-full border-2 border-cyan-400/30 flex justify-center pt-2">
-          <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+        <div className="relative w-6 h-10 rounded-full border-2 border-sky-500/40 flex justify-center pt-2">
+          <div className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" />
         </div>
       </motion.div>
 
       {/* Static tech decorations */}
-      <div className="absolute top-20 right-20 text-cyan-500/20 text-6xl font-mono font-bold hidden xl:block">
+      <div className="absolute top-20 right-20 text-sky-500/20 text-6xl font-mono font-bold hidden xl:block">
         {'{ }'}
       </div>
-      <div className="absolute bottom-32 left-20 text-purple-500/20 text-4xl font-mono hidden xl:block">
+      <div className="absolute bottom-32 left-20 text-indigo-500/20 text-4xl font-mono hidden xl:block">
         {'</>'}
       </div>
     </section>
