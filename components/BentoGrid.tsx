@@ -83,7 +83,7 @@ const BentoGrid: React.FC = () => {
                 return (
                     <motion.div
                         key={item.id}
-                        className={`bento-card group ${sizeClass} relative glass-panel-2 overflow-hidden border border-white/5 hover:border-white/20 transition-all duration-500`}
+                        className={`bento-card group ${sizeClass} relative glass-panel-2 overflow-hidden border border-slate-200 hover:border-sky-300 transition-all duration-500`}
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: '-50px' }}
@@ -91,16 +91,16 @@ const BentoGrid: React.FC = () => {
                         style={{ willChange: 'transform', transform: 'translateZ(0)' }}
                     >
                         {/* Background subtle noise/glow */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
-                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-[radial-gradient(circle_at_50%_120%,rgba(204,255,0,0.1),transparent_50%)] transition-opacity duration-500 pointer-events-none" />
+                        <div className="absolute inset-0 bg-gradient-to-br from-sky-100/40 to-transparent pointer-events-none" />
+                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-[radial-gradient(circle_at_50%_120%,rgba(14,165,233,0.15),transparent_50%)] transition-opacity duration-500 pointer-events-none" />
                         {/* Header */}
                         <div className="flex items-center justify-between mb-6 relative z-10">
-                            <h3 className="text-gray-400 font-exo text-xs uppercase tracking-widest font-bold">
+                            <h3 className="text-slate-500 font-exo text-xs uppercase tracking-widest font-bold">
                                 {item.title}
                             </h3>
                             {item.icon && (
                                 <motion.span
-                                    className="text-neon-lime p-2 rounded-lg bg-neon-lime/10 border border-neon-lime/20"
+                                    className="text-sky-500 p-2 rounded-lg bg-sky-50 border border-sky-200"
                                     whileHover={{ scale: 1.2, rotate: 5 }}
                                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
                                 >
@@ -112,18 +112,18 @@ const BentoGrid: React.FC = () => {
                         {/* Value Display */}
                         {item.value && (
                             <div className="mb-2">
-                                <span className="text-5xl font-orbitron font-bold text-white group-hover:text-neon-lime transition-colors">
+                                <span className="text-5xl font-orbitron font-bold text-slate-900 group-hover:text-sky-500 transition-colors">
                                     {item.value}
                                 </span>
                                 {item.subtitle && (
-                                    <p className="text-gray-500 text-sm mt-1">{item.subtitle}</p>
+                                    <p className="text-slate-500 text-sm mt-1">{item.subtitle}</p>
                                 )}
                             </div>
                         )}
 
                         {/* Subtitle Only */}
                         {item.subtitle && !item.value && !item.skills && (
-                            <p className="text-gray-400 font-exo">{item.subtitle}</p>
+                            <p className="text-slate-600 font-exo">{item.subtitle}</p>
                         )}
 
                         {/* Skills Bars */}
@@ -131,13 +131,13 @@ const BentoGrid: React.FC = () => {
                             <div className="space-y-3 mt-4">
                                 {item.skills.map((skill, idx) => (
                                     <div key={skill.name} className="group/skill">
-                                        <div className="flex justify-between text-xs text-gray-400 mb-1 font-exo uppercase">
+                                        <div className="flex justify-between text-xs text-slate-500 mb-1 font-exo uppercase">
                                             <span>{skill.name}</span>
                                             <span>{skill.value}%</span>
                                         </div>
-                                        <div className="h-2 w-full bg-black/50 rounded-full overflow-hidden border border-white/5 relative">
+                                        <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden border border-slate-300 relative">
                                             {/* Glow track under the fill */}
-                                            <div className="absolute inset-0 bg-neon-lime/5 opacity-0 group-hover/skill:opacity-100 transition-opacity" />
+                                            <div className="absolute inset-0 bg-sky-100/60 opacity-0 group-hover/skill:opacity-100 transition-opacity" />
                                             <motion.div
                                                 initial={{ width: 0 }}
                                                 whileInView={{ width: `${skill.value}%` }}
@@ -147,7 +147,7 @@ const BentoGrid: React.FC = () => {
                                                     delay: index * 0.1 + idx * 0.1,
                                                     ease: [0.22, 1, 0.36, 1] // Custom easeOut Quint
                                                 }}
-                                                className="h-full bg-gradient-to-r from-neon-lime to-cyan-400 shadow-[0_0_10px_rgba(204,255,0,0.5)] relative"
+                                                className="h-full bg-gradient-to-r from-sky-500 to-cyan-400 shadow-[0_0_10px_rgba(14,165,233,0.35)] relative"
                                             >
                                                 {/* Leading edge highlight */}
                                                 <div className="absolute right-0 top-0 bottom-0 w-2 bg-white/50 blur-[2px]" />
@@ -160,8 +160,8 @@ const BentoGrid: React.FC = () => {
 
                         {/* Decorative corner */}
                         <div className="absolute top-0 right-0 w-16 h-16 overflow-hidden">
-                            <div className="absolute top-0 right-0 w-px h-8 bg-gradient-to-b from-neon-lime/50 to-transparent" />
-                            <div className="absolute top-0 right-0 h-px w-8 bg-gradient-to-l from-neon-lime/50 to-transparent" />
+                            <div className="absolute top-0 right-0 w-px h-8 bg-gradient-to-b from-sky-400/60 to-transparent" />
+                            <div className="absolute top-0 right-0 h-px w-8 bg-gradient-to-l from-sky-400/60 to-transparent" />
                         </div>
                     </motion.div>
                 );

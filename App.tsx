@@ -89,7 +89,7 @@ const App: React.FC = () => {
       {/* Scroll Progress */}
       <ScrollProgress />
 
-      <div className={`min-h-screen bg-black text-white selection:bg-neon-lime selection:text-black overflow-x-hidden ${isLoading ? 'h-screen overflow-hidden' : ''}`}>
+      <div className={`min-h-screen bg-gradient-to-b from-slate-50 via-white to-sky-50 text-slate-900 selection:bg-cyan-200 selection:text-slate-950 overflow-x-hidden ${isLoading ? 'h-screen overflow-hidden' : ''}`}>
         {/* Aurora Gradient Mesh — renders above section backgrounds */}
         <AmbientBackground />
         <CustomCursor />
@@ -106,7 +106,7 @@ const App: React.FC = () => {
                 transition={{ duration: 0.5 }}
               >
                 {/* Performance: Suspense boundary ensures Heavy 3D UI doesn't block the main thread */}
-                <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-neon-lime/50 font-mono text-sm tracking-widest uppercase">Initializing modules...</div>}>
+                  <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-cyan-600/70 font-mono text-sm tracking-widest uppercase">Initializing modules...</div>}>
                   <About />
                   <Experience />
                   <Projects />
@@ -119,14 +119,14 @@ const App: React.FC = () => {
         </main>
 
         {/* Footer */}
-        <footer className="py-8 bg-black border-t border-white/5">
+        <footer className="py-8 bg-white/70 backdrop-blur-md border-t border-slate-200/80">
           <div className="max-w-7xl mx-auto px-6">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <div className="text-gray-600 text-xs font-exo">
+                <div className="text-slate-600 text-xs font-exo">
                 © 2026 Vishnu Kanchipati. Crafted with passion.
               </div>
               <div className="flex items-center gap-6">
-                <span className="text-[10px] text-gray-700 font-mono">
+                  <span className="text-[10px] text-slate-500 font-mono">
                   Built with React + Three.js + Framer Motion
                 </span>
               </div>

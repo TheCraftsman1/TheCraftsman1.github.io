@@ -56,7 +56,7 @@ const projects: Project[] = [
 
 const Projects: React.FC = () => {
   return (
-    <section id={SectionId.PROJECTS} className="py-32 bg-carbon-black relative">
+    <section id={SectionId.PROJECTS} className="py-32 bg-white relative">
       <div className="max-w-7xl mx-auto px-6">
         <ScrollReveal>
           <SectionTitle title="Work" subtitle="Featured Projects" />
@@ -71,7 +71,7 @@ const Projects: React.FC = () => {
       </div>
 
       {/* Wave Transition */}
-      <SectionWave position="bottom" fillColor="#121212" />
+      <SectionWave position="bottom" fillColor="#f1f5f9" />
     </section>
   );
 };

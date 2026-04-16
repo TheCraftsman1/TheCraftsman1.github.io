@@ -8,9 +8,9 @@ import SectionWave from './SectionWave';
 
 const Telemetry: React.FC = () => {
     return (
-        <section id={SectionId.SKILLS} className="py-24 bg-carbon-gray relative overflow-hidden border-t border-white/5">
+        <section id={SectionId.SKILLS} className="py-24 bg-slate-50 relative overflow-hidden border-t border-slate-200/70">
             {/* Wave Transition from Hero */}
-            <SectionWave position="top" fillColor="#050505" />
+            <SectionWave position="top" fillColor="#ffffff" />
 
             {/* Decorative Data Lines */}
             <div className="absolute inset-0 opacity-10 pointer-events-none">
@@ -34,7 +34,7 @@ const Telemetry: React.FC = () => {
             </div>
 
             {/* Wave Transition to Contact */}
-            <SectionWave position="bottom" fillColor="#050505" />
+            <SectionWave position="bottom" fillColor="#f8fafc" />
         </section>
     );
 };

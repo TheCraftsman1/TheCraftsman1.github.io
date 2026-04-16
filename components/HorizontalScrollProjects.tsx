@@ -90,12 +90,12 @@ const ProjectCard: React.FC<{
                             background: 'linear-gradient(135deg, #00f0ff, #ccff00, #7c7cff)',
                         }}
                     >
-                        <div className="w-full h-full bg-neutral-900 rounded-2xl" />
+                        <div className="w-full h-full bg-white rounded-2xl" />
                     </div>
 
                     {/* Main card content */}
                     {/* Performance: Reduced blur radius from xl to md to save compositor thread overhead during 3D tilts */}
-                    <div className="absolute inset-[1px] rounded-2xl bg-gradient-to-b from-neutral-800/95 to-neutral-900/98 backdrop-blur-md overflow-hidden" style={{ transform: 'translateZ(0)' }}>
+                    <div className="absolute inset-[1px] rounded-2xl bg-gradient-to-b from-white to-slate-50 backdrop-blur-md overflow-hidden border border-slate-200" style={{ transform: 'translateZ(0)' }}>
                         {/* Image section */}
                         <div className="relative h-56 overflow-hidden">
                             {/* Image */}
@@ -112,13 +112,13 @@ const ProjectCard: React.FC<{
 
                             {/* Performance: Opacity overlay instead of CSS grayscale filter */}
                             <div
-                                className="absolute inset-0 bg-neutral-900 mix-blend-saturation transition-opacity duration-700 pointer-events-none"
+                                className="absolute inset-0 bg-slate-100 mix-blend-multiply transition-opacity duration-700 pointer-events-none"
                                 style={{ opacity: isHovered ? 0 : 0.6 }}
                             />
 
                             {/* Gradient overlays */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-neutral-900 via-neutral-900/30 to-transparent" />
-                            <div className="absolute inset-0 bg-gradient-to-r from-neutral-900/50 via-transparent to-neutral-900/50" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-100 via-slate-100/30 to-transparent" />
+                            <div className="absolute inset-0 bg-gradient-to-r from-slate-100/50 via-transparent to-slate-100/50" />
 
                             {/* Animated shine effect */}
                             <motion.div
@@ -136,8 +136,8 @@ const ProjectCard: React.FC<{
                                     whileInView={{ opacity: 1, x: 0 }}
                                     transition={{ delay: index * 0.1 + 0.2 }}
                                 >
-                                    <div className="absolute inset-0 bg-neon-lime/20 blur-xl" />
-                                    <span className="relative block px-4 py-1.5 bg-black/60 backdrop-blur-md border border-neon-lime/40 text-[10px] text-neon-lime font-bold uppercase tracking-[0.2em]">
+                                    <div className="absolute inset-0 bg-sky-300/30 blur-xl" />
+                                    <span className="relative block px-4 py-1.5 bg-white/90 backdrop-blur-md border border-sky-300 text-[10px] text-sky-600 font-bold uppercase tracking-[0.2em]">
                                         {project.category}
                                     </span>
                                 </motion.div>
@@ -145,13 +145,13 @@ const ProjectCard: React.FC<{
 
                             {/* Hover overlay with arrow */}
                             <motion.div
-                                className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+                                className="absolute inset-0 flex items-center justify-center bg-white/40 backdrop-blur-sm"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: isHovered ? 1 : 0 }}
                                 transition={{ duration: 0.3 }}
                             >
                                 <motion.div
-                                    className="w-16 h-16 rounded-full border-2 border-white/50 flex items-center justify-center"
+                                    className="w-16 h-16 rounded-full border-2 border-slate-500/40 flex items-center justify-center"
                                     initial={{ scale: 0, rotate: -180 }}
                                     animate={{
                                         scale: isHovered ? 1 : 0,
@@ -159,7 +159,7 @@ const ProjectCard: React.FC<{
                                     }}
                                     transition={{ duration: 0.4, delay: 0.1 }}
                                 >
-                                    <ArrowUpRight className="w-6 h-6 text-white" />
+                                    <ArrowUpRight className="w-6 h-6 text-slate-700" />
                                 </motion.div>
                             </motion.div>
                         </div>
@@ -177,7 +177,7 @@ const ProjectCard: React.FC<{
                             )}
                             {/* Title */}
                             <motion.h3
-                                className="text-2xl font-orbitron font-bold text-white uppercase tracking-wide mb-3"
+                                className="text-2xl font-orbitron font-bold text-slate-900 uppercase tracking-wide mb-3"
                                 style={{
                                     textShadow: isHovered ? '0 0 30px rgba(204,255,0,0.3)' : 'none',
                                     transition: 'text-shadow 0.3s ease',
@@ -187,7 +187,7 @@ const ProjectCard: React.FC<{
                             </motion.h3>
 
                             {/* Description */}
-                            <p className="text-gray-400 font-exo text-sm leading-relaxed line-clamp-2 mb-4">
+                            <p className="text-slate-600 font-exo text-sm leading-relaxed line-clamp-2 mb-4">
                                 {project.description}
                             </p>
 
@@ -196,7 +196,7 @@ const ProjectCard: React.FC<{
                                 {project.tech.slice(0, 3).map((t, i) => (
                                     <motion.span
                                         key={t}
-                                        className="text-[10px] uppercase font-bold px-3 py-1.5 bg-white/5 text-gray-400 border border-white/10 rounded-full"
+                                        className="text-[10px] uppercase font-bold px-3 py-1.5 bg-sky-50 text-slate-600 border border-slate-200 rounded-full"
                                         initial={{ opacity: 0, y: 10 }}
                                         whileInView={{ opacity: 1, y: 0 }}
                                         transition={{ delay: index * 0.1 + i * 0.05 }}
@@ -205,7 +205,7 @@ const ProjectCard: React.FC<{
                                     </motion.span>
                                 ))}
                                 {project.tech.length > 3 && (
-                                    <span className="text-[10px] uppercase font-bold px-3 py-1.5 text-gray-500">
+                                    <span className="text-[10px] uppercase font-bold px-3 py-1.5 text-slate-500">
                                         +{project.tech.length - 3}
                                     </span>
                                 )}
@@ -252,7 +252,7 @@ const ProjectCard: React.FC<{
 
                 {/* Shadow */}
                 <motion.div
-                    className="absolute inset-0 rounded-2xl bg-black/50 blur-2xl -z-10"
+                    className="absolute inset-0 rounded-2xl bg-sky-200/50 blur-2xl -z-10"
                     style={{
                         transform: 'translateZ(-50px) translateY(20px)',
                         opacity: isHovered ? 0.5 : 0.2,
@@ -295,7 +295,7 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -20 }}
                             onClick={() => scroll('left')}
-                            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-14 h-14 bg-black/80 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center hover:bg-neon-lime hover:text-black hover:border-neon-lime transition-all duration-300 hover:shadow-[0_0_30px_rgba(204,255,0,0.3)]"
+                            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-14 h-14 bg-white/90 backdrop-blur-md border border-slate-200 rounded-full flex items-center justify-center hover:bg-sky-500 hover:text-white hover:border-sky-500 transition-all duration-300 hover:shadow-[0_0_30px_rgba(14,165,233,0.3)]"
                         >
                             <ChevronLeft size={24} />
                         </motion.button>
@@ -309,7 +309,7 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: 20 }}
                             onClick={() => scroll('right')}
-                            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-14 h-14 bg-black/80 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center hover:bg-neon-lime hover:text-black hover:border-neon-lime transition-all duration-300 hover:shadow-[0_0_30px_rgba(204,255,0,0.3)]"
+                            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-14 h-14 bg-white/90 backdrop-blur-md border border-slate-200 rounded-full flex items-center justify-center hover:bg-sky-500 hover:text-white hover:border-sky-500 transition-all duration-300 hover:shadow-[0_0_30px_rgba(14,165,233,0.3)]"
                         >
                             <ChevronRight size={24} />
                         </motion.button>
@@ -340,7 +340,7 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl"
+                        className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-xl"
                         onClick={() => setSelectedProject(null)}
                     >
                         <motion.div
@@ -348,14 +348,14 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                             animate={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', y: 0, opacity: 1 }}
                             exit={{ clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)', y: -100, opacity: 0 }}
                             transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
-                            className="bg-neutral-900 border border-white/10 max-w-5xl w-full relative overflow-hidden max-h-[90vh] rounded-2xl"
+                            className="bg-white border border-slate-200 max-w-5xl w-full relative overflow-hidden max-h-[90vh] rounded-2xl"
                             style={{ perspective: 1000 }}
                             onClick={(e) => e.stopPropagation()}
                         >
                             {/* Close button */}
                             <motion.button
                                 onClick={() => setSelectedProject(null)}
-                                className="absolute top-6 right-6 text-white bg-black/50 backdrop-blur-md p-3 rounded-full hover:bg-neon-lime hover:text-black transition-colors z-20 border border-white/10"
+                                className="absolute top-6 right-6 text-slate-700 bg-white/90 backdrop-blur-md p-3 rounded-full hover:bg-sky-500 hover:text-white transition-colors z-20 border border-slate-200"
                                 whileHover={{ scale: 1.1, rotate: 90 }}
                                 whileTap={{ scale: 0.9 }}
                             >
@@ -372,12 +372,12 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                                     animate={{ scale: 1 }}
                                     transition={{ duration: 0.6 }}
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-neutral-900 via-neutral-900/50 to-transparent" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-slate-100 via-slate-100/50 to-transparent" />
 
                                 {/* Title overlay */}
                                 <div className="absolute bottom-6 left-6 right-6">
                                     <motion.span
-                                        className="text-neon-lime text-sm font-exo uppercase tracking-[0.3em]"
+                                        className="text-sky-600 text-sm font-exo uppercase tracking-[0.3em]"
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.2 }}
@@ -385,7 +385,7 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                                         {selectedProject.category}
                                     </motion.span>
                                     <motion.h2
-                                        className="text-4xl md:text-5xl font-orbitron font-black text-white uppercase mt-2"
+                                        className="text-4xl md:text-5xl font-orbitron font-black text-slate-900 uppercase mt-2"
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.3 }}
@@ -396,20 +396,20 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                             </div>
 
                             {/* Content */}
-                            <div className="p-8 overflow-y-auto max-h-[calc(90vh-18rem)] rounded-b-2xl" style={{ scrollbarWidth: 'thin', scrollbarColor: '#ccff00 transparent' }}>
+                                <div className="p-8 overflow-y-auto max-h-[calc(90vh-18rem)] rounded-b-2xl" style={{ scrollbarWidth: 'thin', scrollbarColor: '#0ea5e9 transparent' }}>
                                 {selectedProject.caseStudy ? (
                                     <div className="space-y-8 mb-8 font-exo">
                                         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-                                            <h4 className="text-neon-lime text-xs uppercase font-bold tracking-[0.2em] mb-3">The Problem</h4>
-                                            <p className="leading-relaxed text-lg text-gray-300">{selectedProject.caseStudy.problem}</p>
+                                            <h4 className="text-sky-600 text-xs uppercase font-bold tracking-[0.2em] mb-3">The Problem</h4>
+                                            <p className="leading-relaxed text-lg text-slate-700">{selectedProject.caseStudy.problem}</p>
                                         </motion.div>
                                         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-                                            <h4 className="text-neon-lime text-xs uppercase font-bold tracking-[0.2em] mb-3">Architecture & Solution</h4>
-                                            <p className="leading-relaxed text-lg text-gray-300">{selectedProject.caseStudy.architecture}</p>
+                                            <h4 className="text-sky-600 text-xs uppercase font-bold tracking-[0.2em] mb-3">Architecture & Solution</h4>
+                                            <p className="leading-relaxed text-lg text-slate-700">{selectedProject.caseStudy.architecture}</p>
                                         </motion.div>
                                         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
-                                            <h4 className="text-neon-lime text-xs uppercase font-bold tracking-[0.2em] mb-3">Key Metrics</h4>
-                                            <ul className="list-disc pl-5 space-y-2 text-white/90 text-lg">
+                                            <h4 className="text-sky-600 text-xs uppercase font-bold tracking-[0.2em] mb-3">Key Metrics</h4>
+                                            <ul className="list-disc pl-5 space-y-2 text-slate-700 text-lg">
                                                 {selectedProject.caseStudy.metrics.map((metric, idx) => (
                                                     <li key={idx} className="leading-relaxed">{metric}</li>
                                                 ))}
@@ -418,7 +418,7 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                                     </div>
                                 ) : (
                                     <motion.p
-                                        className="font-exo text-gray-300 leading-relaxed text-lg mb-8"
+                                        className="font-exo text-slate-700 leading-relaxed text-lg mb-8"
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.4 }}
@@ -434,14 +434,14 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: selectedProject.caseStudy ? 0.7 : 0.5 }}
                                 >
-                                    <h4 className="text-xs uppercase text-gray-500 mb-4 font-bold tracking-wider">
+                                    <h4 className="text-xs uppercase text-slate-500 mb-4 font-bold tracking-wider">
                                         Tech Stack
                                     </h4>
                                     <div className="flex flex-wrap gap-3">
                                         {selectedProject.tech.map((t, i) => (
                                             <motion.span
                                                 key={t}
-                                                className="text-sm uppercase font-bold px-4 py-2 bg-white/5 text-white border border-white/10 rounded-full hover:border-neon-lime hover:text-neon-lime transition-colors cursor-default"
+                                                className="text-sm uppercase font-bold px-4 py-2 bg-sky-50 text-slate-700 border border-slate-200 rounded-full hover:border-sky-500 hover:text-sky-600 transition-colors cursor-default"
                                                 initial={{ opacity: 0, scale: 0.8 }}
                                                 animate={{ opacity: 1, scale: 1 }}
                                                 transition={{ delay: (selectedProject.caseStudy ? 0.7 : 0.5) + i * 0.05 }}
@@ -454,7 +454,7 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
 
                                 {/* Links */}
                                 <motion.div
-                                    className="flex gap-4 pt-6 border-t border-white/10"
+                                    className="flex gap-4 pt-6 border-t border-slate-200"
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: selectedProject.caseStudy ? 0.8 : 0.6 }}
@@ -464,7 +464,7 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                                             href={selectedProject.github}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex-1 bg-neon-lime text-black py-4 font-orbitron font-bold uppercase hover:bg-white transition-colors flex items-center justify-center gap-2 rounded-lg"
+                                            className="flex-1 bg-sky-500 text-white py-4 font-orbitron font-bold uppercase hover:bg-sky-600 transition-colors flex items-center justify-center gap-2 rounded-lg"
                                             whileHover={{ scale: 1.02 }}
                                             whileTap={{ scale: 0.98 }}
                                         >
