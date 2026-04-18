@@ -1,65 +1,95 @@
-
 import React, { useEffect, useState } from 'react';
+import { motion, Variants } from 'framer-motion';
 
 interface LoaderProps {
   onComplete: () => void;
 }
 
 const Loader: React.FC<LoaderProps> = ({ onComplete }) => {
-  const [progress, setProgress] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
 
+  // Time-based exit since we removed the progress bar noise
   useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(timer);
-          setTimeout(() => setIsExiting(true), 500);
-          setTimeout(onComplete, 1500); // Allow exit animation to finish
-          return 100;
-        }
-        // Non-linear progress for realism
-        const increment = Math.random() * 15;
-        return Math.min(prev + increment, 100);
-      });
-    }, 150);
+    const timer = setTimeout(() => {
+      setIsExiting(true);
+      setTimeout(onComplete, 1200); // Wait for exit animation to finish
+    }, 3500); // Total reading time before starting exit
 
-    return () => clearInterval(timer);
+    return () => clearTimeout(timer);
   }, [onComplete]);
 
+  // Clean, modern animation variants
+  const containerVars: Variants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.08, delayChildren: 0.2 }
+    },
+    exiting: {
+      opacity: 0,
+      y: -20,
+      filter: 'blur(8px)',
+      transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] }
+    }
+  };
+
+  const wordVar: Variants = {
+    hidden: { opacity: 0, y: 15 },
+    show: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } 
+    }
+  };
+
+  const quoteWords = '"Let the power in you rise"'.split(' ');
+
   return (
-    <div
-      className={`fixed inset-0 z-[10000] bg-black flex flex-col items-center justify-center transition-transform duration-1000 ease-in-expo ${isExiting ? '-translate-y-full' : 'translate-y-0'
-        }`}
+    <motion.div
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[10000] flex flex-col items-center justify-center overflow-hidden bg-[#050505] text-white"
     >
-      <div className="relative w-64 md:w-96">
-        {/* Speedometer / RPM Arc */}
-        <div className="absolute bottom-0 left-0 w-full h-full overflow-hidden">
-          <div className="w-full h-full border-t-2 border-gray-800 rounded-t-full opacity-50"></div>
-        </div>
+      {/* ═══ CLEAN STUDIO CANVAS (White Dots on Black) ═══ */}
+      <div 
+        className="absolute inset-0 pointer-events-none opacity-[0.25]"
+        style={{
+          backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)',
+          backgroundSize: '48px 48px',
+        }}
+      />
+      
+      {/* ═══ IMPACTFUL MODERN TEXT ═══ */}
+      <motion.div
+        variants={containerVars}
+        initial="hidden"
+        animate={isExiting ? "exiting" : "show"}
+        className="flex flex-col items-center gap-6 z-10 px-8 text-center relative"
+      >
+        <h1 
+          className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white m-0"
+          style={{ fontFamily: "'Inter', 'Syne', sans-serif" }}
+        >
+          {quoteWords.map((word, i) => (
+            <motion.span 
+              key={i} 
+              variants={wordVar} 
+              className="inline-block mr-[0.25em]"
+            >
+              {word}
+            </motion.span>
+          ))}
+        </h1>
 
-        <div className="text-center mb-4 relative z-10">
-          <h1 className="text-6xl font-orbitron font-black text-white tracking-tighter">
-            {Math.floor(progress)}<span className="text-neon-lime text-2xl">%</span>
-          </h1>
-          <p className="text-neon-lime text-xs font-exo tracking-[0.3em] animate-pulse">SYSTEM INITIALIZATION</p>
-        </div>
-
-        {/* Progress Bar */}
-        <div className="h-1 w-full bg-gray-900 relative overflow-hidden">
-          <div
-            className="h-full bg-neon-lime shadow-[0_0_20px_#CCFF00] transition-all duration-200 ease-out"
-            style={{ width: `${progress}%` }}
-          ></div>
-        </div>
-
-        {/* Decor */}
-        <div className="mt-2 flex justify-between text-[10px] text-gray-500 font-exo">
-          <span>TMP: 98°C</span>
-          <span>RPM: 12000</span>
-        </div>
-      </div>
-    </div>
+        <motion.p 
+          className="text-xs md:text-sm font-semibold uppercase tracking-[0.3em] text-neutral-400 mt-4"
+          initial={{ opacity: 0 }}
+          animate={isExiting ? { opacity: 0 } : { opacity: 1 }}
+          transition={{ duration: 1, delay: 1.2 }}
+        >
+          Vishnu Kanchipati
+        </motion.p>
+      </motion.div>
+    </motion.div>
   );
 };
 

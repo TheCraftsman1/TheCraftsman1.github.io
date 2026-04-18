@@ -54,12 +54,32 @@ const projects: Project[] = [
   }
 ];
 
-const Projects: React.FC = () => {
+interface ProjectsProps {
+  setCurrentView: React.Dispatch<React.SetStateAction<'home' | 'work'>>;
+}
+
+const Projects: React.FC<ProjectsProps> = ({ setCurrentView }) => {
   return (
-    <section id={SectionId.PROJECTS} className="py-32 bg-carbon-black relative">
+    <section id={SectionId.PROJECTS} className="py-32 bg-white relative overflow-hidden border-t border-neutral-100 text-neutral-900">
+      {/* Soft overlay patterns */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000008_1px,transparent_1px),linear-gradient(to_bottom,#00000008_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
       <div className="max-w-7xl mx-auto px-6">
         <ScrollReveal>
-          <SectionTitle title="Work" subtitle="Featured Projects" />
+          <div className="flex justify-between items-end mb-16">
+            <SectionTitle title="Work" subtitle="Featured Projects" />
+            <button
+              onClick={() => {
+                setCurrentView('work');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="text-neutral-400 hover:text-neutral-900 transition-colors duration-300 uppercase tracking-widest text-sm font-semibold flex items-center gap-2 group"
+            >
+              View All Work
+              <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </button>
+          </div>
         </ScrollReveal>
 
         {/* Horizontal Scroll Projects */}
@@ -69,9 +89,6 @@ const Projects: React.FC = () => {
           </ScrollReveal>
         </div>
       </div>
-
-      {/* Wave Transition */}
-      <SectionWave position="bottom" fillColor="#121212" />
     </section>
   );
 };

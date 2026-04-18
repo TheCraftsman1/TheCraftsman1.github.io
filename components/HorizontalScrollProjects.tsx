@@ -87,15 +87,15 @@ const ProjectCard: React.FC<{
                     {/* Animated border gradient */}
                     <div className="absolute inset-0 rounded-2xl p-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                         style={{
-                            background: 'linear-gradient(135deg, #00f0ff, #ccff00, #7c7cff)',
+                            background: 'linear-gradient(135deg, #e5e5e5, #d4d4d4, #f5f5f5)',
                         }}
                     >
-                        <div className="w-full h-full bg-neutral-900 rounded-2xl" />
+                        <div className="w-full h-full bg-white rounded-2xl" />
                     </div>
 
                     {/* Main card content */}
                     {/* Performance: Reduced blur radius from xl to md to save compositor thread overhead during 3D tilts */}
-                    <div className="absolute inset-[1px] rounded-2xl bg-gradient-to-b from-neutral-800/95 to-neutral-900/98 backdrop-blur-md overflow-hidden" style={{ transform: 'translateZ(0)' }}>
+                    <div className="absolute inset-[1px] rounded-2xl bg-white border border-neutral-100 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
                         {/* Image section */}
                         <div className="relative h-56 overflow-hidden">
                             {/* Image */}
@@ -112,17 +112,17 @@ const ProjectCard: React.FC<{
 
                             {/* Performance: Opacity overlay instead of CSS grayscale filter */}
                             <div
-                                className="absolute inset-0 bg-neutral-900 mix-blend-saturation transition-opacity duration-700 pointer-events-none"
+                                className="absolute inset-0 bg-white mix-blend-saturation transition-opacity duration-700 pointer-events-none"
                                 style={{ opacity: isHovered ? 0 : 0.6 }}
                             />
 
                             {/* Gradient overlays */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-neutral-900 via-neutral-900/30 to-transparent" />
-                            <div className="absolute inset-0 bg-gradient-to-r from-neutral-900/50 via-transparent to-neutral-900/50" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-white via-white/30 to-transparent" />
+                            <div className="absolute inset-0 bg-gradient-to-r from-white/50 via-transparent to-white/50" />
 
                             {/* Animated shine effect */}
                             <motion.div
-                                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                                className="absolute inset-0 bg-gradient-to-r from-transparent via-black/5 to-transparent"
                                 initial={{ x: '-100%' }}
                                 animate={{ x: isHovered ? '100%' : '-100%' }}
                                 transition={{ duration: 0.8, ease: 'easeInOut' }}
@@ -136,8 +136,8 @@ const ProjectCard: React.FC<{
                                     whileInView={{ opacity: 1, x: 0 }}
                                     transition={{ delay: index * 0.1 + 0.2 }}
                                 >
-                                    <div className="absolute inset-0 bg-neon-lime/20 blur-xl" />
-                                    <span className="relative block px-4 py-1.5 bg-black/60 backdrop-blur-md border border-neon-lime/40 text-[10px] text-neon-lime font-bold uppercase tracking-[0.2em]">
+                                    <div className="absolute inset-0 bg-neutral-100 blur-xl" />
+                                    <span className="relative block px-4 py-1.5 bg-white/90 backdrop-blur-md border border-neutral-200 text-[10px] text-neutral-900 font-bold uppercase tracking-[0.2em]">
                                         {project.category}
                                     </span>
                                 </motion.div>
@@ -145,13 +145,13 @@ const ProjectCard: React.FC<{
 
                             {/* Hover overlay with arrow */}
                             <motion.div
-                                className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+                                className="absolute inset-0 flex items-center justify-center bg-white/40 backdrop-blur-sm"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: isHovered ? 1 : 0 }}
                                 transition={{ duration: 0.3 }}
                             >
                                 <motion.div
-                                    className="w-16 h-16 rounded-full border-2 border-white/50 flex items-center justify-center"
+                                    className="w-16 h-16 rounded-full border-2 border-neutral-900/50 flex items-center justify-center"
                                     initial={{ scale: 0, rotate: -180 }}
                                     animate={{
                                         scale: isHovered ? 1 : 0,
@@ -159,7 +159,7 @@ const ProjectCard: React.FC<{
                                     }}
                                     transition={{ duration: 0.4, delay: 0.1 }}
                                 >
-                                    <ArrowUpRight className="w-6 h-6 text-white" />
+                                    <ArrowUpRight className="w-6 h-6 text-neutral-900" />
                                 </motion.div>
                             </motion.div>
                         </div>
@@ -177,9 +177,9 @@ const ProjectCard: React.FC<{
                             )}
                             {/* Title */}
                             <motion.h3
-                                className="text-2xl font-orbitron font-bold text-white uppercase tracking-wide mb-3"
+                                className="text-2xl font-orbitron font-bold text-neutral-900 uppercase tracking-wide mb-3"
                                 style={{
-                                    textShadow: isHovered ? '0 0 30px rgba(204,255,0,0.3)' : 'none',
+                                    textShadow: isHovered ? '0 0 30px rgba(0,0,0,0.1)' : 'none',
                                     transition: 'text-shadow 0.3s ease',
                                 }}
                             >
@@ -187,7 +187,7 @@ const ProjectCard: React.FC<{
                             </motion.h3>
 
                             {/* Description */}
-                            <p className="text-gray-400 font-exo text-sm leading-relaxed line-clamp-2 mb-4">
+                            <p className="text-neutral-500 font-exo text-sm leading-relaxed line-clamp-2 mb-4">
                                 {project.description}
                             </p>
 
@@ -196,7 +196,7 @@ const ProjectCard: React.FC<{
                                 {project.tech.slice(0, 3).map((t, i) => (
                                     <motion.span
                                         key={t}
-                                        className="text-[10px] uppercase font-bold px-3 py-1.5 bg-white/5 text-gray-400 border border-white/10 rounded-full"
+                                        className="text-[10px] uppercase font-bold px-3 py-1.5 bg-neutral-50 text-neutral-600 border border-neutral-200 rounded-full"
                                         initial={{ opacity: 0, y: 10 }}
                                         whileInView={{ opacity: 1, y: 0 }}
                                         transition={{ delay: index * 0.1 + i * 0.05 }}
@@ -213,7 +213,7 @@ const ProjectCard: React.FC<{
 
                             {/* Bottom indicator */}
                             <motion.div
-                                className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-neon-lime"
+                                className="absolute bottom-0 left-0 right-0 h-1 bg-neutral-900"
                                 initial={{ scaleX: 0 }}
                                 animate={{ scaleX: isHovered ? 1 : 0 }}
                                 transition={{ duration: 0.4 }}
@@ -229,7 +229,7 @@ const ProjectCard: React.FC<{
                                 {[...Array(6)].map((_, i) => (
                                     <motion.div
                                         key={i}
-                                        className="absolute w-1 h-1 bg-neon-lime rounded-full"
+                                        className="absolute w-1 h-1 bg-neutral-900 rounded-full"
                                         initial={{
                                             opacity: 0,
                                             scale: 0,
@@ -252,10 +252,10 @@ const ProjectCard: React.FC<{
 
                 {/* Shadow */}
                 <motion.div
-                    className="absolute inset-0 rounded-2xl bg-black/50 blur-2xl -z-10"
+                    className="absolute inset-0 rounded-2xl bg-neutral-900/10 blur-2xl -z-10"
                     style={{
                         transform: 'translateZ(-50px) translateY(20px)',
-                        opacity: isHovered ? 0.5 : 0.2,
+                        opacity: isHovered ? 0.3 : 0.1,
                     }}
                 />
             </motion.div>

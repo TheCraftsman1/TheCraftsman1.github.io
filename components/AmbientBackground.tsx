@@ -1,97 +1,81 @@
 import React from "react";
+import { Canvas } from "@react-three/fiber";
+import { Float, MeshDistortMaterial, Environment } from "@react-three/drei";
 
-/**
- * AmbientBackground — Premium Aurora Gradient Mesh
- * 
- * Large, blurred gradient orbs that slowly drift and pulse,
- * creating a living atmosphere. Pure CSS, GPU-accelerated.
- */
+const FluidShapes = () => {
+    return (
+        <group>
+            {/* Top Left Blob - Subtle Silver/Gray */}
+            <Float speed={2} rotationIntensity={0.5} floatIntensity={1.2}>
+                <mesh position={[-4, 3, -6]}>
+                    <sphereGeometry args={[2.5, 64, 64]} />
+                    <MeshDistortMaterial 
+                        color="#ffffff" 
+                        ambient={0.8}
+                        distort={0.3} 
+                        speed={1.5} 
+                        roughness={0.1}
+                        transmission={0.95}
+                        thickness={2}
+                        transparent 
+                        opacity={0.6}
+                    />
+                </mesh>
+            </Float>
+            
+            {/* Bottom Right Blob - Sleek Darker Glass */}
+            <Float speed={1.5} rotationIntensity={1} floatIntensity={1}>
+                <mesh position={[5, -2, -5]}>
+                    <sphereGeometry args={[3, 64, 64]} />
+                    <MeshDistortMaterial 
+                        color="#cbd5e1" 
+                        ambient={0.7}
+                        distort={0.4} 
+                        speed={1.2} 
+                        roughness={0.15}
+                        transmission={0.9}
+                        thickness={2.5}
+                        transparent 
+                        opacity={0.5}
+                    />
+                </mesh>
+            </Float>
+            
+            {/* Center Background Blob - Emerald Hint matching cursor */}
+            <Float speed={2.5} rotationIntensity={1} floatIntensity={2}>
+                <mesh position={[-1, -1, -8]}>
+                    <sphereGeometry args={[3.5, 64, 64]} />
+                    <MeshDistortMaterial 
+                        color="#10b981" 
+                        ambient={0.5}
+                        distort={0.25} 
+                        speed={2} 
+                        roughness={0.2}
+                        transmission={0.8}
+                        thickness={1}
+                        transparent 
+                        opacity={0.15}
+                    />
+                </mesh>
+            </Float>
+        </group>
+    );
+};
+
 const AmbientBackground: React.FC = () => {
     return (
         <div
-            className="fixed inset-0 overflow-hidden"
-            style={{ zIndex: 2, pointerEvents: "none" }}
+            className="fixed inset-0 transition-opacity duration-1000"
+            style={{ zIndex: -1, pointerEvents: "none", background: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)" }}
             aria-hidden="true"
         >
-            {/* Primary Neon-Lime Orb — Top Left */}
-            <div
-                style={{
-                    position: "absolute",
-                    width: "70vw",
-                    height: "70vw",
-                    top: "-20%",
-                    left: "-15%",
-                    borderRadius: "50%",
-                    background: "radial-gradient(circle, rgba(204,255,0,0.15) 0%, rgba(204,255,0,0.05) 40%, transparent 70%)",
-                    filter: "blur(60px)",
-                    animation: "aurora-drift-1 20s ease-in-out infinite alternate",
-                    willChange: "transform",
-                }}
-            />
-
-            {/* Cyan Orb — Center Right */}
-            <div
-                style={{
-                    position: "absolute",
-                    width: "60vw",
-                    height: "60vw",
-                    top: "25%",
-                    right: "-20%",
-                    borderRadius: "50%",
-                    background: "radial-gradient(circle, rgba(0,240,255,0.12) 0%, rgba(0,240,255,0.04) 40%, transparent 70%)",
-                    filter: "blur(80px)",
-                    animation: "aurora-drift-2 25s ease-in-out infinite alternate",
-                    willChange: "transform",
-                }}
-            />
-
-            {/* Purple/Violet Orb — Bottom Left */}
-            <div
-                style={{
-                    position: "absolute",
-                    width: "55vw",
-                    height: "55vw",
-                    bottom: "0%",
-                    left: "5%",
-                    borderRadius: "50%",
-                    background: "radial-gradient(circle, rgba(124,124,255,0.12) 0%, rgba(124,124,255,0.04) 40%, transparent 70%)",
-                    filter: "blur(70px)",
-                    animation: "aurora-drift-3 22s ease-in-out infinite alternate",
-                    willChange: "transform",
-                }}
-            />
-
-            {/* Deep Magenta Accent — Center */}
-            <div
-                style={{
-                    position: "absolute",
-                    width: "45vw",
-                    height: "45vw",
-                    top: "55%",
-                    right: "25%",
-                    borderRadius: "50%",
-                    background: "radial-gradient(circle, rgba(255,107,157,0.08) 0%, rgba(255,107,157,0.02) 40%, transparent 70%)",
-                    filter: "blur(60px)",
-                    animation: "aurora-drift-4 18s ease-in-out infinite alternate",
-                    willChange: "transform",
-                }}
-            />
-
-            {/* Secondary Lime Flare — Top Right */}
-            <div
-                style={{
-                    position: "absolute",
-                    width: "30vw",
-                    height: "30vw",
-                    top: "5%",
-                    right: "15%",
-                    borderRadius: "50%",
-                    background: "radial-gradient(circle, rgba(204,255,0,0.10) 0%, rgba(204,255,0,0.03) 40%, transparent 60%)",
-                    filter: "blur(50px)",
-                    animation: "aurora-drift-5 15s ease-in-out infinite alternate",
-                    willChange: "transform",
-                }}
-            />
+            <Canvas camera={{ position: [0, 0, 8], fov: 60 }} gl={{ alpha: true, antialias: true }}>
+                <ambientLight intensity={2} />
+                <directionalLight position={[5, 10, 5]} intensity={3} color="#ffffff" />
+                <pointLight position={[-10, 0, -10]} color="#ffffff" intensity={2} />
+                <Environment preset="studio" />
+                <FluidShapes />
+            </Canvas>
         </div>
     );
 };

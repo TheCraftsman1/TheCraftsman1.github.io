@@ -3,24 +3,30 @@ import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { SectionId } from './types';
 import Hero from './components/Hero';
 import Navbar from './components/Navbar';
-import CustomCursor from './components/CustomCursor';
+import Journey from './components/Experience';
 import Loader from './components/Loader';
 import SmoothScroll from './components/SmoothScroll';
 import ScrollProgress from './components/ScrollProgress';
-import AmbientBackground from './components/AmbientBackground';
-import { motion, AnimatePresence } from 'framer-motion';
+import ScrollReveal from './components/ScrollReveal';
+import CursorTrail from './components/CursorTrail';
+import InteractiveParticles from './components/InteractiveParticles';
+import ScrollDriven3D from './components/ScrollDriven3D';
+import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
+import { Canvas } from '@react-three/fiber';
 
-// Performance: Lazy-load below-the-fold components to reduce initial JS payload and RAM allocation
 const About = lazy(() => import('./components/About'));
 const Experience = lazy(() => import('./components/Experience'));
 const Projects = lazy(() => import('./components/Projects'));
-const Telemetry = lazy(() => import('./components/Skills'));
+const Skills = lazy(() => import('./components/Skills'));
 const Contact = lazy(() => import('./components/Contact'));
 const EasterEgg = lazy(() => import('./components/EasterEgg'));
+const WorkPage = lazy(() => import('./components/WorkPage'));
 
 const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [activeSection, setActiveSection] = useState<SectionId>(SectionId.HERO);
+  const [currentView, setCurrentView] = useState<'home' | 'work'>('home');
+  const [isVideoComplete, setIsVideoComplete] = useState(false);
 
   const scrollToSection = (id: SectionId) => {
     const element = document.getElementById(id);
@@ -44,14 +50,11 @@ const App: React.FC = () => {
       let newlyActive: SectionId | null = null;
       const sections = Object.values(SectionId);
 
-      // Dynamic DOM querying handles React.lazy automatically
       sections.forEach((section) => {
         const element = document.getElementById(section);
         if (element) {
           const rect = element.getBoundingClientRect();
-          // Trigger point is 40% from top of screen
           const triggerPoint = window.innerHeight * 0.4;
-
           if (rect.top <= triggerPoint && rect.bottom >= triggerPoint) {
             newlyActive = section as SectionId;
           }
@@ -72,8 +75,6 @@ const App: React.FC = () => {
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-
-    // Initial check in case they loaded halfway down the page
     setTimeout(updateActiveSection, 500);
 
     return () => window.removeEventListener('scroll', handleScroll);
@@ -81,7 +82,10 @@ const App: React.FC = () => {
 
   return (
     <SmoothScroll>
-      {isLoading && <Loader onComplete={() => setIsLoading(false)} />}
+      <LayoutGroup>
+        <AnimatePresence mode="wait">
+          {isLoading && <Loader key="loader" onComplete={() => setIsLoading(false)} />}
+        </AnimatePresence>
 
       {/* Noise Overlay */}
       <div className="noise-overlay" />
@@ -89,29 +93,75 @@ const App: React.FC = () => {
       {/* Scroll Progress */}
       <ScrollProgress />
 
-      <div className={`min-h-screen bg-black text-white selection:bg-neon-lime selection:text-black overflow-x-hidden ${isLoading ? 'h-screen overflow-hidden' : ''}`}>
-        {/* Aurora Gradient Mesh — renders above section backgrounds */}
-        <AmbientBackground />
-        <CustomCursor />
-        <Navbar scrollToSection={scrollToSection} activeSection={activeSection} />
+      <div className={`relative min-h-screen bg-white z-10 text-neutral-900 selection:bg-neutral-900 selection:text-white overflow-x-hidden ${isLoading ? 'h-screen overflow-hidden' : ''}`}>
+        
+        <AnimatePresence>
+          {(!isLoading && isVideoComplete) && (
+            <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+              <Navbar 
+                scrollToSection={scrollToSection} 
+                activeSection={activeSection} 
+                currentView={currentView}
+                setCurrentView={setCurrentView}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <main>
-          <Hero scrollToSection={scrollToSection} startAnimation={!isLoading} />
-
-          <AnimatePresence>
-            {!isLoading && (
+          <AnimatePresence mode="wait">
+            {currentView === 'home' ? (
               <motion.div
+                key="home-view"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
+                exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.5 }}
               >
-                {/* Performance: Suspense boundary ensures Heavy 3D UI doesn't block the main thread */}
-                <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-neon-lime/50 font-mono text-sm tracking-widest uppercase">Initializing modules...</div>}>
+                <Hero 
+                  scrollToSection={scrollToSection} 
+                  startAnimation={!isLoading} 
+                  onVideoComplete={() => setIsVideoComplete(true)} 
+                />
+
+                <AnimatePresence>
+                  {(!isLoading && isVideoComplete) && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 1.2, ease: "easeOut" }}
+                    >
+                      <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-neutral-300 text-sm tracking-widest uppercase font-medium">Loading...</div>}>
+                        <ScrollReveal animation="fade-up">
                   <About />
+                        </ScrollReveal>
+                        <ScrollReveal animation="fade-up" delay={200}>
                   <Experience />
-                  <Projects />
-                  <Telemetry />
+                        </ScrollReveal>
+                        <ScrollReveal animation="fade-up" delay={200}>
+                          <Projects setCurrentView={setCurrentView} />
+                        </ScrollReveal>
+                        <ScrollReveal animation="fade-up" delay={200}>
+                          <Skills />
+                        </ScrollReveal>
+                        <ScrollReveal animation="zoom-in" delay={200}>
                   <Contact />
+                        </ScrollReveal>
+                      </Suspense>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="work-view"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-neutral-300 text-sm tracking-widest uppercase font-medium">Loading...</div>}>
+                  <WorkPage />
                 </Suspense>
               </motion.div>
             )}
@@ -119,15 +169,15 @@ const App: React.FC = () => {
         </main>
 
         {/* Footer */}
-        <footer className="py-8 bg-black border-t border-white/5">
+        <footer className="py-8 bg-white border-t border-neutral-100">
           <div className="max-w-7xl mx-auto px-6">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <div className="text-gray-600 text-xs font-exo">
-                © 2026 Vishnu Kanchipati. Crafted with passion.
+              <div className="text-neutral-400 text-xs font-medium">
+                © 2026 Vishnu Kanchipati
               </div>
               <div className="flex items-center gap-6">
-                <span className="text-[10px] text-gray-700 font-mono">
-                  Built with React + Three.js + Framer Motion
+                <span className="text-[10px] text-neutral-300 font-medium uppercase tracking-widest">
+                  React + Framer Motion
                 </span>
               </div>
             </div>
@@ -135,10 +185,11 @@ const App: React.FC = () => {
         </footer>
       </div>
 
-      {/* Easter Egg - Hidden game (Lazy loaded) */}
+      {/* Easter Egg */}
       <Suspense fallback={null}>
         <EasterEgg />
       </Suspense>
+      </LayoutGroup>
     </SmoothScroll>
   );
 };

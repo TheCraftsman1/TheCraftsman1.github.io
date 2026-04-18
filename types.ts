@@ -2,11 +2,16 @@
 export interface Project {
   id: string;
   title: string;
+  tagline?: string;
   category: string;
   description: string;
   image: string;
   tech: string[];
-  fullDetails: string; // Legacy fallback
+  fullDetails: string;
+  color?: string;
+  year?: string;
+  role?: string;
+  liveUrl?: string;
   caseStudy?: {
     problem: string;
     architecture: string;

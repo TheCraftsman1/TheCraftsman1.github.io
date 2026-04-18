@@ -4,6 +4,7 @@ import { motion, useInView } from 'framer-motion';
 interface SectionTitleProps {
   title: string;
   subtitle: string;
+  number?: string;
 }
 
 const letterVariants = {
@@ -27,7 +28,7 @@ const containerVariants = {
   }
 };
 
-const SectionTitle: React.FC<SectionTitleProps> = ({ title, subtitle }) => {
+const SectionTitle: React.FC<SectionTitleProps> = ({ title, subtitle, number }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 

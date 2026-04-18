@@ -1,276 +1,278 @@
-import React, { useCallback, useState } from 'react';
-import { ChevronRight, Mail, Download, Terminal, Code2, Cpu } from 'lucide-react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
+import { motion, useScroll, useTransform, useSpring, useMotionValue, Variants, AnimatePresence } from 'framer-motion';
 import { SectionId } from '../types';
-import TechyBackground from './TechyBackground';
-import Hero3D from './Hero3D';
 import MagneticButton from './MagneticButton';
-import StageSpotlight from './StageSpotlight';
+import { ArrowDownRight } from 'lucide-react';
+import AmbientBackground from './AmbientBackground';
 
 interface HeroProps {
   scrollToSection: (id: SectionId) => void;
   startAnimation: boolean;
+  onVideoComplete?: () => void;
 }
 
-const Hero: React.FC<HeroProps> = ({ scrollToSection, startAnimation }) => {
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [isGlowOn, setIsGlowOn] = useState(false);
-  const { scrollY, scrollYProgress } = useScroll();
+const roles = ['Full-Stack Engineer', 'Creative Developer', 'Problem Solver', 'UI/UX Enthusiast'];
 
-  // Parallax transforms
-  const y1 = useTransform(scrollY, [0, 500], [0, 150]);
-  const y2 = useTransform(scrollY, [0, 500], [0, -100]);
-  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+const Hero: React.FC<HeroProps> = ({ scrollToSection, startAnimation, onVideoComplete }) => {
+  const [roleIndex, setRoleIndex] = useState(0);
+  const [showText, setShowText] = useState(false);
+  const [fadeVideoOut, setFadeVideoOut] = useState(false);
+  
+  const videoRef = React.useRef<HTMLVideoElement>(null);
 
-  const skills = [
-    { name: 'B.Tech CSE', icon: <Cpu className="w-3 h-3" /> },
-    { name: 'Java', icon: <Code2 className="w-3 h-3" /> },
-    { name: 'Flutter', icon: <Terminal className="w-3 h-3" /> },
-    { name: 'Web Dev', icon: <Code2 className="w-3 h-3" /> },
-    { name: 'DSA', icon: <Cpu className="w-3 h-3" /> }
-  ];
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const springConfig = { damping: 40, stiffness: 300 };
+  const smoothX = useSpring(mouseX, springConfig);
+  const smoothY = useSpring(mouseY, springConfig);
 
-  // Smooth scroll handler
-  const handleScroll = useCallback(() => {
-    scrollToSection(SectionId.PROJECTS);
-  }, [scrollToSection]);
+  const floatX1 = useTransform(smoothX, [-1, 1], [-40, 40]);
+  const floatY1 = useTransform(smoothY, [-1, 1], [-30, 30]);
+  const floatX2 = useTransform(smoothX, [-1, 1], [30, -30]);
+  const floatY2 = useTransform(smoothY, [-1, 1], [20, -20]);
+
+  const { scrollY } = useScroll();
+  const opacity = useTransform(scrollY, [0, 400], [1, 0]);
+  const yScroll = useTransform(scrollY, [0, 400], [0, 100]);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    mouseX.set((e.clientX / window.innerWidth) * 2 - 1);
+    mouseY.set((e.clientY / window.innerHeight) * 2 - 1);
+  };
+
+  // Video playback animation
+  useEffect(() => {
+    if (!startAnimation) return;
+
+    if (videoRef.current) {
+      videoRef.current.play().catch(e => console.log('Video play error:', e));
+    }
+
+    const fadeTimer = setTimeout(() => {
+      setFadeVideoOut(true);
+    }, 4000);
+
+    const textTimer = setTimeout(() => {
+      setShowText(true);
+      
+      // Trigger the reveal of the rest of the site
+      setTimeout(() => {
+        if (onVideoComplete) onVideoComplete();
+      }, 1500); // Let the text animate in first
+    }, 4300);
+
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(textTimer);
+    };
+  }, [startAnimation, onVideoComplete]);
+
+  useEffect(() => {
+    if (!showText) return;
+
+    const interval = setInterval(() => {
+      setRoleIndex((prev) => (prev + 1) % roles.length);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, [showText]);
+  const containerVars: Variants = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.1 } }
+  };
+
+  const charVars: Variants = {
+    hidden: { y: 150, opacity: 0 },
+    show: { y: 0, opacity: 1, transition: { duration: 1.4, ease: [0.16, 1, 0.3, 1] } }
+  };
+
+  const fadeUp: Variants = {
+    hidden: { y: 40, opacity: 0 },
+    show: { y: 0, opacity: 1, transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1] } }
+  };
 
   return (
     <section
       id={SectionId.HERO}
-      className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-[#050505]"
+      onMouseMove={handleMouseMove}
+      className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-[#fafafa]"
     >
-      {/* 3D Background */}
-      <Hero3D scrollYProgress={scrollYProgress} />
+      {/* ═══ AMBIENT BACKGROUND ═══ */}
+      <AmbientBackground />
 
-      {/* Animated Background Layers */}
-      <motion.div
-        className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_#1a1a3e_0%,_#0a0a0a_70%)]"
-        style={{ y: y1 }}
+      {/* Decorative Grid Lines */}
+      <div className="absolute inset-0 pointer-events-none select-none z-[1] opacity-[0.4] mix-blend-overlay">
+        <div className="absolute left-[20%] top-0 bottom-0 w-[1px] bg-neutral-900/20 shadow-[0_0_10px_rgba(0,0,0,0.1)]" />
+        <div className="absolute right-[20%] top-0 bottom-0 w-[1px] bg-neutral-900/20 shadow-[0_0_10px_rgba(0,0,0,0.1)]" />
+        <div className="absolute top-[30%] left-0 right-0 h-[1px] bg-neutral-900/20 shadow-[0_0_10px_rgba(0,0,0,0.1)]" />
+        <div className="absolute bottom-[30%] left-0 right-0 h-[1px] bg-neutral-900/20 shadow-[0_0_10px_rgba(0,0,0,0.1)]" />
+      </div>
+
+      {/* ═══ NOISE TEXTURE OVERLAY ═══ */}
+      <div 
+        className="absolute inset-0 pointer-events-none opacity-[0.25] z-[1] mix-blend-overlay"
+        style={{
+          backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")',
+        }}
       />
 
-      {/* Static gradient orbs - removed animation for performance */}
-      <div className="absolute top-1/4 -left-32 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[120px]" />
-      <div className="absolute bottom-1/4 -right-32 w-[400px] h-[400px] bg-cyan-500/20 rounded-full blur-[120px]" />
-
-      {/* Techy circuit background */}
-      <TechyBackground variant="circuit" opacity={0.12} />
-
-      {/* Grid pattern - static for performance */}
-      <div className="absolute inset-0 opacity-[0.08] bg-[linear-gradient(rgba(0,240,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(0,240,255,0.1)_1px,transparent_1px)] bg-[size:80px_80px]" />
-
-      {/* Main Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-20">
-
-        {/* Left: Text Content */}
-        <motion.div
-          className="flex-1 text-center lg:text-left order-2 lg:order-1"
-          style={{ y: y2, opacity }}
-        >
-          <motion.p
-            className="text-gray-400 font-exo text-lg md:text-xl mb-4 tracking-wide"
-            initial={{ opacity: 0, y: 20 }}
-            animate={startAnimation ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            Hi, I'm
-          </motion.p>
-
-          {/* Name */}
-          <motion.h1
-            className="relative text-6xl md:text-8xl lg:text-9xl font-orbitron font-black uppercase tracking-tighter mb-6"
-            initial={{ opacity: 0, y: 30 }}
-            animate={startAnimation ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            <span className="relative inline-block">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-500 to-cyan-400">
-                Vishnu
-              </span>
-            </span>
-          </motion.h1>
-
-          {/* Statement with kinetic text */}
-          <motion.div
-            className="text-2xl md:text-3xl lg:text-4xl font-exo text-white mb-8 leading-relaxed"
-            initial={{ opacity: 0, y: 20 }}
-            animate={startAnimation ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.6 }}
-          >
-            <span className="text-gray-400">I build </span>
-            <span className="relative inline-block font-bold">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-cyan-400">
-                software
-              </span>
-              <svg
-                className="absolute -bottom-2 left-0 w-full"
-                viewBox="0 0 200 12"
-                fill="none"
-              >
-                <path
-                  d="M0 6 Q 50 12, 100 6 T 200 6"
-                  stroke="url(#gradient)"
-                  strokeWidth="3"
-                  fill="none"
-                  strokeLinecap="round"
-                />
-                <defs>
-                  <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#ccff00" />
-                    <stop offset="100%" stopColor="#00f0ff" />
-                  </linearGradient>
-                </defs>
-              </svg>
-            </span>
-            <span className="text-gray-400">, not just projects.</span>
-          </motion.div>
-
-          {/* Skills with hover effects */}
-          <motion.div
-            className="flex flex-wrap justify-center lg:justify-start gap-3 mb-10"
-            initial={{ opacity: 0, y: 20 }}
-            animate={startAnimation ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.8 }}
-          >
-            {skills.map((skill, index) => (
-              <span
-                key={skill.name}
-                className="group flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-lg backdrop-blur-sm text-sm font-mono text-gray-300 hover:text-cyan-400 hover:border-cyan-400/50 hover:bg-cyan-500/10 transition-all duration-300 cursor-default"
-              >
-                <span className="text-cyan-500 group-hover:scale-110 transition-transform">
-                  {skill.icon}
-                </span>
-                {skill.name}
-              </span>
-            ))}
-          </motion.div>
-
-          {/* CTAs with enhanced magnetic buttons */}
-          <motion.div
-            className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={startAnimation ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 1.1 }}
-          >
-            <MagneticButton
-              onClick={handleScroll}
-              className="group relative px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl overflow-hidden shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 transition-all duration-300"
-            >
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-purple-600 to-cyan-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-              />
-              <span className="relative font-orbitron font-bold text-white uppercase tracking-wider flex items-center justify-center gap-2">
-                View Projects
-                <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </span>
-            </MagneticButton>
-
-            <MagneticButton
-              href="/vishnu-resume.pdf"
-              className="group px-8 py-4 bg-white/5 border border-white/20 rounded-xl hover:border-cyan-400/50 hover:bg-cyan-500/10 transition-all duration-300 backdrop-blur-sm"
-            >
-              <span className="font-orbitron font-bold text-white uppercase tracking-wider flex items-center justify-center gap-2">
-                Resume
-                <Download className="w-5 h-5 group-hover:translate-y-1 transition-transform" />
-              </span>
-            </MagneticButton>
-          </motion.div>
-
-          {/* Email with magnetic hover */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={startAnimation ? { opacity: 1 } : {}}
-            transition={{ duration: 0.8, delay: 1.3 }}
-          >
-            <a
-              href="mailto:vishnukanchipati@gmail.com"
-              className="group inline-flex items-center gap-3 text-gray-400 hover:text-cyan-400 transition-colors font-mono text-sm"
-            >
-              <span className="p-2 rounded-lg bg-white/5 group-hover:bg-cyan-500/10 transition-colors">
-                <Mail className="w-4 h-4" />
-              </span>
-              <span className="relative">
-                vishnukanchipati@gmail.com
-                <span className="absolute -bottom-1 left-0 w-0 h-px bg-cyan-400 group-hover:w-full transition-all duration-300" />
-              </span>
-            </a>
-          </motion.div>
-        </motion.div>
-
-        {/* Right: Photo with enhanced effects */}
-        <motion.div
-          className="flex-1 flex justify-center lg:justify-end order-1 lg:order-2"
-          initial={{ opacity: 0, x: 100, scale: 0.8 }}
-          animate={startAnimation ? { opacity: 1, x: 0, scale: 1 } : {}}
-          transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1], delay: 0.4 }}
-        >
-          <div
-            className="relative cursor-pointer group"
-            onClick={() => setIsGlowOn(!isGlowOn)}
-          >
-            {/* Simple elegant spotlight - behind the photo */}
-            <StageSpotlight
-              isOn={isGlowOn}
-              intensity={1}
-              className="z-0"
-            />
-
-            {/* Animated gradient border - sharp */}
-            <div className="absolute -inset-[2px] rounded-2xl overflow-hidden">
-              <div className="absolute inset-[-100%] animate-gradient-rotate bg-[conic-gradient(from_0deg,#00f0ff_0%,#a855f7_25%,#00f0ff_50%,#a855f7_75%,#00f0ff_100%)]" />
-            </div>
-
-            {/* Decorative frame */}
-            <div className="absolute -inset-4 rounded-3xl border border-cyan-500/20 bg-gradient-to-b from-cyan-500/10 to-transparent" />
-
-            {/* Image container */}
-            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-b from-gray-900 to-black">
-              {/* Scanline overlay - static thin lines */}
-              <div className="absolute inset-0 z-30 pointer-events-none bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.3)_50%)] bg-[length:100%_2px]" />
-
-              {/* Gradient overlays */}
-              <div className="absolute inset-0 z-20 pointer-events-none bg-gradient-to-t from-[#050505] via-transparent to-transparent opacity-80" />
-              <div className="absolute inset-0 z-20 pointer-events-none bg-gradient-to-r from-[#050505]/60 via-transparent to-[#050505]/60" />
-
-              {/* Corner accents */}
-              <div className="absolute top-4 left-4 w-8 h-8 border-l-2 border-t-2 border-cyan-400/50 z-30" />
-              <div className="absolute top-4 right-4 w-8 h-8 border-r-2 border-t-2 border-cyan-400/50 z-30" />
-              <div className="absolute bottom-4 left-4 w-8 h-8 border-l-2 border-b-2 border-cyan-400/50 z-30" />
-              <div className="absolute bottom-4 right-4 w-8 h-8 border-r-2 border-b-2 border-cyan-400/50 z-30" />
-
-              <img
-                src="/vishnu-hero.png"
-                alt="Vishnu Kanchipati"
-                className={`relative z-10 w-72 h-auto md:w-96 lg:w-[420px] object-cover transition-all duration-500 ${isGlowOn ? 'mix-blend-normal brightness-110 contrast-105' : 'mix-blend-lighten'}`}
-                onLoad={() => setImageLoaded(true)}
-              />
-            </div>
-          </div>
-        </motion.div>
-      </div>
-
-      {/* Scroll Indicator */}
+      {/* ═══ VIDEO BACKGROUND (Hero Construction) ═══ */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={startAnimation ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 1, delay: 1.8 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-20"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: fadeVideoOut ? 0 : 1 }}
+        transition={{ duration: fadeVideoOut ? 1.5 : 1, ease: 'easeOut' }}
+        className="absolute inset-0 z-[1] flex items-center justify-center pointer-events-none overflow-hidden"
       >
-        <span className="text-[10px] uppercase font-mono tracking-[0.3em] text-white/40">
-          Scroll to explore
-        </span>
-        <div className="relative w-6 h-10 rounded-full border-2 border-cyan-400/30 flex justify-center pt-2">
-          <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-        </div>
+        <video
+          ref={videoRef}
+          src="/Untitled design.mp4"
+          className="w-full h-full object-cover object-center"
+          style={{ transform: 'translateZ(0)' }}
+          muted
+          playsInline
+        />
       </motion.div>
 
-      {/* Static tech decorations */}
-      <div className="absolute top-20 right-20 text-cyan-500/20 text-6xl font-mono font-bold hidden xl:block">
-        {'{ }'}
-      </div>
-      <div className="absolute bottom-32 left-20 text-purple-500/20 text-4xl font-mono hidden xl:block">
-        {'</>'}
-      </div>
+      {/* ═══ MAIN CONTENT ═══ */}
+      <motion.div style={{ opacity, y: yScroll }} className="z-10 w-full px-6 flex flex-col items-center relative">
+        <motion.div
+          variants={containerVars}
+          initial="hidden"
+          animate={showText ? "show" : "hidden"}
+          className="flex flex-col items-center w-full z-10"
+        >
+          {/* Overline */}
+          <motion.div variants={fadeUp} className="mb-2 sm:mb-4 relative z-30 flex items-center gap-4 text-neutral-500">
+            <div className="w-8 sm:w-16 h-px bg-neutral-900/30" />
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.5em] text-neutral-800">Portfolio 2026</span>
+            <div className="w-8 sm:w-16 h-px bg-neutral-900/30" />
+          </motion.div>
+
+          {/* ── VISHNU ── */}
+          <div className="overflow-hidden mb-2 relative z-20" style={{ perspective: '1000px' }}>
+            <div className="flex items-center justify-center text-neutral-900">
+              {'VISHNU'.split('').map((char, i) => (
+                <motion.span
+                  layoutId={`hero-v-${i}`}
+                  key={`v-${i}`}
+                  className="inline-block"
+                  variants={charVars}
+                  whileHover={{ 
+                    y: -12, 
+                    color: '#0ea5e9', // sleek sky blue 
+                    scale: 1.05, 
+                    rotate: Math.random() * 4 - 2,
+                    textShadow: "0px 0px 20px rgba(14, 165, 233, 0.4)"
+                  }}
+                  transition={{ type: "spring", stiffness: 350, damping: 15 }}
+                  style={{
+                    color: '#171717',
+                    fontFamily: "'Syne', sans-serif",
+                    fontSize: 'clamp(5rem, 15vw, 12rem)',
+                    fontWeight: 900,
+                    lineHeight: 1,
+                    letterSpacing: '-0.02em',
+                  }}
+                >
+                  {char}
+                </motion.span>
+              ))}
+            </div>
+          </div>
+
+          {/* ── KANCHIPATI ── */}
+          <div className="overflow-hidden relative z-20 mb-4" style={{ perspective: '1000px' }}>
+            <div className="flex items-center justify-center text-neutral-800">
+              {'KANCHIPATI'.split('').map((char, i) => (
+                <motion.span
+                  layoutId={`hero-k-${i}`}
+                  key={`k-${i}`}
+                  className="inline-block"
+                  variants={charVars}
+                  whileHover={{ 
+                    y: 12, 
+                    color: '#10b981', // emerald-500 matching cursor trail
+                    scale: 1.05, 
+                    rotate: Math.random() * 4 - 2,
+                    textShadow: "0px 0px 20px rgba(16, 185, 129, 0.4)"
+                  }}
+                  transition={{ type: "spring", stiffness: 350, damping: 15 }}
+                  style={{
+                    color: '#262626',
+                    fontFamily: "'Syne', sans-serif",
+                    fontSize: 'clamp(5rem, 15vw, 12rem)',
+                    fontWeight: 900,
+                    lineHeight: 1,
+                    letterSpacing: '-0.02em'
+                  }}
+                >
+                  {char}
+                </motion.span>
+              ))}
+            </div>
+          </div>
+
+          {/* Roles & Micro-interactions */}
+          <motion.div variants={fadeUp} className="mt-8 sm:mt-12 h-14 w-full flex justify-center overflow-hidden relative z-20">
+            <AnimatePresence mode="wait">
+              <motion.span
+                key={roleIndex}
+                initial={{ y: 30, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -30, opacity: 0 }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                className="flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-[0.4em] text-white bg-neutral-900/90 backdrop-blur-md px-8 py-3.5 rounded-full shadow-2xl border border-neutral-800"
+              >
+                <div className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.8)]" />
+                {roles[roleIndex]}
+              </motion.span>
+            </AnimatePresence>
+          </motion.div>
+
+          {/* Intro Text */}
+          <motion.div variants={fadeUp} className="mt-8 md:mt-12 flex flex-col items-center gap-8 max-w-lg text-center text-neutral-900">
+            <p className="text-sm md:text-base text-neutral-500 font-light leading-relaxed">
+              Engineering high-fidelity digital experiences. Bridging complex logic with minimalist, premium design.
+            </p>
+
+            {/* CTAs */}
+            <div className="flex items-center gap-4">
+              <MagneticButton>
+                <button
+                  onClick={() => scrollToSection(SectionId.PROJECTS)}
+                  className="px-8 py-3.5 bg-neutral-900 text-white text-xs font-bold tracking-[0.15em] uppercase rounded-full hover:bg-neutral-800 transition-colors shadow-xl flex items-center gap-3"
+                >
+                  Explore Work <ArrowDownRight className="w-4 h-4" />
+                </button>
+              </MagneticButton>
+              <MagneticButton>
+                <button
+                  onClick={() => scrollToSection(SectionId.CONTACT)}
+                  className="px-8 py-3.5 text-neutral-900 bg-white text-xs font-bold tracking-[0.15em] uppercase rounded-full border border-neutral-200 hover:border-neutral-900 transition-all duration-300"
+                >
+                  Contact
+                </button>
+              </MagneticButton>
+            </div>
+          </motion.div>
+        </motion.div>
+      </motion.div>
+
+      {/* Modern Scroll Indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: showText ? 1 : 0 }}
+        transition={{ delay: 1.5, duration: 1 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-20"
+      >
+        <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-neutral-400">Scroll</span>
+        <div className="w-[1px] h-12 bg-neutral-200 relative overflow-hidden">
+          <motion.div
+            animate={{ top: ['-100%', '100%'] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
+            className="absolute left-0 w-full h-1/2 bg-neutral-900"
+          />
+        </div>
+      </motion.div>
     </section>
   );
 };

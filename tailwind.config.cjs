@@ -2,24 +2,31 @@
 module.exports = {
     content: [
         "./index.html",
+        "./index.tsx",
+        "./App.tsx",
+        "./types.ts",
         "./src/**/*.{js,ts,jsx,tsx}",
-        "./components/**/*.{js,ts,jsx,tsx}"
+        "./components/**/*.{js,ts,jsx,tsx}",
+        "./utils/**/*.{js,ts,jsx,tsx}",
     ],
     theme: {
         extend: {
             colors: {
-                'neon-lime': '#CCFF00',
-                'neon-cyan': '#00F0FF',
-                'carbon-black': '#050505',
-                'carbon-gray': '#121212',
+                'accent': '#6366f1',
+                'accent-light': '#818cf8',
+                'accent-dark': '#4f46e5',
+                'accent-subtle': '#eef2ff',
+                'secondary': '#0ea5e9',
+                'secondary-light': '#38bdf8',
+                'surface': '#ffffff',
+                'surface-alt': '#f8fafc',
+                'surface-raised': '#f1f5f9',
             },
             fontFamily: {
-                orbitron: ['Orbitron', 'sans-serif'],
-                exo: ['Exo 2', 'sans-serif'],
+                orbitron: ['Inter', 'sans-serif'],
+                exo: ['Inter', 'sans-serif'],
+                sans: ['Inter', 'sans-serif'],
             },
-            backgroundImage: {
-                'grid-pattern': "linear-gradient(to right, #1f1f1f 1px, transparent 1px), linear-gradient(to bottom, #1f1f1f 1px, transparent 1px)",
-            }
         },
     },
     plugins: [],

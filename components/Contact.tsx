@@ -1,198 +1,264 @@
 import React, { useState } from 'react';
 import { SectionId } from '../types';
 import SectionTitle from './SectionTitle';
-import TechyBackground from './TechyBackground';
-import { Mail, Linkedin, Github, Code, CheckCircle, AlertCircle } from 'lucide-react';
+import { Mail, Linkedin, Github, Code, CheckCircle, AlertCircle, ArrowUpRight, Send } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { isValidEmail, sanitizeInput } from '../utils/validation';
+import ScrollReveal from './ScrollReveal';
 
 const Contact: React.FC = () => {
-    const [formState, setFormState] = useState({ name: '', email: '', message: '' });
-    const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
-    const [errorMessage, setErrorMessage] = useState('');
+  const [formState, setFormState] = useState({ name: '', email: '', message: '' });
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
 
-        const sanitizedName = sanitizeInput(formState.name);
-        const sanitizedEmail = sanitizeInput(formState.email);
-        const sanitizedMessage = sanitizeInput(formState.message);
+    const sanitizedName = sanitizeInput(formState.name);
+    const sanitizedEmail = sanitizeInput(formState.email);
+    const sanitizedMessage = sanitizeInput(formState.message);
 
-        if (!sanitizedName || !sanitizedEmail || !sanitizedMessage) {
-            setErrorMessage('Please fill in all fields.');
-            setStatus('error');
-            setTimeout(() => setStatus('idle'), 3000);
-            return;
+    if (!sanitizedName || !sanitizedEmail || !sanitizedMessage) {
+      setErrorMessage('Please fill in all fields.');
+      setStatus('error');
+      setTimeout(() => setStatus('idle'), 3000);
+      return;
+    }
+
+    if (!isValidEmail(sanitizedEmail)) {
+      setErrorMessage('Invalid email format.');
+      setStatus('error');
+      setTimeout(() => setStatus('idle'), 3000);
+      return;
+    }
+
+    setStatus('submitting');
+
+    fetch('https://formsubmit.co/ajax/vishnukanchipati@gmail.com', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        name: sanitizedName,
+        email: sanitizedEmail,
+        message: sanitizedMessage,
+        _subject: "New Portfolio Message!"
+      })
+    })
+      .then(response => {
+        if (response.ok) {
+          setStatus('success');
+          setFormState({ name: '', email: '', message: '' });
+          setTimeout(() => setStatus('idle'), 5000);
+        } else {
+          throw new Error('Failed to send');
         }
+      })
+      .catch(() => {
+        setErrorMessage('Failed to send message. Please try again.');
+        setStatus('error');
+        setTimeout(() => setStatus('idle'), 3000);
+      });
+  };
 
-        if (!isValidEmail(sanitizedEmail)) {
-            setErrorMessage('Invalid email format.');
-            setStatus('error');
-            setTimeout(() => setStatus('idle'), 3000);
-            return;
-        }
+  const socials = [
+    { href: 'https://github.com/TheCraftsman1', label: 'GitHub', desc: 'Check out my repos', icon: <Github className="w-5 h-5" /> },
+    { href: 'https://in.linkedin.com/in/sree-vishnu-kanchipati-479422331', label: 'LinkedIn', desc: 'Let\'s connect', icon: <Linkedin className="w-5 h-5" /> },
+    { href: 'https://leetcode.com/u/dPqPqsFd0k/', label: 'LeetCode', desc: 'DSA practice', icon: <Code className="w-5 h-5" /> },
+    { href: 'mailto:vishnukanchipati@gmail.com', label: 'Email', desc: 'Direct message', icon: <Mail className="w-5 h-5" /> },
+  ];
 
-        setStatus('submitting');
+  return (
+    <section id={SectionId.CONTACT} className="py-32 md:py-40 bg-white relative overflow-hidden border-t border-neutral-100">
+      {/* Subtle grid background */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.05]"
+        style={{
+          backgroundImage: 'linear-gradient(to right, #000 1px, transparent 1px), linear-gradient(to bottom, #000 1px, transparent 1px)',
+          backgroundSize: '80px 80px',
+        }}
+      />
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <SectionTitle title="Contact" subtitle="Get In Touch" number="05" />
 
-        // Submit via FormSubmit.co
-        fetch('https://formsubmit.co/ajax/vishnukanchipati@gmail.com', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                name: sanitizedName,
-                email: sanitizedEmail,
-                message: sanitizedMessage,
-                _subject: "New Portfolio Message!"
-            })
-        })
-            .then(response => {
-                if (response.ok) {
-                    setStatus('success');
-                    setFormState({ name: '', email: '', message: '' });
-                    setTimeout(() => setStatus('idle'), 5000);
-                } else {
-                    throw new Error('Failed to send');
-                }
-            })
-            .catch(() => {
-                setErrorMessage('Failed to send message. Please try again.');
-                setStatus('error');
-                setTimeout(() => setStatus('idle'), 3000);
-            });
-    };
+        <div className="mt-20 grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20">
+          {/* Left — CTA + Social */}
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <ScrollReveal animation="fade-up">
+            <h3
+              className="text-4xl md:text-6xl font-black uppercase tracking-tight text-neutral-900 leading-[0.95] mb-8"
+              style={{ fontFamily: "'Syne', 'Inter', sans-serif" }}
+            >
+              Let's build<br />
+              something<br />
+              <span className="text-neutral-300">great.</span>
+            </h3>
+            </ScrollReveal>
 
-    return (
-        <section id={SectionId.CONTACT} className="py-24 bg-black relative border-t border-white/10">
-            {/* Techy background decoration */}
-            <TechyBackground variant="circuit" opacity={0.2} />
+            <ScrollReveal delay={200} animation="fade-up">
+              <p className="text-neutral-500 text-lg leading-relaxed max-w-sm font-light mb-12">
+                Have a project in mind or want to collaborate? I'm currently open to new opportunities. Reach out and let's create impactful software together.
+            </p>
+            </ScrollReveal>
 
-            <div className="max-w-4xl mx-auto px-6 relative z-10">
-                <SectionTitle title="Contact" subtitle="Get In Touch" />
-
-                <div className="mt-16 glass-panel-intense p-8 md:p-12 relative">
-                    {/* Neon Corner Accents */}
-                    <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-neon-lime"></div>
-                    <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-neon-lime"></div>
-
-                    <form className="space-y-8" onSubmit={handleSubmit}>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div className="group relative">
-                                <label htmlFor="name" className="block text-xs font-exo uppercase tracking-wider text-gray-500 mb-2 group-focus-within:text-neon-lime transition-colors">Name</label>
-                                <div className="relative">
-                                    <input
-                                        id="name"
-                                        type="text"
-                                        value={formState.name}
-                                        onChange={(e) => setFormState({ ...formState, name: e.target.value })}
-                                        className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 py-4 text-white font-exo focus:outline-none focus:border-neon-lime focus:bg-white/[0.05] transition-all duration-300 placeholder-gray-700 backdrop-blur-sm"
-                                        placeholder="ENTER YOUR NAME"
-                                        maxLength={100}
-                                    />
-                                    {/* Focus Gradient Line underneath */}
-                                    <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-neon-lime to-cyan-400 group-focus-within:w-full transition-all duration-500 rounded-b-lg" />
-                                </div>
-                            </div>
-                            <div className="group relative">
-                                <label htmlFor="email" className="block text-xs font-exo uppercase tracking-wider text-gray-500 mb-2 group-focus-within:text-neon-lime transition-colors">Email</label>
-                                <div className="relative">
-                                    <input
-                                        id="email"
-                                        type="email"
-                                        value={formState.email}
-                                        onChange={(e) => setFormState({ ...formState, email: e.target.value })}
-                                        className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 py-4 text-white font-exo focus:outline-none focus:border-neon-lime focus:bg-white/[0.05] transition-all duration-300 placeholder-gray-700 backdrop-blur-sm"
-                                        placeholder="ENTER YOUR EMAIL"
-                                        maxLength={100}
-                                    />
-                                    <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-neon-lime to-cyan-400 group-focus-within:w-full transition-all duration-500 rounded-b-lg" />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="group relative">
-                            <label htmlFor="message" className="block text-xs font-exo uppercase tracking-wider text-gray-500 mb-2 group-focus-within:text-neon-lime transition-colors">Message</label>
-                            <div className="relative">
-                                <textarea
-                                    id="message"
-                                    rows={4}
-                                    value={formState.message}
-                                    onChange={(e) => setFormState({ ...formState, message: e.target.value })}
-                                    className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 py-4 text-white font-exo focus:outline-none focus:border-neon-lime focus:bg-white/[0.05] transition-all duration-300 placeholder-gray-700 resize-none backdrop-blur-sm"
-                                    placeholder="PROJECT DETAILS..."
-                                    maxLength={500}
-                                ></textarea>
-                                <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-neon-lime to-cyan-400 group-focus-within:w-full transition-all duration-500 rounded-b-lg" />
-                            </div>
-                        </div>
-
-                        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                            {status === 'error' && (
-                                <div className="text-red-500 flex items-center gap-2 text-sm font-exo animate-pulse">
-                                    <AlertCircle size={16} /> {errorMessage}
-                                </div>
-                            )}
-
-                            <motion.button
-                                disabled={status === 'submitting'}
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                className="px-10 py-4 bg-neon-lime text-black font-orbitron font-bold uppercase tracking-wider transition-all duration-300 hover:shadow-[0_0_30px_rgba(204,255,0,0.6)] rounded-lg disabled:opacity-50 disabled:cursor-not-allowed ml-auto relative overflow-hidden group/btn"
-                            >
-                                <span className="relative z-10">{status === 'submitting' ? 'Sending...' : 'Send Message'}</span>
-                                {/* Hover light sweep effect */}
-                                <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover/btn:animate-[shimmer_1s_infinite] skew-x-12" />
-                            </motion.button>
-                        </div>
-                    </form>
-
-                    <div className="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6">
-                        <div className="text-gray-400 font-exo text-sm">
-                            Based in India • Available for Freelance
-                        </div>
-                        <div className="flex gap-6">
-                            <a href="https://github.com/TheCraftsman1" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile" className="text-gray-400 hover:text-neon-lime hover:scale-125 transition-all duration-300"><Github size={20} /></a>
-                            <a href="https://in.linkedin.com/in/sree-vishnu-kanchipati-479422331" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile" className="text-gray-400 hover:text-neon-lime hover:scale-125 transition-all duration-300"><Linkedin size={20} /></a>
-                            <a href="https://leetcode.com/u/dPqPqsFd0k/" target="_blank" rel="noopener noreferrer" aria-label="LeetCode Profile" className="text-gray-400 hover:text-neon-lime hover:scale-125 transition-all duration-300"><Code size={20} /></a>
-                            <a href="mailto:vishnukanchipati@gmail.com" aria-label="Send Email" className="text-gray-400 hover:text-neon-lime hover:scale-125 transition-all duration-300"><Mail size={20} /></a>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Footer Racing Stripe */}
-                <div className="mt-24 flex items-center justify-center gap-2 opacity-30">
-                    {[...Array(20)].map((_, i) => (
-                        <div key={i} className="w-2 h-8 bg-white skew-x-[-20deg]"></div>
-                    ))}
-                </div>
-                <p className="text-center text-gray-600 font-exo text-xs mt-6 uppercase tracking-widest">© 2026 Vishnu Kanchipati. All Rights Reserved.</p>
+            {/* Social cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {socials.map((social, index) => (
+                <motion.a
+                  key={social.label}
+                  href={social.href}
+                  target={social.href.startsWith('mailto') ? undefined : '_blank'}
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-4 p-4 rounded-xl border border-neutral-100 bg-white hover:bg-neutral-50 hover:border-neutral-300 transition-all duration-300 group"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.3 + index * 0.1 }}
+                  whileHover={{ x: 4 }}
+                >
+                  <div className="w-10 h-10 rounded-lg bg-neutral-50 border border-neutral-100 flex items-center justify-center text-neutral-500 group-hover:bg-neutral-900 group-hover:text-white group-hover:border-neutral-900 transition-all duration-300">
+                    {social.icon}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-neutral-900">{social.label}</p>
+                    <p className="text-[11px] text-neutral-400 font-medium">{social.desc}</p>
+                  </div>
+                  <ArrowUpRight className="w-4 h-4 text-neutral-300 group-hover:text-neutral-900 transition-colors" />
+                </motion.a>
+              ))}
             </div>
+          </motion.div>
 
-            {/* Success Modal */}
-            <AnimatePresence>
-                {status === 'success' && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="absolute inset-0 z-20 flex items-center justify-center bg-black/80 backdrop-blur-sm"
-                    >
-                        <motion.div
-                            initial={{ scale: 0.8, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.8, opacity: 0 }}
-                            className="bg-neutral-900 border border-neon-lime p-8 flex flex-col items-center text-center max-w-sm mx-4 shadow-[0_0_50px_rgba(204,255,0,0.2)]"
-                        >
-                            <CheckCircle className="text-neon-lime w-16 h-16 mb-4" />
-                            <h3 className="text-2xl font-orbitron font-bold text-white mb-2">Message Sent!</h3>
-                            <p className="text-gray-400 font-exo">I'll get back to you as soon as possible.</p>
-                        </motion.div>
-                    </motion.div>
+          {/* Right — Form */}
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <form className="space-y-8" onSubmit={handleSubmit}>
+              {/* Name */}
+              <div className="float-label-group">
+                <input
+                  id="contact-name"
+                  type="text"
+                  value={formState.name}
+                  onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+                  placeholder=" "
+                  maxLength={100}
+                />
+                <label htmlFor="contact-name">Your Name</label>
+              </div>
+
+              {/* Email */}
+              <div className="float-label-group">
+                <input
+                  id="contact-email"
+                  type="email"
+                  value={formState.email}
+                  onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+                  placeholder=" "
+                  maxLength={100}
+                />
+                <label htmlFor="contact-email">Email Address</label>
+              </div>
+
+              {/* Message */}
+              <div className="float-label-group">
+                <textarea
+                  id="contact-message"
+                  rows={4}
+                  value={formState.message}
+                  onChange={(e) => setFormState({ ...formState, message: e.target.value })}
+                  placeholder=" "
+                  maxLength={500}
+                  style={{ resize: 'none' }}
+                />
+                <label htmlFor="contact-message">Your Message</label>
+              </div>
+
+              {/* Error */}
+              <AnimatePresence>
+                {status === 'error' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="text-red-500 flex items-center gap-2 text-sm font-medium"
+                  >
+                    <AlertCircle size={16} /> {errorMessage}
+                  </motion.div>
                 )}
-            </AnimatePresence>
-        </section>
-    );
+              </AnimatePresence>
+
+              {/* Submit */}
+              <motion.button
+                type="submit"
+                disabled={status === 'submitting'}
+                className="w-full py-5 bg-neutral-900 text-white font-black uppercase tracking-wider text-sm rounded-xl hover:bg-neutral-800 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 button-shine relative overflow-hidden"
+                style={{ fontFamily: "'Syne', sans-serif" }}
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
+              >
+                {status === 'submitting' ? (
+                  <span className="flex items-center gap-2">
+                    <motion.div
+                      className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full"
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                    />
+                    Sending...
+                  </span>
+                ) : (
+                  <>
+                    Send Message <Send className="w-4 h-4" />
+                  </>
+                )}
+              </motion.button>
+            </form>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Success Modal */}
+      <AnimatePresence>
+        {status === 'success' && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/20 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              className="bg-white border border-neutral-200 p-10 flex flex-col items-center text-center max-w-sm mx-4 shadow-2xl rounded-2xl"
+            >
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: 'spring', stiffness: 200, damping: 15, delay: 0.2 }}
+              >
+                <CheckCircle className="text-emerald-500 w-16 h-16 mb-5" />
+              </motion.div>
+              <h3
+                className="text-2xl font-black text-neutral-900 uppercase tracking-tight mb-2"
+                style={{ fontFamily: "'Syne', sans-serif" }}
+              >
+                Message Sent!
+              </h3>
+              <p className="text-neutral-500 text-sm leading-relaxed">I'll get back to you as soon as possible.</p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </section>
+  );
 };
 
 export default Contact;

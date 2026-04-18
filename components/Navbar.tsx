@@ -1,11 +1,13 @@
-
 import React, { useState, useEffect } from 'react';
 import { SectionId } from '../types';
 import { Menu, X } from 'lucide-react';
+import MagneticButton from './MagneticButton';
 
 interface NavbarProps {
   scrollToSection: (id: SectionId) => void;
   activeSection: SectionId;
+  currentView?: "work" | "home";
+  setCurrentView?: React.Dispatch<React.SetStateAction<"work" | "home">>;
 }
 
 const Navbar: React.FC<NavbarProps> = ({ scrollToSection, activeSection }) => {
@@ -27,53 +29,72 @@ const Navbar: React.FC<NavbarProps> = ({ scrollToSection, activeSection }) => {
   ];
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${isScrolled ? 'glass-panel-intense py-3 border-b border-neon-lime/20 shadow-[0_4px_30px_rgba(204,255,0,0.1)]' : 'bg-transparent py-6'}`}>
+    <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${isScrolled ? 'backdrop-blur-xl bg-white/70 py-4 border-b border-black/5 shadow-sm' : 'bg-transparent py-6'}`}>
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-        {/* Logo */}
-        <div
-          className="text-2xl font-orbitron font-bold text-white tracking-tighter cursor-pointer group flex items-center"
-          onClick={() => scrollToSection(SectionId.HERO)}
-        >
-          <span className="group-hover:text-neon-lime transition-colors">V</span>
-          <span className="group-hover:translate-x-0.5 transition-transform">K</span>
-          <span className="text-neon-lime animate-pulse ml-0.5">.</span>
-        </div>
+        {/* Brand / Logo */}
+        <MagneticButton>
+          <div
+            onClick={() => scrollToSection(SectionId.HERO)}
+            className="cursor-pointer"
+          >
+            <div className="text-|e font-bold tracking-tighter uppercase text-black inline-flex" style={{ letterSpacing: '-0.05em' }}>
+              V<span className="text-gray-400">K</span>
+               <span className="text-gray-400 font-normal ml-2" style={{ fontSize: '10px', letterSpacing: 'normal' }}>©2026</span>
+            </div>
+          </div>
+        </MagneticButton>
 
         {/* Desktop Nav */}
-        <div className="hidden md:flex gap-8 items-center">
+        <div className="hidden md:flex space-x-2">
           {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => scrollToSection(item.id)}
-              className={`text-xs font-exo uppercase font-bold tracking-[0.15em] transition-colors duration-300 relative group ${activeSection === item.id ? 'text-neon-lime' : 'text-gray-400 hover:text-white'}`}
-            >
-              {item.label}
-              <span className={`absolute -bottom-2 left-1/2 -translate-x-1/2 h-[2px] bg-neon-lime transition-all duration-300 shadow-[0_0_10px_#CCFF00] ${activeSection === item.id ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
-            </button>
+            <MagneticButton key={item.id}>
+              <button
+                onClick={() => scrollToSection(item.id)}
+                className={`${activeSection === item.id ? 'text-black' : 'text-gray-400'} px-4 py-2 text-xs font-semibold uppercase tracking-widest transition-all duration-300 hover:text-black relative group hover:bg-black/5 rounded-full`}
+              >
+                {item.label}
+                {activeSection === item.id && (
+                  <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-black rounded-full" />
+                )}
+              </button>
+            </MagneticButton>
           ))}
         </div>
 
-        {/* Mobile Menu Toggle */}
-        <button className="md:hidden text-white hover:text-neon-lime transition-colors" onClick={() => setIsMobileOpen(!isMobileOpen)}>
-          {isMobileOpen ? <X /> : <Menu />}
-        </button>
+        {/* Mobile Toggle */}
+        <div className="md:hidden">
+          <button
+            onClick={() => setIsMobileOpen(!isMobileOpen)}
+            className="p-2 text-black hover:bg-black/5 rounded-full transition-colors"
+          >
+            {
+              isMobileOpen ? <X size={24} /> : <Menu size={24} />
+            }
+          </button>
+        </div>
       </div>
 
-      {/* Mobile Nav Overlay */}
-      <div className={`fixed inset-0 bg-black z-40 flex flex-col items-center justify-center gap-8 transition-transform duration-500 md:hidden ${isMobileOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-        {navItems.map((item) => (
-          <button
-            key={item.id}
-            onClick={() => {
-              scrollToSection(item.id);
-              setIsMobileOpen(false);
-            }}
-            className={`text-2xl font-orbitron uppercase font-bold tracking-widest hover:text-neon-lime hover:scale-110 transition-all ${activeSection === item.id ? 'text-neon-lime' : 'text-white'}`}
-          >
-            {item.label}
-          </button>
-        ))}
-      </div>
+      {/* Mobile Menu */}
+      (
+        isMobileOpen && (
+          <div className="md:hidden absolute top-full left-0 w-full bg-white/95 backdrop-blur-xl border-b border-black/5 shadow-2xl py-6 flex flex-col items-center space-y-6">
+            {
+              navItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    scrollToSection(item.id);
+                    setIsMobileOpen(false);
+                  }}
+                  className={`${activeSection === item.id ? 'text-black font-bold' : 'text-gray-500'} text-lg uppercase tracking-widest`}
+                >
+                  {item.label}
+                </button>
+              ))
+            }
+          </div>
+        )
+      )
     </nav>
   );
 };

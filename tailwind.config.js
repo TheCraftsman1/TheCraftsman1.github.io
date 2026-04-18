@@ -12,17 +12,23 @@ export default {
     theme: {
         extend: {
             colors: {
-                'neon-lime': '#CCFF00',
-                'neon-cyan': '#00F0FF',
-                'carbon-black': '#050505',
-                'carbon-gray': '#121212',
+                'accent': '#6366f1',
+                'accent-light': '#818cf8',
+                'accent-dark': '#4f46e5',
+                'accent-subtle': '#eef2ff',
+                'secondary': '#0ea5e9',
+                'secondary-light': '#38bdf8',
+                'surface': '#ffffff',
+                'surface-alt': '#f8fafc',
+                'surface-raised': '#f1f5f9',
             },
             fontFamily: {
-                orbitron: ['Orbitron', 'sans-serif'],
-                exo: ['Exo 2', 'sans-serif'],
+                orbitron: ['Inter', 'sans-serif'],
+                exo: ['Inter', 'sans-serif'],
+                sans: ['Inter', 'sans-serif'],
             },
             backgroundImage: {
-                'grid-pattern': "linear-gradient(to right, #1f1f1f 1px, transparent 1px), linear-gradient(to bottom, #1f1f1f 1px, transparent 1px)",
+                'grid-pattern': "linear-gradient(to right, #e2e8f0 1px, transparent 1px), linear-gradient(to bottom, #e2e8f0 1px, transparent 1px)",
             },
             animation: {
                 'float': 'float 6s ease-in-out infinite',
@@ -40,8 +46,8 @@ export default {
                     '50%': { transform: 'translateY(-15px) rotate(2deg)' },
                 },
                 'pulse-glow': {
-                    '0%, 100%': { boxShadow: '0 0 20px rgba(204, 255, 0, 0.2)', opacity: '0.8' },
-                    '50%': { boxShadow: '0 0 40px rgba(204, 255, 0, 0.4)', opacity: '1' },
+                    '0%, 100%': { boxShadow: '0 0 20px rgba(99, 102, 241, 0.2)', opacity: '0.8' },
+                    '50%': { boxShadow: '0 0 40px rgba(99, 102, 241, 0.4)', opacity: '1' },
                 },
                 'gradient-shift': {
                     '0%': { backgroundPosition: '0% 50%' },
