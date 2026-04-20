@@ -5,6 +5,7 @@ interface SectionTitleProps {
   title: string;
   subtitle: string;
   number?: string;
+  titleColor?: string;
 }
 
 const letterVariants = {
@@ -28,7 +29,7 @@ const containerVariants = {
   }
 };
 
-const SectionTitle: React.FC<SectionTitleProps> = ({ title, subtitle, number }) => {
+const SectionTitle: React.FC<SectionTitleProps> = ({ title, subtitle, number, titleColor = "text-white" }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -44,7 +45,8 @@ const SectionTitle: React.FC<SectionTitleProps> = ({ title, subtitle, number }) 
       </motion.span>
 
       <motion.h2
-        className="text-4xl md:text-6xl font-orbitron font-black text-white uppercase tracking-tighter flex flex-wrap"
+        className={`text-4xl md:text-5xl lg:text-7xl font-black ${titleColor} uppercase tracking-tighter flex flex-wrap leading-tight`}
+        style={{ fontFamily: "'Syne', sans-serif" }}
         variants={containerVariants}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}

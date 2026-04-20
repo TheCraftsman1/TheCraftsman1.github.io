@@ -1,13 +1,33 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, useMotionTemplate } from 'framer-motion';
-import { X, ExternalLink, Github, ChevronRight, ChevronLeft, ArrowUpRight } from 'lucide-react';
+import { X, ExternalLink, ChevronRight, ChevronLeft, ArrowUpRight } from 'lucide-react';
+import { Github } from './Github';
 import { Project } from '../types';
 
 interface HorizontalScrollProjectsProps {
     projects: Project[];
 }
 
-// Premium 3D Card with mouse tracking
+const METRIC_TOKEN_SPLIT = /(O\([^)]+\)|\b\d+(?:\.\d+)?%(?:\+)?|\b\d+(?:\.\d+)?s\b|\b\d+(?:\.\d+)?k\+?\b|\b\d{2,}\+\b|\bsub-\d+\s*second(?:s)?\b)/gi;
+const METRIC_TOKEN_MATCH = /^(O\([^)]+\)|\d+(?:\.\d+)?%(?:\+)?|\d+(?:\.\d+)?s|\d+(?:\.\d+)?k\+?|\d{2,}\+|sub-\d+\s*second(?:s)?)$/i;
+
+const renderMetricText = (text: string) =>
+    text
+        .split(METRIC_TOKEN_SPLIT)
+        .filter(Boolean)
+        .map((part, idx) =>
+            METRIC_TOKEN_MATCH.test(part) ? (
+                <span
+                    key={`${part}-${idx}`}
+                    className="font-mono text-cyan-200 bg-cyan-400/10 border border-cyan-400/20 rounded px-1.5 py-0.5"
+                >
+                    {part}
+                </span>
+            ) : (
+                <span key={`${part}-${idx}`}>{part}</span>
+            )
+        );
+
 const ProjectCard: React.FC<{
     project: Project;
     index: number;
@@ -19,11 +39,16 @@ const ProjectCard: React.FC<{
     const x = useMotionValue(0);
     const y = useMotionValue(0);
 
-    const mouseXSpring = useSpring(x, { stiffness: 500, damping: 100 });
-    const mouseYSpring = useSpring(y, { stiffness: 500, damping: 100 });
+    const mouseXSpring = useSpring(x, { stiffness: 500, damping: 90 });
+    const mouseYSpring = useSpring(y, { stiffness: 500, damping: 90 });
 
-    const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ['17.5deg', '-17.5deg']);
-    const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ['-17.5deg', '17.5deg']);
+    const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ['14deg', '-14deg']);
+    const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ['-14deg', '14deg']);
+
+    const glareX = useTransform(x, [-0.5, 0.5], ['90%', '10%']);
+    const glareY = useTransform(y, [-0.5, 0.5], ['90%', '10%']);
+    const glareOpacity = useTransform(x, [-0.5, 0, 0.5], [0.08, 0.2, 0.08]);
+    const glareBackground = useMotionTemplate`radial-gradient(circle at ${glareX} ${glareY}, rgba(34,211,238,${glareOpacity}) 0%, transparent 55%)`;
 
     const handleMouseMove = (e: React.MouseEvent) => {
         if (!cardRef.current) return;
@@ -46,219 +71,174 @@ const ProjectCard: React.FC<{
         setIsHovered(false);
     };
 
-    // Dynamic Glare Effect Logic
-    const glareX = useTransform(x, [-0.5, 0.5], ['100%', '0%']);
-    const glareY = useTransform(y, [-0.5, 0.5], ['100%', '0%']);
-    const glareOpacity = useTransform(x, [-0.5, 0, 0.5], [0.1, 0.3, 0.1]);
-    const glareBackground = useMotionTemplate`radial-gradient(circle at ${glareX} ${glareY}, rgba(255,255,255,${glareOpacity}) 0%, transparent 50%)`;
-
     return (
         <motion.div
             className="horizontal-scroll-item"
-            initial={{ opacity: 0, x: 50, rotateY: -10 }}
+            initial={{ opacity: 0, x: 60, rotateY: -8 }}
             whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
             viewport={{ once: true, margin: '-50px' }}
-            transition={{ delay: index * 0.15, duration: 0.6, ease: 'easeOut' }}
-            style={{
-                perspective: 1500,
-            }}
+            transition={{ delay: index * 0.12, duration: 0.6, ease: 'easeOut' }}
+            style={{ perspective: 1400 }}
         >
-            <motion.div
+            <motion.article
                 ref={cardRef}
-                className="relative h-[480px] cursor-pointer group"
+                className="relative h-[520px] cursor-pointer group"
                 style={{
                     rotateX,
                     rotateY,
                     transformStyle: 'preserve-3d',
-                    willChange: 'transform', // Performance: hint to browser to GPU accelerate this
+                    willChange: 'transform',
                 }}
                 onMouseMove={handleMouseMove}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={handleMouseLeave}
                 onClick={onClick}
             >
-                {/* Card container with glass effect */}
-                <div className="relative h-full rounded-2xl overflow-hidden transition-all duration-500"
-                    style={{
-                        transform: 'translateZ(0)',
-                        transformStyle: 'preserve-3d',
-                    }}
+                <div
+                    className="relative h-full rounded-3xl overflow-hidden"
+                    style={{ transform: 'translateZ(0)', transformStyle: 'preserve-3d' }}
                 >
-                    {/* Animated border gradient */}
-                    <div className="absolute inset-0 rounded-2xl p-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                        style={{
-                            background: 'linear-gradient(135deg, #e5e5e5, #d4d4d4, #f5f5f5)',
-                        }}
-                    >
-                        <div className="w-full h-full bg-white rounded-2xl" />
+                    <div className="absolute inset-0 rounded-3xl p-[1px] bg-gradient-to-b from-cyan-300/60 via-white/20 to-amber-200/40 opacity-70">
+                        <div className="h-full w-full rounded-3xl bg-[#0b1118]" />
                     </div>
 
-                    {/* Main card content */}
-                    {/* Performance: Reduced blur radius from xl to md to save compositor thread overhead during 3D tilts */}
-                    <div className="absolute inset-[1px] rounded-2xl bg-white border border-neutral-100 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
-                        {/* Image section */}
+                    <div
+                        className="absolute inset-[1px] rounded-3xl border border-white/10 bg-[#0b1118] overflow-hidden"
+                        style={{ transform: 'translateZ(0)' }}
+                    >
                         <div className="relative h-56 overflow-hidden">
-                            {/* Image */}
                             <motion.img
                                 src={project.image}
-                                alt={project.title}
+                                alt={`${project.title} project proof`}
                                 className="w-full h-full object-cover"
                                 style={{
-                                    transform: isHovered ? 'scale(1.1)' : 'scale(1)',
-                                    willChange: 'transform',
+                                    transform: isHovered ? 'scale(1.06)' : 'scale(1)',
                                     transition: 'transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
+                                    willChange: 'transform',
                                 }}
                             />
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#0b1118] via-[#0b1118]/50 to-transparent" />
+                            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 via-transparent to-amber-400/5" />
 
-                            {/* Performance: Opacity overlay instead of CSS grayscale filter */}
-                            <div
-                                className="absolute inset-0 bg-white mix-blend-saturation transition-opacity duration-700 pointer-events-none"
-                                style={{ opacity: isHovered ? 0 : 0.6 }}
-                            />
-
-                            {/* Gradient overlays */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-white via-white/30 to-transparent" />
-                            <div className="absolute inset-0 bg-gradient-to-r from-white/50 via-transparent to-white/50" />
-
-                            {/* Animated shine effect */}
-                            <motion.div
-                                className="absolute inset-0 bg-gradient-to-r from-transparent via-black/5 to-transparent"
-                                initial={{ x: '-100%' }}
-                                animate={{ x: isHovered ? '100%' : '-100%' }}
-                                transition={{ duration: 0.8, ease: 'easeInOut' }}
-                            />
-
-                            {/* Category badge */}
                             <div className="absolute top-4 left-4 z-20">
-                                <motion.div
-                                    className="relative overflow-hidden"
-                                    initial={{ opacity: 0, x: -20 }}
-                                    whileInView={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: index * 0.1 + 0.2 }}
-                                >
-                                    <div className="absolute inset-0 bg-neutral-100 blur-xl" />
-                                    <span className="relative block px-4 py-1.5 bg-white/90 backdrop-blur-md border border-neutral-200 text-[10px] text-neutral-900 font-bold uppercase tracking-[0.2em]">
-                                        {project.category}
-                                    </span>
-                                </motion.div>
+                                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/45 backdrop-blur-md border border-white/20 text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-100">
+                                    {project.category}
+                                </span>
                             </div>
 
-                            {/* Hover overlay with arrow */}
+                            {project.caseStudy?.proofNote && (
+                                <div className="absolute bottom-4 left-4 right-4 z-20">
+                                    <span className="inline-block w-full truncate px-3 py-2 rounded-lg bg-black/60 backdrop-blur-md border border-cyan-300/25 text-[10px] uppercase tracking-[0.14em] text-cyan-100 font-mono">
+                                        Proof | {project.caseStudy.proofNote}
+                                    </span>
+                                </div>
+                            )}
+
                             <motion.div
-                                className="absolute inset-0 flex items-center justify-center bg-white/40 backdrop-blur-sm"
+                                className="absolute inset-0 flex items-center justify-center bg-black/35 backdrop-blur-[1px]"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: isHovered ? 1 : 0 }}
-                                transition={{ duration: 0.3 }}
+                                transition={{ duration: 0.25 }}
                             >
                                 <motion.div
-                                    className="w-16 h-16 rounded-full border-2 border-neutral-900/50 flex items-center justify-center"
-                                    initial={{ scale: 0, rotate: -180 }}
+                                    className="w-14 h-14 rounded-full border border-cyan-200/60 bg-black/40 flex items-center justify-center"
+                                    initial={{ scale: 0.6, opacity: 0 }}
                                     animate={{
-                                        scale: isHovered ? 1 : 0,
-                                        rotate: isHovered ? 0 : -180
+                                        scale: isHovered ? 1 : 0.6,
+                                        opacity: isHovered ? 1 : 0,
                                     }}
-                                    transition={{ duration: 0.4, delay: 0.1 }}
+                                    transition={{ duration: 0.25 }}
                                 >
-                                    <ArrowUpRight className="w-6 h-6 text-neutral-900" />
+                                    <ArrowUpRight className="w-5 h-5 text-cyan-100" />
                                 </motion.div>
                             </motion.div>
                         </div>
 
-                        {/* Content section */}
-                        <div className="p-6 relative" style={{ transform: 'translateZ(30px)' }}>
-                            {/* Dynamic Interactive Sheen/Glare Overlay */}
+                        <div className="relative p-6 h-[calc(100%-14rem)] flex flex-col" style={{ transform: 'translateZ(26px)' }}>
                             {isHovered && (
                                 <motion.div
-                                    className="absolute inset-0 pointer-events-none z-0 mix-blend-overlay"
-                                    style={{
-                                        background: glareBackground,
-                                    }}
+                                    className="absolute inset-0 pointer-events-none z-0 mix-blend-screen"
+                                    style={{ background: glareBackground }}
                                 />
                             )}
-                            {/* Title */}
-                            <motion.h3
-                                className="text-2xl font-orbitron font-bold text-neutral-900 uppercase tracking-wide mb-3"
-                                style={{
-                                    textShadow: isHovered ? '0 0 30px rgba(0,0,0,0.1)' : 'none',
-                                    transition: 'text-shadow 0.3s ease',
-                                }}
-                            >
-                                {project.title}
-                            </motion.h3>
 
-                            {/* Description */}
-                            <p className="text-neutral-500 font-exo text-sm leading-relaxed line-clamp-2 mb-4">
-                                {project.description}
-                            </p>
+                            <div className="relative z-10 flex-1 flex flex-col">
+                                <h3 className="text-2xl font-orbitron font-bold text-white uppercase tracking-wide mb-3 leading-tight">
+                                    {project.title}
+                                </h3>
 
-                            {/* Tech stack */}
-                            <div className="flex flex-wrap gap-2">
-                                {project.tech.slice(0, 3).map((t, i) => (
-                                    <motion.span
-                                        key={t}
-                                        className="text-[10px] uppercase font-bold px-3 py-1.5 bg-neutral-50 text-neutral-600 border border-neutral-200 rounded-full"
-                                        initial={{ opacity: 0, y: 10 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: index * 0.1 + i * 0.05 }}
+                                <p className="text-neutral-300 font-exo text-sm leading-relaxed line-clamp-4 mb-5">
+                                    {renderMetricText(project.description)}
+                                </p>
+
+                                <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2 pr-2 mb-5">
+                                    {project.tech.map((tech) => (
+                                        <span
+                                            key={tech}
+                                            className="shrink-0 text-[10px] uppercase font-bold px-3 py-1.5 bg-white/5 text-neutral-200 border border-white/15 rounded-full"
+                                        >
+                                            {tech}
+                                        </span>
+                                    ))}
+                                </div>
+
+                                <div className="flex flex-wrap items-center gap-2 mt-auto">
+                                    {project.github && (
+                                        <a
+                                            href={project.github}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-cyan-300/35 bg-cyan-300/10 text-cyan-100 text-[10px] uppercase tracking-[0.16em] font-bold hover:bg-cyan-300/20 transition-colors duration-300 pointer-events-auto"
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
+                                            Source Code {'{}'} <Github className="w-3.5 h-3.5" />
+                                        </a>
+                                    )}
+
+                                    {project.liveUrl && (
+                                        <a
+                                            href={project.liveUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/25 bg-white/10 text-white text-[10px] uppercase tracking-[0.16em] font-bold hover:bg-white/20 transition-colors duration-300 pointer-events-auto"
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
+                                            Live Demo <ExternalLink className="w-3.5 h-3.5" />
+                                        </a>
+                                    )}
+
+                                    <button
+                                        type="button"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onClick();
+                                        }}
+                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-amber-200/35 bg-amber-200/10 text-amber-100 text-[10px] uppercase tracking-[0.16em] font-bold hover:bg-amber-200/20 transition-colors duration-300"
                                     >
-                                        {t}
-                                    </motion.span>
-                                ))}
-                                {project.tech.length > 3 && (
-                                    <span className="text-[10px] uppercase font-bold px-3 py-1.5 text-gray-500">
-                                        +{project.tech.length - 3}
-                                    </span>
-                                )}
+                                        Open Case Study <ArrowUpRight className="w-3.5 h-3.5" />
+                                    </button>
+                                </div>
                             </div>
 
-                            {/* Bottom indicator */}
                             <motion.div
-                                className="absolute bottom-0 left-0 right-0 h-1 bg-neutral-900"
+                                className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-cyan-300 via-cyan-100 to-amber-200"
                                 initial={{ scaleX: 0 }}
                                 animate={{ scaleX: isHovered ? 1 : 0 }}
-                                transition={{ duration: 0.4 }}
+                                transition={{ duration: 0.35 }}
                                 style={{ transformOrigin: 'left' }}
                             />
                         </div>
                     </div>
-
-                    {/* Floating particles on hover */}
-                    <AnimatePresence>
-                        {isHovered && (
-                            <>
-                                {[...Array(6)].map((_, i) => (
-                                    <motion.div
-                                        key={i}
-                                        className="absolute w-1 h-1 bg-neutral-900 rounded-full"
-                                        initial={{
-                                            opacity: 0,
-                                            scale: 0,
-                                            x: Math.random() * 400,
-                                            y: Math.random() * 500,
-                                        }}
-                                        animate={{
-                                            opacity: [0, 1, 0],
-                                            scale: [0, 1, 0],
-                                            y: [Math.random() * 500, Math.random() * 500 - 50],
-                                        }}
-                                        exit={{ opacity: 0, scale: 0 }}
-                                        transition={{ duration: 1, delay: i * 0.1 }}
-                                    />
-                                ))}
-                            </>
-                        )}
-                    </AnimatePresence>
                 </div>
 
-                {/* Shadow */}
                 <motion.div
-                    className="absolute inset-0 rounded-2xl bg-neutral-900/10 blur-2xl -z-10"
+                    className="absolute inset-0 rounded-3xl bg-cyan-200/15 blur-2xl -z-10"
                     style={{
-                        transform: 'translateZ(-50px) translateY(20px)',
-                        opacity: isHovered ? 0.3 : 0.1,
+                        transform: 'translateZ(-50px) translateY(16px)',
+                        opacity: isHovered ? 0.28 : 0.12,
                     }}
                 />
-            </motion.div>
+            </motion.article>
         </motion.div>
     );
 };
@@ -267,37 +247,45 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
     const containerRef = useRef<HTMLDivElement>(null);
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
     const [canScrollLeft, setCanScrollLeft] = useState(false);
-    const [canScrollRight, setCanScrollRight] = useState(true);
+    const [canScrollRight, setCanScrollRight] = useState(false);
 
     const checkScroll = () => {
-        if (containerRef.current) {
-            const { scrollLeft, scrollWidth, clientWidth } = containerRef.current;
-            setCanScrollLeft(scrollLeft > 0);
-            setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
-        }
+        if (!containerRef.current) return;
+
+        const { scrollLeft, scrollWidth, clientWidth } = containerRef.current;
+        setCanScrollLeft(scrollLeft > 4);
+        setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 8);
     };
 
+    useEffect(() => {
+        checkScroll();
+        const handleResize = () => checkScroll();
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [projects.length]);
+
     const scroll = (direction: 'left' | 'right') => {
-        if (containerRef.current) {
-            const scrollAmount = direction === 'left' ? -450 : 450;
-            containerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-        }
+        if (!containerRef.current) return;
+
+        const scrollAmount = direction === 'left' ? -460 : 460;
+        containerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     };
 
     return (
         <>
             <div className="relative">
-                {/* Navigation Arrows */}
                 <AnimatePresence>
                     {canScrollLeft && (
                         <motion.button
-                            initial={{ opacity: 0, x: -20 }}
+                            initial={{ opacity: 0, x: -16 }}
                             animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -20 }}
+                            exit={{ opacity: 0, x: -16 }}
                             onClick={() => scroll('left')}
-                            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-14 h-14 bg-black/80 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center hover:bg-neon-lime hover:text-black hover:border-neon-lime transition-all duration-300 hover:shadow-[0_0_30px_rgba(204,255,0,0.3)]"
+                            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-black/70 backdrop-blur-md border border-white/15 rounded-full flex items-center justify-center hover:border-cyan-300/60 hover:text-cyan-100 transition-all duration-300"
+                            aria-label="Scroll projects left"
                         >
-                            <ChevronLeft size={24} />
+                            <ChevronLeft size={20} />
                         </motion.button>
                     )}
                 </AnimatePresence>
@@ -305,18 +293,18 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                 <AnimatePresence>
                     {canScrollRight && (
                         <motion.button
-                            initial={{ opacity: 0, x: 20 }}
+                            initial={{ opacity: 0, x: 16 }}
                             animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: 20 }}
+                            exit={{ opacity: 0, x: 16 }}
                             onClick={() => scroll('right')}
-                            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-14 h-14 bg-black/80 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center hover:bg-neon-lime hover:text-black hover:border-neon-lime transition-all duration-300 hover:shadow-[0_0_30px_rgba(204,255,0,0.3)]"
+                            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-black/70 backdrop-blur-md border border-white/15 rounded-full flex items-center justify-center hover:border-cyan-300/60 hover:text-cyan-100 transition-all duration-300"
+                            aria-label="Scroll projects right"
                         >
-                            <ChevronRight size={24} />
+                            <ChevronRight size={20} />
                         </motion.button>
                     )}
                 </AnimatePresence>
 
-                {/* Horizontal Scroll Container */}
                 <div
                     ref={containerRef}
                     className="horizontal-scroll-container pb-8 pt-4"
@@ -333,54 +321,50 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                 </div>
             </div>
 
-            {/* Project Modal */}
             <AnimatePresence>
                 {selectedProject && (
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl"
+                        className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/90 backdrop-blur-lg"
                         onClick={() => setSelectedProject(null)}
                     >
                         <motion.div
-                            initial={{ clipPath: 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)', y: 100, opacity: 0 }}
-                            animate={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', y: 0, opacity: 1 }}
-                            exit={{ clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)', y: -100, opacity: 0 }}
-                            transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
-                            className="bg-neutral-900 border border-white/10 max-w-5xl w-full relative overflow-hidden max-h-[90vh] rounded-2xl"
-                            style={{ perspective: 1000 }}
+                            initial={{ opacity: 0, y: 60 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -40 }}
+                            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                            className="bg-[#0a1016] border border-white/10 max-w-5xl w-full relative overflow-hidden max-h-[90vh] rounded-2xl"
                             onClick={(e) => e.stopPropagation()}
                         >
-                            {/* Close button */}
                             <motion.button
                                 onClick={() => setSelectedProject(null)}
-                                className="absolute top-6 right-6 text-white bg-black/50 backdrop-blur-md p-3 rounded-full hover:bg-neon-lime hover:text-black transition-colors z-20 border border-white/10"
-                                whileHover={{ scale: 1.1, rotate: 90 }}
-                                whileTap={{ scale: 0.9 }}
+                                className="absolute top-5 right-5 text-white bg-black/45 backdrop-blur-md p-2.5 rounded-full hover:bg-white hover:text-black transition-colors z-20 border border-white/15"
+                                whileHover={{ scale: 1.06, rotate: 90 }}
+                                whileTap={{ scale: 0.95 }}
+                                aria-label="Close project details"
                             >
-                                <X size={24} />
+                                <X size={20} />
                             </motion.button>
 
-                            {/* Hero Image */}
                             <div className="w-full h-72 relative overflow-hidden">
                                 <motion.img
                                     src={selectedProject.image}
-                                    alt={selectedProject.title}
+                                    alt={`${selectedProject.title} details`}
                                     className="w-full h-full object-cover"
-                                    initial={{ scale: 1.1 }}
+                                    initial={{ scale: 1.08 }}
                                     animate={{ scale: 1 }}
-                                    transition={{ duration: 0.6 }}
+                                    transition={{ duration: 0.5 }}
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-neutral-900 via-neutral-900/50 to-transparent" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#0a1016] via-[#0a1016]/50 to-transparent" />
 
-                                {/* Title overlay */}
                                 <div className="absolute bottom-6 left-6 right-6">
                                     <motion.span
-                                        className="text-neon-lime text-sm font-exo uppercase tracking-[0.3em]"
-                                        initial={{ opacity: 0, y: 20 }}
+                                        className="text-cyan-200 text-xs font-mono uppercase tracking-[0.2em]"
+                                        initial={{ opacity: 0, y: 18 }}
                                         animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.2 }}
+                                        transition={{ delay: 0.1 }}
                                     >
                                         {selectedProject.category}
                                     </motion.span>
@@ -388,87 +372,135 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                                         className="text-4xl md:text-5xl font-orbitron font-black text-white uppercase mt-2"
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.3 }}
+                                        transition={{ delay: 0.2 }}
                                     >
                                         {selectedProject.title}
                                     </motion.h2>
                                 </div>
                             </div>
 
-                            {/* Content */}
-                            <div className="p-8 overflow-y-auto max-h-[calc(90vh-18rem)] rounded-b-2xl" style={{ scrollbarWidth: 'thin', scrollbarColor: '#ccff00 transparent' }}>
+                            <div className="p-8 overflow-y-auto max-h-[calc(90vh-18rem)] rounded-b-2xl" style={{ scrollbarWidth: 'thin', scrollbarColor: '#34d399 transparent' }}>
                                 {selectedProject.caseStudy ? (
-                                    <div className="space-y-8 mb-8 font-exo">
-                                        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-                                            <h4 className="text-neon-lime text-xs uppercase font-bold tracking-[0.2em] mb-3">The Problem</h4>
-                                            <p className="leading-relaxed text-lg text-gray-300">{selectedProject.caseStudy.problem}</p>
+                                    <div className="space-y-8 mb-10 font-exo">
+                                        <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
+                                            <h4 className="text-cyan-200 text-[11px] uppercase font-bold tracking-[0.2em] mb-3">The Problem</h4>
+                                            <p className="leading-relaxed text-lg text-neutral-300">{selectedProject.caseStudy.problem}</p>
                                         </motion.div>
-                                        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-                                            <h4 className="text-neon-lime text-xs uppercase font-bold tracking-[0.2em] mb-3">Architecture & Solution</h4>
-                                            <p className="leading-relaxed text-lg text-gray-300">{selectedProject.caseStudy.architecture}</p>
+
+                                        <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+                                            <h4 className="text-cyan-200 text-[11px] uppercase font-bold tracking-[0.2em] mb-3">Architecture & Solution</h4>
+                                            <p className="leading-relaxed text-lg text-neutral-300">{selectedProject.caseStudy.architecture}</p>
                                         </motion.div>
-                                        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
-                                            <h4 className="text-neon-lime text-xs uppercase font-bold tracking-[0.2em] mb-3">Key Metrics</h4>
-                                            <ul className="list-disc pl-5 space-y-2 text-white/90 text-lg">
+
+                                        {selectedProject.pipeline && (
+                                            <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.32 }}>
+                                                <h4 className="text-cyan-200 text-[11px] uppercase font-bold tracking-[0.2em] mb-4">Pipeline Stages</h4>
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    {selectedProject.pipeline.map((step, idx) => (
+                                                        <div key={idx} className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-400/30 transition-colors group">
+                                                            <div className="flex items-center gap-3 mb-2">
+                                                                <span className="w-6 h-6 rounded-full bg-cyan-400/10 border border-cyan-400/20 flex items-center justify-center text-[10px] font-bold text-cyan-200 group-hover:bg-cyan-400/20 transition-colors">
+                                                                    0{idx + 1}
+                                                                </span>
+                                                                <span className="text-sm font-bold text-white uppercase tracking-wider">{step.step}</span>
+                                                            </div>
+                                                            <p className="text-xs text-neutral-400 leading-relaxed font-exo">
+                                                                {step.description}
+                                                            </p>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </motion.div>
+                                        )}
+
+                                        <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
+                                            <h4 className="text-cyan-200 text-[11px] uppercase font-bold tracking-[0.2em] mb-3">Key Metrics</h4>
+                                            <ul className="list-disc pl-5 space-y-3 text-neutral-100 text-base">
                                                 {selectedProject.caseStudy.metrics.map((metric, idx) => (
-                                                    <li key={idx} className="leading-relaxed">{metric}</li>
+                                                    <li key={idx} className="leading-relaxed">{renderMetricText(metric)}</li>
                                                 ))}
                                             </ul>
                                         </motion.div>
+
+                                        {selectedProject.caseStudy.hardestPart && (
+                                            <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+                                                <h4 className="text-cyan-200 text-[11px] uppercase font-bold tracking-[0.2em] mb-3">The Biggest Challenge</h4>
+                                                <p className="leading-relaxed text-base text-neutral-300">{selectedProject.caseStudy.hardestPart}</p>
+                                            </motion.div>
+                                        )}
+
+                                        {selectedProject.caseStudy.proofNote && (
+                                            <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}>
+                                                <h4 className="text-cyan-200 text-[11px] uppercase font-bold tracking-[0.2em] mb-3">Proof Artifact</h4>
+                                                <p className="font-mono text-sm text-cyan-100 bg-cyan-400/10 border border-cyan-400/20 rounded-lg px-4 py-3">
+                                                    {selectedProject.caseStudy.proofNote}
+                                                </p>
+                                            </motion.div>
+                                        )}
                                     </div>
                                 ) : (
                                     <motion.p
-                                        className="font-exo text-gray-300 leading-relaxed text-lg mb-8"
-                                        initial={{ opacity: 0, y: 20 }}
+                                        className="font-exo text-neutral-300 leading-relaxed text-lg mb-8"
+                                        initial={{ opacity: 0, y: 18 }}
                                         animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.4 }}
                                     >
                                         {selectedProject.fullDetails}
                                     </motion.p>
                                 )}
 
-                                {/* Tech Stack */}
                                 <motion.div
                                     className="mb-8"
-                                    initial={{ opacity: 0, y: 20 }}
+                                    initial={{ opacity: 0, y: 18 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: selectedProject.caseStudy ? 0.7 : 0.5 }}
+                                    transition={{ delay: selectedProject.caseStudy ? 0.5 : 0.2 }}
                                 >
-                                    <h4 className="text-xs uppercase text-gray-500 mb-4 font-bold tracking-wider">
+                                    <h4 className="text-[11px] uppercase text-neutral-500 mb-4 font-bold tracking-[0.2em]">
                                         Tech Stack
                                     </h4>
                                     <div className="flex flex-wrap gap-3">
-                                        {selectedProject.tech.map((t, i) => (
+                                        {selectedProject.tech.map((tech, i) => (
                                             <motion.span
-                                                key={t}
-                                                className="text-sm uppercase font-bold px-4 py-2 bg-white/5 text-white border border-white/10 rounded-full hover:border-neon-lime hover:text-neon-lime transition-colors cursor-default"
-                                                initial={{ opacity: 0, scale: 0.8 }}
+                                                key={tech}
+                                                className="text-xs uppercase font-bold px-4 py-2 bg-white/5 text-neutral-100 border border-white/10 rounded-full"
+                                                initial={{ opacity: 0, scale: 0.86 }}
                                                 animate={{ opacity: 1, scale: 1 }}
-                                                transition={{ delay: (selectedProject.caseStudy ? 0.7 : 0.5) + i * 0.05 }}
+                                                transition={{ delay: (selectedProject.caseStudy ? 0.5 : 0.2) + i * 0.04 }}
                                             >
-                                                {t}
+                                                {tech}
                                             </motion.span>
                                         ))}
                                     </div>
                                 </motion.div>
 
-                                {/* Links */}
                                 <motion.div
-                                    className="flex gap-4 pt-6 border-t border-white/10"
-                                    initial={{ opacity: 0, y: 20 }}
+                                    className="flex flex-wrap gap-3 pt-6 border-t border-white/10"
+                                    initial={{ opacity: 0, y: 18 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: selectedProject.caseStudy ? 0.8 : 0.6 }}
+                                    transition={{ delay: selectedProject.caseStudy ? 0.58 : 0.28 }}
                                 >
                                     {selectedProject.github && (
                                         <motion.a
                                             href={selectedProject.github}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex-1 bg-neon-lime text-black py-4 font-orbitron font-bold uppercase hover:bg-white transition-colors flex items-center justify-center gap-2 rounded-lg"
+                                            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-cyan-300/15 border border-cyan-300/35 text-cyan-100 text-xs uppercase tracking-[0.16em] font-bold hover:bg-cyan-300/25 transition-colors"
                                             whileHover={{ scale: 1.02 }}
                                             whileTap={{ scale: 0.98 }}
                                         >
-                                            View Code <Github size={18} />
+                                            Source Code {'{}'} <Github size={16} />
+                                        </motion.a>
+                                    )}
+
+                                    {selectedProject.liveUrl && (
+                                        <motion.a
+                                            href={selectedProject.liveUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white/10 border border-white/20 text-white text-xs uppercase tracking-[0.16em] font-bold hover:bg-white/20 transition-colors"
+                                            whileHover={{ scale: 1.02 }}
+                                            whileTap={{ scale: 0.98 }}
+                                        >
+                                            Live Demo <ExternalLink size={16} />
                                         </motion.a>
                                     )}
                                 </motion.div>

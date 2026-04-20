@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { motion, Variants } from 'framer-motion';
 
 interface LoaderProps {
@@ -6,17 +6,53 @@ interface LoaderProps {
 }
 
 const Loader: React.FC<LoaderProps> = ({ onComplete }) => {
-  const [isExiting, setIsExiting] = useState(false);
+  const [phase, setPhase] = useState<'text' | 'video' | 'exiting'>('text');
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const fallbackCalled = useRef(false);
 
-  // Time-based exit since we removed the progress bar noise
   useEffect(() => {
+    // Show text for 2.8 seconds before triggering video
     const timer = setTimeout(() => {
-      setIsExiting(true);
-      setTimeout(onComplete, 1200); // Wait for exit animation to finish
-    }, 3500); // Total reading time before starting exit
+      setPhase('video');
+      if (videoRef.current) {
+        videoRef.current.play().catch((err) => {
+          console.error('Video autoplay failed:', err);
+          // If video fails, quickly exit loading screen
+          if (!fallbackCalled.current) {
+            fallbackCalled.current = true;
+            setPhase('exiting');
+            setTimeout(onComplete, 600);
+          }
+        });
+      }
+    }, 2800);
 
-    return () => clearTimeout(timer);
+    // Absolute fallback: load site after 8s no matter what 
+    const failsafe = setTimeout(() => {
+      if (!fallbackCalled.current) {
+        fallbackCalled.current = true;
+        setPhase('exiting');
+        onComplete();
+      }
+    }, 8000);
+
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(failsafe);
+    };
   }, [onComplete]);
+
+  // Stop video right after the motion blur / horizontal stretch glitch effect (~4.2 seconds)
+  const handleTimeUpdate = () => {
+    if (videoRef.current && videoRef.current.currentTime >= 4.2) {
+      if (!fallbackCalled.current) {
+        fallbackCalled.current = true;
+        videoRef.current.pause();
+        setPhase('exiting');
+        setTimeout(onComplete, 400); // Wait for a snappy fade before unmounting
+      }
+    }
+  };
 
   // Clean, modern animation variants
   const containerVars: Variants = {
@@ -29,7 +65,7 @@ const Loader: React.FC<LoaderProps> = ({ onComplete }) => {
       opacity: 0,
       y: -20,
       filter: 'blur(8px)',
-      transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] }
+      transition: { duration: 0.6, ease: [0.76, 0, 0.24, 1] }
     }
   };
 
@@ -46,23 +82,39 @@ const Loader: React.FC<LoaderProps> = ({ onComplete }) => {
 
   return (
     <motion.div
-      exit={{ opacity: 0 }}
+      initial={{ opacity: 1 }}
+      animate={{ opacity: phase === 'exiting' ? 0 : 1 }}
+      transition={{ duration: 0.6 }}
       className="fixed inset-0 z-[10000] flex flex-col items-center justify-center overflow-hidden bg-[#050505] text-white"
     >
       {/* ═══ CLEAN STUDIO CANVAS (White Dots on Black) ═══ */}
-      <div 
+      <motion.div 
         className="absolute inset-0 pointer-events-none opacity-[0.25]"
+        animate={{ opacity: phase === 'text' ? 0.25 : 0 }}
         style={{
           backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)',
           backgroundSize: '48px 48px',
         }}
+      />
+
+      {/* ═══ INTRO VIDEO BACKGROUND ═══ */}
+      <motion.video
+        ref={videoRef}
+        src="/Untitled design.mp4"
+        muted
+        playsInline
+        onTimeUpdate={handleTimeUpdate}
+        className="absolute inset-0 w-full h-full object-cover z-0"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: phase === 'video' ? 1 : 0 }}
+        transition={{ duration: 0.8 }}
       />
       
       {/* ═══ IMPACTFUL MODERN TEXT ═══ */}
       <motion.div
         variants={containerVars}
         initial="hidden"
-        animate={isExiting ? "exiting" : "show"}
+        animate={phase === 'text' ? "show" : "exiting"}
         className="flex flex-col items-center gap-6 z-10 px-8 text-center relative"
       >
         <h1 
@@ -83,7 +135,7 @@ const Loader: React.FC<LoaderProps> = ({ onComplete }) => {
         <motion.p 
           className="text-xs md:text-sm font-semibold uppercase tracking-[0.3em] text-neutral-400 mt-4"
           initial={{ opacity: 0 }}
-          animate={isExiting ? { opacity: 0 } : { opacity: 1 }}
+          animate={phase === 'text' ? { opacity: 1 } : { opacity: 0 }}
           transition={{ duration: 1, delay: 1.2 }}
         >
           Vishnu Kanchipati

@@ -8,6 +8,7 @@ import Loader from './components/Loader';
 import SmoothScroll from './components/SmoothScroll';
 import ScrollProgress from './components/ScrollProgress';
 import ScrollReveal from './components/ScrollReveal';
+import CustomCursor from './components/CustomCursor';
 import CursorTrail from './components/CursorTrail';
 import InteractiveParticles from './components/InteractiveParticles';
 import ScrollDriven3D from './components/ScrollDriven3D';
@@ -83,6 +84,7 @@ const App: React.FC = () => {
   return (
     <SmoothScroll>
       <LayoutGroup>
+        <CustomCursor />
         <AnimatePresence mode="wait">
           {isLoading && <Loader key="loader" onComplete={() => setIsLoading(false)} />}
         </AnimatePresence>
@@ -161,7 +163,7 @@ const App: React.FC = () => {
                 transition={{ duration: 0.5 }}
               >
                 <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-neutral-300 text-sm tracking-widest uppercase font-medium">Loading...</div>}>
-                  <WorkPage />
+                  <WorkPage setCurrentView={setCurrentView} />
                 </Suspense>
               </motion.div>
             )}

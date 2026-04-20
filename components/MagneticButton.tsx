@@ -1,8 +1,8 @@
-import React, { useRef, memo } from 'react';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
+import React, { useRef, memo, ReactNode, MouseEvent } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 interface MagneticButtonProps {
-    children: React.ReactNode;
+    children: ReactNode;
     onClick?: () => void;
     href?: string;
     className?: string;
@@ -23,7 +23,11 @@ const MagneticButton: React.FC<MagneticButtonProps> = memo(({
     const springX = useSpring(x, springConfig);
     const springY = useSpring(y, springConfig);
 
-    const handleMouseMove = (e: React.MouseEvent) => {
+    // Subtle parallax effect for the content
+    const textX = useTransform(springX, (value) => value * 0.4);
+    const textY = useTransform(springY, (value) => value * 0.4);
+
+    const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
         if (!ref.current) return;
 
         const rect = ref.current.getBoundingClientRect();
@@ -33,7 +37,6 @@ const MagneticButton: React.FC<MagneticButtonProps> = memo(({
         const distanceX = e.clientX - centerX;
         const distanceY = e.clientY - centerY;
 
-        // Reduced magnetic effect for performance
         x.set(distanceX * 0.2);
         y.set(distanceY * 0.2);
     };
@@ -46,13 +49,15 @@ const MagneticButton: React.FC<MagneticButtonProps> = memo(({
     const content = (
         <motion.div
             ref={ref}
-            className={`inline-block ${className}`}
+            className={`inline-block relative ${className}`}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             style={{ x: springX, y: springY }}
             onClick={onClick}
         >
-            {children}
+            <motion.div style={{ x: textX, y: textY }} className="w-full h-full flex items-center justify-center">
+                {children}
+            </motion.div>
         </motion.div>
     );
 

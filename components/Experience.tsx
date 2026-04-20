@@ -1,213 +1,280 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef, useState } from 'react';
+import { motion, useScroll, useSpring, useTransform, AnimatePresence } from 'framer-motion';
 import { SectionId } from '../types';
 import SectionTitle from './SectionTitle';
-import { Calendar, MapPin, Building2, GraduationCap } from 'lucide-react';
+import { Network, GraduationCap, Plus, Minus, Code2 } from 'lucide-react';
 import CountUp from 'react-countup';
-import { ParallaxSection } from './ParallaxSection';
-import ScrollReveal from './ScrollReveal';
 
-interface ExperienceItem {
-  id: string;
-  type: 'work' | 'education' | 'achievement';
-  title: string;
-  organization: string;
-  location: string;
-  date: string;
-  year: string;
-  description: string;
-  tags?: string[];
-  icon: React.ReactNode;
-  accent: string;
-}
-
-const experiences: ExperienceItem[] = [
+const experiences = [
   {
-    id: '1',
-    type: 'education',
-    title: 'B.Tech Computer Science',
-    organization: 'IARE',
-    location: 'Hyderabad, India',
-    date: '2024 - 2028',
-    year: '2024',
-    description: 'Pursuing Bachelor of Technology in Computer Science and Engineering with focus on software development, algorithms, and emerging technologies.',
-    tags: ['Data Structures', 'Algorithms', 'Web Development', 'AI/ML'],
-    icon: <GraduationCap className="w-6 h-6" />,
-    accent: '#f59e0b',
+    id: 'iare',
+    type: 'Formal Architecture',
+    title: 'B.Tech in Computer Science',
+    organization: '< Institute of Aeronautical Engineering />',
+    date: '2024 — 2028',
+    gpa: '8.5',
+    image: '/iare.jpg',
+    icon: <GraduationCap className="w-6 h-6 text-teal-400" />,
+    bullets: [
+      'Architecting foundations in Operating Systems, DBMS, and Network Protocols.',
+      'Bridging theoretical Computer Science with modern Full-Stack development.',
+    ],
+    deepDive: [
+      'Engineered resilient software patterns applied to academic projects.',
+      'Participated in hackathons and coding competitions representing the university.',
+    ],
+    tags: ['Data Structures', 'Algorithms', 'System Design'],
+  },
+  {
+    id: 'dsa',
+    type: 'Independent Study',
+    title: 'Algorithmic Problem Solving',
+    organization: '< LeetCode & GeeksForGeeks />',
+    date: '2024 — Present',
+    icon: <Network className="w-6 h-6 text-teal-400" />,
+    bullets: [
+      'Conquered 200+ complex algorithmic challenges, focusing on Graph Theory and Dynamic Programming.',
+      'Optimized brute-force solutions to achieve O(N) time complexity metrics.',
+    ],
+    deepDive: [
+      'Maintained top percentile ranking in competitive programming contests.',
+      'Developed deep understanding of memory management and algorithmic efficiency.',
+    ],
+    languages: [
+      { name: 'Java', color: 'bg-teal-400', width: '60%' },
+      { name: 'C++', color: 'bg-white', width: '40%' },
+    ],
   },
 ];
 
-const ticker = [
-  { value: 20, suffix: '+', label: 'Projects' },
-  { value: 200, suffix: '+', label: 'DSA Problems' },
-  { value: 3, suffix: '+', label: 'Years Coding' },
-  { value: 10, suffix: '+', label: 'Technologies' },
-];
+const SpotlightCard = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => {
+  const divRef = useRef<HTMLDivElement>(null);
+  const [isFocused, setIsFocused] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [opacity, setOpacity] = useState(0);
 
-const Experience: React.FC = () => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!divRef.current || isFocused) return;
+    const div = divRef.current;
+    const rect = div.getBoundingClientRect();
+    setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  };
+
+  const handleFocus = () => setIsFocused(true);
+  const handleBlur = () => setIsFocused(false);
+  const handleMouseEnter = () => setOpacity(1);
+  const handleMouseLeave = () => setOpacity(0);
+
   return (
-    <section id={SectionId.EXPERIENCE} className="py-32 md:py-40 bg-white relative overflow-hidden border-t border-neutral-100">
-      {/* Subtle grid background */}
+    <div
+      ref={divRef}
+      onMouseMove={handleMouseMove}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className={`relative overflow-hidden rounded-3xl border border-neutral-800 bg-neutral-950/50 p-8 md:p-10 transition-colors duration-500 hover:border-neutral-700 ${className}`}
+    >
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.05]"
+        className="pointer-events-none absolute -inset-px transition-opacity duration-300"
         style={{
-          backgroundImage: 'linear-gradient(to right, #000 1px, transparent 1px), linear-gradient(to bottom, #000 1px, transparent 1px)',
-          backgroundSize: '80px 80px',
+          opacity,
+          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(45, 212, 191, 0.1), transparent 40%)`,
         }}
       />
+      <div className="relative z-10">{children}</div>
+    </div>
+  );
+};
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <SectionTitle title="Journey" subtitle="Experience & Education" number="02" />
+const ExperienceNode = ({ data }: { data: typeof experiences[0] }) => {
+  const [expanded, setExpanded] = useState(false);
 
-        {/* Hero image + experience card layout */}
-        <div className="mt-20 grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-
-          {/* Portrait photo — blends with the grey tones */}
-          <motion.div
-            className="lg:col-span-4 relative"
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <ParallaxSection direction="vertical" speed={0.15}>
-            <div className="relative group">
-              {/* Matching grey background frame to blend with photo's grey bg */}
-              <div className="absolute -inset-3 bg-gradient-to-b from-neutral-200/40 to-neutral-100/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-
-              <div className="relative rounded-2xl overflow-hidden bg-neutral-200" style={{ aspectRatio: '3/4' }}>
-                <img
-                  src="/journey-photo.jpg"
-                  alt="Vishnu Kanchipati"
-                  className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
-                />
-                {/* Bottom fade that matches the section's neutral-50 background */}
-                <div className="absolute inset-0 bg-gradient-to-t from-neutral-50 via-transparent to-transparent opacity-60" />
-                {/* Subtle grey tone overlay to unify with section */}
-                <div className="absolute inset-0 bg-neutral-50/10 mix-blend-overlay pointer-events-none" />
-              </div>
-
-              {/* Floating label at bottom */}
-              <motion.div
-                className="absolute -bottom-4 left-4 right-4 bg-white border border-neutral-200 rounded-xl px-5 py-3 shadow-lg flex items-center justify-between"
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.6, duration: 0.5 }}
-              >
-                <div>
-                  <p className="text-sm font-black uppercase tracking-tight text-neutral-900" style={{ fontFamily: "'Syne', sans-serif" }}>Vishnu K.</p>
-                  <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-neutral-400">CS Undergrad</p>
-                </div>
-                <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" title="Available" />
-              </motion.div>
+  return (
+    <SpotlightCard className="mb-8">
+      <div className="flex flex-col sm:flex-row items-start justify-between mb-6 gap-4">
+        <div className="flex items-center gap-4">
+          {data.image ? (
+             <div className="w-12 h-12 rounded-full overflow-hidden bg-white flex items-center justify-center shrink-0 border border-neutral-800 shadow-inner">
+               <img src={data.image} alt={data.title} className="w-full h-full object-contain" />
+             </div>
+          ) : (
+            <div className="w-12 h-12 rounded-full border border-neutral-800 bg-neutral-900/50 flex items-center justify-center shrink-0 shadow-inner">
+              {data.icon}
             </div>
-            </ParallaxSection>
-          </motion.div>
-
-          {/* Experience cards column */}
-          <div className="lg:col-span-8 space-y-8">
-            {experiences.map((item, index) => (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-                className="relative"
-              >
-
-
-                <div className="relative editorial-card p-8 md:p-10">
-                  {/* Icon badge */}
-                  <motion.div
-                    className="absolute top-8 right-8 w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-lg"
-                    style={{ backgroundColor: item.accent }}
-                    whileHover={{ rotate: 5, scale: 1.05 }}
-                  >
-                    {item.icon}
-                  </motion.div>
-
-                  {/* Type + meta */}
-                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400 block mb-4">{item.type}</span>
-
-                  <div className="flex flex-wrap gap-4 text-sm text-neutral-500 font-medium mb-3">
-                    <div className="flex items-center gap-1.5">
-                      <Building2 className="w-3.5 h-3.5 text-neutral-400" />
-                      <span>{item.organization}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-neutral-400" />
-                      <span>{item.date}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-neutral-400" />
-                      <span>{item.location}</span>
-                    </div>
-                  </div>
-
-                  <h3
-                    className="text-2xl md:text-4xl font-black tracking-tight text-neutral-900 uppercase leading-[1.1] mb-4 pr-16"
-                    style={{ fontFamily: "'Syne', 'Inter', sans-serif" }}
-                  >
-                    {item.title}
-                  </h3>
-
-                  <p className="text-neutral-500 leading-relaxed text-base font-light max-w-2xl mb-6">
-                    {item.description}
-                  </p>
-
-                  {/* Tags */}
-                  {item.tags && (
-                    <div className="flex flex-wrap gap-2">
-                      {item.tags.map((tag) => (
-                        <motion.span
-                          key={tag}
-                          className="text-[11px] font-bold uppercase tracking-wider px-4 py-2 bg-neutral-50 text-neutral-600 hover:bg-neutral-900 hover:text-white rounded-lg border border-neutral-100 hover:border-neutral-900 transition-all duration-300 cursor-default"
-                          whileHover={{ y: -1 }}
-                        >
-                          {tag}
-                        </motion.span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-            ))}
+          )}
+          <div>
+            <h3 className="text-xl md:text-3xl font-black tracking-tight text-white">{data.title}</h3>
+            <div className="flex items-center flex-wrap gap-2 text-sm mt-1">
+              <span className="text-neutral-400 font-mono">{data.organization}</span>
+              {data.gpa && (
+                <>
+                  <span className="text-neutral-600">•</span>
+                  <span className="text-teal-400 font-mono">CGPA: {data.gpa}</span>
+                </>
+              )}
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* Ticker stats strip */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3 }}
-          className="mt-24 border-t border-b border-neutral-200 py-10"
+      <div className="space-y-3 mb-6">
+        {data.bullets.map((bullet, i) => (
+          <div key={i} className="flex items-start gap-3">
+            <span className="text-teal-400 mt-1 font-mono">{'>'}</span>
+            <p className="text-neutral-300 leading-relaxed font-light">
+              {/* Simple regex to find metrics and wrap them in monospace */}
+              {bullet.split(/(\d+%|\d+\+|O\(N\))/).map((part, j) => 
+                /(\d+%|\d+\+|O\(N\))/.test(part) ? (
+                  <span key={j} className="text-teal-300 font-mono bg-teal-400/10 px-1 py-0.5 rounded">{part}</span>
+                ) : (
+                  <span key={j}>{part}</span>
+                )
+              )}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <AnimatePresence>
+        {expanded && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="overflow-hidden"
+          >
+            <div className="pt-2 pb-6 space-y-3 border-t border-neutral-800/50 mt-4">
+              {data.deepDive.map((bullet, i) => (
+                <div key={i} className="flex items-start gap-3">
+                  <span className="text-neutral-600 mt-1 font-mono">{'>'}</span>
+                  <p className="text-neutral-400 leading-relaxed font-light text-sm">{bullet}</p>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="flex flex-wrap items-center justify-between gap-4 mt-6">
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="flex items-center gap-2 text-xs font-mono text-neutral-400 hover:text-teal-400 transition-colors uppercase tracking-widest bg-neutral-900/50 border border-neutral-800 px-4 py-2 rounded-full"
         >
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {ticker.map((stat, index) => (
+          {expanded ? <Minus className="w-3 h-3" /> : <Plus className="w-3 h-3" />}
+          {expanded ? 'Collapse Scope' : 'View Architecture'}
+        </button>
+
+        {data.tags && (
+          <div className="flex gap-2">
+            {data.tags.map(tag => (
+              <span key={tag} className="text-xs font-mono text-teal-400/80 bg-teal-400/10 border border-teal-400/20 px-3 py-1 rounded-full shadow-[0_0_10px_rgba(45,212,191,0.1)]">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+        
+        {data.languages && (
+          <div className="flex flex-col gap-1 w-full max-w-[200px]">
+            <div className="flex justify-between text-[10px] font-mono text-neutral-500 uppercase tracking-widest">
+              <span>Stack Distribution</span>
+            </div>
+            <div className="h-1.5 w-full bg-neutral-900 rounded-full overflow-hidden flex">
+              {data.languages.map((lang) => (
+                <div key={lang.name} className={`h-full ${lang.color}`} style={{ width: lang.width }} title={`${lang.name} (${lang.width})`} />
+              ))}
+            </div>
+            <div className="flex gap-3 text-[10px] font-mono text-neutral-400 mt-1">
+              {data.languages.map((lang) => (
+                <span key={lang.name} className="flex items-center gap-1">
+                  <span className={`w-1.5 h-1.5 rounded-full ${lang.color}`} />
+                  {lang.name}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </SpotlightCard>
+  );
+};
+
+const Experience: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start center", "end center"]
+  });
+
+  const pathLength = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
+  return (
+    <section id={SectionId.EXPERIENCE} className="min-h-screen py-24 bg-black relative overflow-hidden text-neutral-300">
+      <div className="max-w-6xl mx-auto px-6 relative z-10" ref={containerRef}>
+        <SectionTitle title="The Journey" subtitle="Training Ground" number="02" />
+
+        <div className="mt-24 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative">
+          
+          {/* Left Column: The Timeline (30%) */}
+          <div className="hidden lg:block lg:col-span-3 sticky top-32">
+            <div className="flex relative h-[600px]">
+              {/* Background Path */}
+              <svg className="absolute left-6 top-0 w-8 h-full" viewBox="0 0 40 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 0 L20 600" stroke="#262626" strokeWidth="2" strokeDasharray="4 4" />
+                <path d="M20 100 Q 40 150 20 200" stroke="#262626" strokeWidth="2" fill="none"/>
+                <path d="M20 300 Q 0 350 20 400" stroke="#262626" strokeWidth="2" fill="none"/>
+              </svg>
+              
+              {/* Active Glowing Path */}
+              <svg className="absolute left-6 top-0 w-8 h-full" viewBox="0 0 40 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <motion.path 
+                  d="M20 0 L20 600" 
+                  stroke="#2dd4bf" 
+                  strokeWidth="3" 
+                  style={{ pathLength }}
+                  className="drop-shadow-[0_0_8px_rgba(45,212,191,0.8)]"
+                />
+              </svg>
+
+              <div className="pl-16 space-y-32 pt-8">
+                {experiences.map((exp, i) => (
+                  <motion.div 
+                    key={exp.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ delay: i * 0.2 }}
+                    className="relative"
+                  >
+                    <div className="absolute -left-[45px] top-2 w-3 h-3 bg-black border-2 border-teal-400 rounded-full shadow-[0_0_10px_rgba(45,212,191,0.8)] z-10" />
+                    <span className="text-sm font-mono text-teal-400 bg-teal-400/10 px-3 py-1 rounded inline-block whitespace-nowrap border border-teal-400/20">{exp.date}</span>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Academic Nodes (70%) */}
+          <div className="lg:col-span-9 space-y-12">
+            {experiences.map((data, index) => (
               <motion.div
-                key={stat.label}
-                className="text-center group"
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.4 + index * 0.1 }}
+                key={data.id}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
               >
-                <div
-                  className="text-4xl md:text-5xl font-black tracking-tighter text-neutral-900 group-hover:text-amber-500 transition-colors duration-300"
-                  style={{ fontFamily: "'Syne', sans-serif" }}
-                >
-                  <CountUp end={stat.value} duration={2.5} suffix={stat.suffix} enableScrollSpy scrollSpyOnce />
-                </div>
-                <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400 mt-2">
-                  {stat.label}
-                </div>
+                <ExperienceNode data={data} />
               </motion.div>
             ))}
           </div>
-        </motion.div>
+
+        </div>
       </div>
     </section>
   );

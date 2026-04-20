@@ -16,8 +16,14 @@ export interface Project {
     problem: string;
     architecture: string;
     metrics: string[];
+    hardestPart?: string;
+    proofNote?: string;
   };
   github?: string;
+  pipeline?: {
+    step: string;
+    description: string;
+  }[];
 }
 
 export interface SkillCategory {
