@@ -824,3 +824,9 @@ html.lenis body {
     font-size: 5rem !important;
   }
 }
+/* Hide default cursor to let custom cursor shine */
+@media (pointer: fine) {
+  *, *::before, *::after {
+    cursor: none !important;
+  }
+}
