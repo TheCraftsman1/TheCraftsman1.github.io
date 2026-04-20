@@ -3,17 +3,12 @@ import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { SectionId } from './types';
 import Hero from './components/Hero';
 import Navbar from './components/Navbar';
-import Journey from './components/Experience';
 import Loader from './components/Loader';
 import SmoothScroll from './components/SmoothScroll';
 import ScrollProgress from './components/ScrollProgress';
 import ScrollReveal from './components/ScrollReveal';
 import CustomCursor from './components/CustomCursor';
-import CursorTrail from './components/CursorTrail';
-import InteractiveParticles from './components/InteractiveParticles';
-import ScrollDriven3D from './components/ScrollDriven3D';
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
-import { Canvas } from '@react-three/fiber';
 
 const About = lazy(() => import('./components/About'));
 const Experience = lazy(() => import('./components/Experience'));

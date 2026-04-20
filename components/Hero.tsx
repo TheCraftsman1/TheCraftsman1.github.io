@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense, lazy } from 'react';
 import { motion, useScroll, useTransform, useSpring, useMotionValue, Variants, MotionValue, AnimatePresence } from 'framer-motion';
 import { SectionId } from '../types';
 import MagneticButton from './MagneticButton';
 import { ArrowDownRight } from 'lucide-react';
-import FrostedGlassBackground from './FrostedGlassBackground';
+
+const FrostedGlassBackground = lazy(() => import('./FrostedGlassBackground'));
 
 interface HeroProps {
   scrollToSection: (id: SectionId) => void;
@@ -151,7 +152,9 @@ const Hero: React.FC<HeroProps> = ({ scrollToSection, startAnimation, onVideoCom
       className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-[#fafafa]"
     >
       {/* ═══ AMBIENT BACKGROUND ═══ */}
-      <FrostedGlassBackground startAnimation={startAnimation} />
+      <Suspense fallback={null}>
+        <FrostedGlassBackground startAnimation={startAnimation} />
+      </Suspense>
 
       {/* Decorative Grid Lines */}
       <div className="absolute inset-0 pointer-events-none select-none z-[1] opacity-[0.4] mix-blend-overlay">
