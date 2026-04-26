@@ -122,7 +122,7 @@ const ImmersiveLoader: React.FC<ImmersiveLoaderProps> = ({
     return (
         <div className="fixed inset-0 z-[100] bg-black overflow-hidden">
             {/* 3D Scene */}
-            <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
+            <Canvas onCreated={({ gl }) => { gl.debug.checkShaderErrors = false }} camera={{ position: [0, 0, 5], fov: 45 }}>
                 <ambientLight intensity={0.5} />
                 <pointLight position={[10, 10, 10]} intensity={1} color="#00f0ff" />
                 <pointLight position={[-10, -10, -10]} intensity={0.8} color="#ccff00" />

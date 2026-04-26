@@ -143,7 +143,7 @@ const Contact: React.FC = () => {
             transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
           >
             {/* Soft Neumorphic Form Container */}
-            <div className="bg-white/80 backdrop-blur-3xl p-8 sm:p-10 rounded-[2.5rem] border border-white shadow-[0_10px_40px_rgba(0,0,0,0.04),0_2px_10px_rgba(0,0,0,0.02)]">
+            <div className="bg-white/80 backdrop-blur-sm p-8 sm:p-10 rounded-[2.5rem] border border-white shadow-[0_10px_40px_rgba(0,0,0,0.04),0_2px_10px_rgba(0,0,0,0.02)]">
               <form className="space-y-6" onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   {/* Name field */}
@@ -157,7 +157,7 @@ const Contact: React.FC = () => {
                       value={formState.name}
                       onChange={(e) => setFormState({ ...formState, name: e.target.value })}
                       placeholder="e.g. John Doe"
-                      className="w-full bg-[#FAFAFA] text-neutral-800 placeholder:text-neutral-300 rounded-2xl border-0 px-5 py-4 focus:ring-2 focus:ring-neutral-200/60 focus:bg-white shadow-[inset_0_2px_6px_rgba(0,0,0,0.03)] outline-none transition-all duration-300 font-medium text-[15px]"
+                      className="w-full bg-[#FAFAFA] text-neutral-800 placeholder:text-neutral-500 rounded-2xl border-0 px-5 py-4 focus:ring-2 focus:ring-neutral-200/60 focus:bg-white shadow-[inset_0_2px_6px_rgba(0,0,0,0.03)] outline-none transition-all duration-300 font-medium text-[15px]"
                       maxLength={100}
                     />
                   </div>
@@ -173,7 +173,7 @@ const Contact: React.FC = () => {
                       value={formState.email}
                       onChange={(e) => setFormState({ ...formState, email: e.target.value })}
                       placeholder="john@company.com"
-                      className="w-full bg-[#FAFAFA] text-neutral-800 placeholder:text-neutral-300 rounded-2xl border-0 px-5 py-4 focus:ring-2 focus:ring-neutral-200/60 focus:bg-white shadow-[inset_0_2px_6px_rgba(0,0,0,0.03)] outline-none transition-all duration-300 font-medium text-[15px]"
+                      className="w-full bg-[#FAFAFA] text-neutral-800 placeholder:text-neutral-500 rounded-2xl border-0 px-5 py-4 focus:ring-2 focus:ring-neutral-200/60 focus:bg-white shadow-[inset_0_2px_6px_rgba(0,0,0,0.03)] outline-none transition-all duration-300 font-medium text-[15px]"
                       maxLength={100}
                     />
                   </div>
@@ -190,7 +190,7 @@ const Contact: React.FC = () => {
                     value={formState.message}
                     onChange={(e) => setFormState({ ...formState, message: e.target.value })}
                     placeholder="Tell me about your project..."
-                    className="w-full bg-[#FAFAFA] text-neutral-800 placeholder:text-neutral-300 rounded-2xl border-0 px-5 py-4 focus:ring-2 focus:ring-neutral-200/60 focus:bg-white shadow-[inset_0_2px_6px_rgba(0,0,0,0.03)] outline-none transition-all duration-300 font-medium text-[15px]"
+                    className="w-full bg-[#FAFAFA] text-neutral-800 placeholder:text-neutral-500 rounded-2xl border-0 px-5 py-4 focus:ring-2 focus:ring-neutral-200/60 focus:bg-white shadow-[inset_0_2px_6px_rgba(0,0,0,0.03)] outline-none transition-all duration-300 font-medium text-[15px]"
                     maxLength={500}
                     style={{ resize: 'none' }}
                   />

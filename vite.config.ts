@@ -15,12 +15,12 @@ export default defineConfig(({ mode }) => {
           output: {
             manualChunks: {
               'react-vendor': ['react', 'react-dom'],
-              'three-vendor': ['three', '@react-three/fiber', '@react-three/drei'],
               'motion-vendor': ['framer-motion'],
+              'three-vendor': ['three', '@react-three/fiber', '@react-three/drei'],
             }
           }
         },
-        chunkSizeWarningLimit: 1000
+        chunkSizeWarningLimit: 2000
       },
       define: {
         'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),

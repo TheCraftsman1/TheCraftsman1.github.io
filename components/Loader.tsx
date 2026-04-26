@@ -11,13 +11,11 @@ const Loader: React.FC<LoaderProps> = ({ onComplete }) => {
   const fallbackCalled = useRef(false);
 
   useEffect(() => {
-    // Show text for 2.8 seconds before triggering video
     const timer = setTimeout(() => {
       setPhase('video');
       if (videoRef.current) {
         videoRef.current.play().catch((err) => {
           console.error('Video autoplay failed:', err);
-          // If video fails, quickly exit loading screen
           if (!fallbackCalled.current) {
             fallbackCalled.current = true;
             setPhase('exiting');
@@ -25,16 +23,15 @@ const Loader: React.FC<LoaderProps> = ({ onComplete }) => {
           }
         });
       }
-    }, 2800);
+    }, 1500);
 
-    // Absolute fallback: load site after 8s no matter what 
     const failsafe = setTimeout(() => {
       if (!fallbackCalled.current) {
         fallbackCalled.current = true;
         setPhase('exiting');
         onComplete();
       }
-    }, 8000);
+    }, 6000);
 
     return () => {
       clearTimeout(timer);
@@ -42,40 +39,45 @@ const Loader: React.FC<LoaderProps> = ({ onComplete }) => {
     };
   }, [onComplete]);
 
-  // Stop video right after the motion blur / horizontal stretch glitch effect (~4.2 seconds)
   const handleTimeUpdate = () => {
     if (videoRef.current && videoRef.current.currentTime >= 4.2) {
       if (!fallbackCalled.current) {
         fallbackCalled.current = true;
         videoRef.current.pause();
         setPhase('exiting');
-        setTimeout(onComplete, 400); // Wait for a snappy fade before unmounting
+        setTimeout(onComplete, 400);
       }
     }
   };
 
-  // Clean, modern animation variants
+  // Word-by-word staggered reveal
   const containerVars: Variants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: { staggerChildren: 0.08, delayChildren: 0.2 }
+      transition: { staggerChildren: 0.12, delayChildren: 0.3 }
     },
     exiting: {
       opacity: 0,
-      y: -20,
-      filter: 'blur(8px)',
-      transition: { duration: 0.6, ease: [0.76, 0, 0.24, 1] }
+      y: -30,
+      filter: 'blur(10px)',
+      transition: { duration: 0.5, ease: [0.76, 0, 0.24, 1] }
     }
   };
 
   const wordVar: Variants = {
-    hidden: { opacity: 0, y: 15 },
+    hidden: { opacity: 0, y: 50, filter: 'blur(6px)' },
     show: { 
       opacity: 1, 
       y: 0, 
+      filter: 'blur(0px)',
       transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } 
     }
+  };
+
+  const lineVar: Variants = {
+    hidden: { scaleX: 0 },
+    show: { scaleX: 1, transition: { duration: 1, delay: 1.0, ease: [0.22, 1, 0.36, 1] } }
   };
 
   const quoteWords = '"Let the power in you rise"'.split(' ');
@@ -87,39 +89,55 @@ const Loader: React.FC<LoaderProps> = ({ onComplete }) => {
       transition={{ duration: 0.6 }}
       className="fixed inset-0 z-[10000] flex flex-col items-center justify-center overflow-hidden bg-[#050505] text-white"
     >
-      {/* ═══ CLEAN STUDIO CANVAS (White Dots on Black) ═══ */}
+      {/* ═══ GRAPH DOT GRID ═══ */}
       <motion.div 
-        className="absolute inset-0 pointer-events-none opacity-[0.25]"
+        className="absolute inset-0 pointer-events-none"
         animate={{ opacity: phase === 'text' ? 0.25 : 0 }}
+        transition={{ duration: 0.8 }}
         style={{
-          backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)',
-          backgroundSize: '48px 48px',
+          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.4) 1.2px, transparent 1.2px)',
+          backgroundSize: '32px 32px',
         }}
       />
 
-      {/* ═══ INTRO VIDEO BACKGROUND ═══ */}
+      {/* Faint axis lines (graph paper feel) */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none"
+        animate={{ opacity: phase === 'text' ? 0.06 : 0 }}
+        transition={{ duration: 0.8 }}
+        style={{
+          backgroundImage: 
+            'linear-gradient(to right, rgba(255,255,255,0.15) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.15) 1px, transparent 1px)',
+          backgroundSize: '32px 32px',
+        }}
+      />
+
+      {/* ═══ VIDEO ═══ */}
       <motion.video
         ref={videoRef}
         src="/Untitled design.mp4"
+        preload="metadata"
         muted
         playsInline
+        disablePictureInPicture
         onTimeUpdate={handleTimeUpdate}
-        className="absolute inset-0 w-full h-full object-cover z-0"
+        className="absolute inset-0 w-full h-full object-contain md:object-cover z-0"
+        style={{ transform: 'translateZ(0)', willChange: 'opacity' }}
         initial={{ opacity: 0 }}
         animate={{ opacity: phase === 'video' ? 1 : 0 }}
         transition={{ duration: 0.8 }}
       />
       
-      {/* ═══ IMPACTFUL MODERN TEXT ═══ */}
+      {/* ═══ QUOTE ═══ */}
       <motion.div
         variants={containerVars}
         initial="hidden"
         animate={phase === 'text' ? "show" : "exiting"}
-        className="flex flex-col items-center gap-6 z-10 px-8 text-center relative"
+        className="flex flex-col items-center gap-8 z-10 px-8 text-center relative"
       >
         <h1 
-          className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white m-0"
-          style={{ fontFamily: "'Inter', 'Syne', sans-serif" }}
+          className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tight text-white m-0 leading-[1.1]"
+          style={{ fontFamily: "'Syne', 'Inter', sans-serif" }}
         >
           {quoteWords.map((word, i) => (
             <motion.span 
@@ -132,14 +150,19 @@ const Loader: React.FC<LoaderProps> = ({ onComplete }) => {
           ))}
         </h1>
 
-        <motion.p 
-          className="text-xs md:text-sm font-semibold uppercase tracking-[0.3em] text-neutral-400 mt-4"
-          initial={{ opacity: 0 }}
-          animate={phase === 'text' ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ duration: 1, delay: 1.2 }}
-        >
-          Vishnu Kanchipati
-        </motion.p>
+        {/* Attribution with flanking lines */}
+        <div className="flex items-center gap-4">
+          <motion.div variants={lineVar} className="w-10 md:w-16 h-[1px] bg-white/20 origin-right" />
+          <motion.p 
+            className="text-[10px] md:text-xs font-semibold uppercase tracking-[0.3em] text-neutral-500"
+            initial={{ opacity: 0 }}
+            animate={phase === 'text' ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: 0.8, delay: 1.2 }}
+          >
+            Vishnu Kanchipati
+          </motion.p>
+          <motion.div variants={lineVar} className="w-10 md:w-16 h-[1px] bg-white/20 origin-left" />
+        </div>
       </motion.div>
     </motion.div>
   );

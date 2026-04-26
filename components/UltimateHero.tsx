@@ -167,7 +167,7 @@ const UltimateHero: React.FC<UltimateHeroProps> = ({ children }) => {
         <div className="relative w-full min-h-screen">
             {/* 3D Background */}
             <div className="absolute inset-0 z-0">
-                <Canvas
+                <Canvas onCreated={({ gl }) => { gl.debug.checkShaderErrors = false }}
                     camera={{ position: [0, 0, 6], fov: 45 }}
                     gl={{ antialias: true, alpha: true }}
                     dpr={[1, 2]}

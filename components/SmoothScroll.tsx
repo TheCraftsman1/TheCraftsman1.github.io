@@ -3,6 +3,7 @@ import Lenis from 'lenis';
 
 interface SmoothScrollProps {
     children: ReactNode;
+    enabled?: boolean;
 }
 
 interface LenisContextType {
@@ -13,8 +14,10 @@ const LenisContext = createContext<LenisContextType>({ lenis: null });
 
 export const useLenis = () => useContext(LenisContext);
 
-const SmoothScroll: React.FC<SmoothScrollProps> = ({ children }) => {
+const SmoothScroll: React.FC<SmoothScrollProps> = ({ children, enabled = true }) => {
     useEffect(() => {
+        if (!enabled) return;
+
         const lenis = new Lenis({
             duration: 1.2,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -39,7 +42,7 @@ const SmoothScroll: React.FC<SmoothScrollProps> = ({ children }) => {
             lenis.destroy();
             (window as any).lenis = null;
         };
-    }, []);
+    }, [enabled]);
 
     return <>{children}</>;
 };

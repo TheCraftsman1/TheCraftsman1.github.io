@@ -163,7 +163,7 @@ const ShaderPlane = () => {
 export const MyceliumBackground = () => {
   return (
     <div className="absolute inset-0 w-full h-full bg-[#fafafa] z-0 pointer-events-none">
-      <Canvas
+      <Canvas onCreated={({ gl }) => { gl.debug.checkShaderErrors = false }}
         camera={{ position: [0, 0, 1], orthographic: true, zoom: 1 }}
         style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}
         gl={{ alpha: true, antialias: false, powerPreference: "high-performance" }}

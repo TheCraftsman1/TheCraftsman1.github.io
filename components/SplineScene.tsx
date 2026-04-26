@@ -163,7 +163,7 @@ const ParticleField: React.FC = () => {
 const SplineScene: React.FC = () => {
     return (
         <div className="absolute inset-0 z-0">
-            <Canvas
+            <Canvas onCreated={({ gl }) => { gl.debug.checkShaderErrors = false }}
                 camera={{ position: [0, 0, 6], fov: 45 }}
                 gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
                 dpr={[1, 2]}

@@ -193,7 +193,7 @@ const ScrollDriven3D: React.FC = () => {
     return (
         <div className="fixed inset-0 z-0 pointer-events-none">
             {/* Performance: Clamped DPR to 1.5 max */}
-            <Canvas
+            <Canvas onCreated={({ gl }) => { gl.debug.checkShaderErrors = false }}
                 gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
                 dpr={[1, 1.5]}
             >

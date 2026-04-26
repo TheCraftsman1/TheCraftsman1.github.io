@@ -36,7 +36,7 @@ const SectionTitle: React.FC<SectionTitleProps> = ({ title, subtitle, number, ti
   return (
     <div ref={ref} className="flex flex-col items-start border-l-4 border-gradient-to-b from-cyan-400 to-purple-600 pl-6 py-2 relative overflow-visible" style={{ borderImage: 'linear-gradient(to bottom, #00ffd5, #7c7cff) 1' }}>
       <motion.span
-        className="text-neon-lime font-exo font-bold uppercase tracking-[0.2em] text-sm mb-1 block"
+        className="text-teal-400 font-exo font-bold uppercase tracking-[0.2em] text-sm mb-1 block"
         initial={{ opacity: 0, x: -20 }}
         animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
         transition={{ duration: 0.5, delay: 0.2 }}

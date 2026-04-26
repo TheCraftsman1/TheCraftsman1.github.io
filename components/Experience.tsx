@@ -96,7 +96,7 @@ const ExperienceNode = ({ data }: { data: typeof experiences[0] }) => {
         <div className="flex items-center gap-4">
           {data.image ? (
              <div className="w-12 h-12 rounded-full overflow-hidden bg-white flex items-center justify-center shrink-0 border border-neutral-800 shadow-inner">
-               <img src={data.image} alt={data.title} className="w-full h-full object-contain" />
+               <img src={data.image} alt={data.title} loading="lazy" className="w-full h-full object-contain" />
              </div>
           ) : (
             <div className="w-12 h-12 rounded-full border border-neutral-800 bg-neutral-900/50 flex items-center justify-center shrink-0 shadow-inner">
@@ -159,6 +159,7 @@ const ExperienceNode = ({ data }: { data: typeof experiences[0] }) => {
       <div className="flex flex-wrap items-center justify-between gap-4 mt-6">
         <button
           onClick={() => setExpanded(!expanded)}
+          aria-label={expanded ? 'Collapse details' : 'Expand details'}
           className="flex items-center gap-2 text-xs font-mono text-neutral-400 hover:text-teal-400 transition-colors uppercase tracking-widest bg-neutral-900/50 border border-neutral-800 px-4 py-2 rounded-full"
         >
           {expanded ? <Minus className="w-3 h-3" /> : <Plus className="w-3 h-3" />}

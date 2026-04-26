@@ -111,6 +111,7 @@ const ProjectCard: React.FC<{
                                 src={project.image}
                                 alt={`${project.title} project proof`}
                                 className="w-full h-full object-cover"
+                                loading="lazy"
                                 style={{
                                     transform: isHovered ? 'scale(1.06)' : 'scale(1)',
                                     transition: 'transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)',

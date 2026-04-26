@@ -56,7 +56,7 @@ const ParticleFieldScene: React.FC = memo(() => {
 const ParticleField: React.FC = memo(() => {
     return (
         <div className="absolute inset-0 pointer-events-none">
-            <Canvas
+            <Canvas onCreated={({ gl }) => { gl.debug.checkShaderErrors = false }}
                 camera={{ position: [0, 0, 5], fov: 75 }}
                 style={{ background: 'transparent' }}
                 gl={{ antialias: false, alpha: true }}

@@ -69,7 +69,7 @@ const AmbientBackground: React.FC = () => {
             style={{ zIndex: -1, pointerEvents: "none", background: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)" }}
             aria-hidden="true"
         >
-            <Canvas camera={{ position: [0, 0, 8], fov: 60 }} gl={{ alpha: true, antialias: true }}>
+            <Canvas onCreated={({ gl }) => { gl.debug.checkShaderErrors = false }} camera={{ position: [0, 0, 8], fov: 60 }} gl={{ alpha: true, antialias: true }}>
                 <ambientLight intensity={2} />
                 <directionalLight position={[5, 10, 5]} intensity={3} color="#ffffff" />
                 <pointLight position={[-10, 0, -10]} color="#ffffff" intensity={2} />

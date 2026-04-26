@@ -21,7 +21,7 @@ const Hero3D: React.FC<Hero3DProps> = memo(({ scrollYProgress }) => {
         <div ref={containerRef} className="absolute inset-0 z-0 pointer-events-none">
             {/* 3D Context */}
             {/* Performance: Clamped DPR to 1.5 max, dynamic frameloop to stop rendering when off-screen */}
-            <Canvas
+            <Canvas onCreated={({ gl }) => { gl.debug.checkShaderErrors = false }}
                 camera={{ position: [0, 0, 7], fov: 45 }}
                 gl={{
                     antialias: true,

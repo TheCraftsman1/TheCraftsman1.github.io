@@ -8,7 +8,7 @@ import SmoothScroll from './components/SmoothScroll';
 import ScrollProgress from './components/ScrollProgress';
 import ScrollReveal from './components/ScrollReveal';
 import CustomCursor from './components/CustomCursor';
-import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const About = lazy(() => import('./components/About'));
 const Experience = lazy(() => import('./components/Experience'));
@@ -77,15 +77,14 @@ const App: React.FC = () => {
   }, [isLoading]);
 
   return (
-    <SmoothScroll>
-      <LayoutGroup>
-        <CustomCursor />
+    <SmoothScroll enabled={!isLoading}>
+      <>
+        {!isLoading && <CustomCursor />}
         <AnimatePresence mode="wait">
           {isLoading && <Loader key="loader" onComplete={() => setIsLoading(false)} />}
         </AnimatePresence>
 
-      {/* Noise Overlay */}
-      <div className="noise-overlay" />
+
 
       {/* Scroll Progress */}
       <ScrollProgress />
@@ -186,7 +185,7 @@ const App: React.FC = () => {
       <Suspense fallback={null}>
         <EasterEgg />
       </Suspense>
-      </LayoutGroup>
+      </>
     </SmoothScroll>
   );
 };
