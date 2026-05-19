@@ -1,24 +1,28 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import InteractiveProjectView from './InteractiveProjectView';
+import SecurePipelineView from './SecurePipelineView';
 
 const projectsData = [
   {
     id: '01',
-    tag: '2025 • LEAD ANDROID DEVELOPER',
+    tag: '2025 LEAD ANDROID DEVELOPER',
     title: 'VIKIFY',
     intro: 'Reduced playback startup lag to near-instant with Room-backed indexing.',
     problem: 'Typical mobile players had fragile queue recovery and inconsistent offline behavior after process death or background service interruptions.',
     architecture: 'Built a Kotlin playback engine around ExoPlayer with a unidirectional state model, Room persistence for queue/library snapshots, and deterministic service-to-UI reconciliation.',
     pipeline: [
-      { step: '1', title: 'DEPENDENCY BRIDGE', desc: 'Mediating between service and UI lifecycles.' },
-      { step: '2', title: 'METADATA HYDRATION', desc: 'Async loading of album art and lyrics.' },
-      { step: '3', title: 'EXOPLAYER ENGINE', desc: 'Unidirectional playback control logic.' },
-      { step: '4', title: 'ROOM PERSISTENCE', desc: 'Caching queue and library snapshots.' }
+      { step: '1', title: 'DYNAMIC PREVIEW', desc: 'Fluid animations and gesture controls in action.', video: '/projects/vikify/video.mp4' },
+      { step: '2', title: 'NOW PLAYING UI', desc: 'Immersive media playback UI with dynamic background lighting.', image: '/projects/vikify/now_playing_1.png' },
+      { step: '3', title: 'EXOPLAYER ENGINE', desc: 'Unidirectional playback control logic supporting gapless playback.', image: '/projects/vikify/now_playing_2.png' },
+      { step: '4', title: 'DEPENDENCY BRIDGE', desc: 'Mediating between service and UI lifecycles.', image: '/projects/vikify/home.webp' },
+      { step: '5', title: 'METADATA HYDRATION', desc: 'Async loading of album art and lyrics.', image: '/projects/vikify/search.webp' },
+      { step: '6', title: 'ROOM PERSISTENCE', desc: 'Caching queue and library snapshots.', image: '/projects/vikify/settings.webp' }
     ]
   },
   {
     id: '02',
-    tag: '2026 • DEVSECOPS ENGINEER',
+    tag: '2026 ï¿½ DEVSECOPS ENGINEER',
     title: 'SECURE AI PIPELINE',
     intro: 'Policy-driven DevSecOps for AI artifact provenance.',
     problem: 'Manual release checks for AI endpoints were slow and inconsistent, creating security blind spots and delayed deployments.',
@@ -34,7 +38,7 @@ const projectsData = [
   },
   {
     id: '03',
-    tag: '2025 • AI RESEARCHER',
+    tag: '2025 AI RESEARCHER',
     title: 'FAKE NEWS DETECTOR',
     intro: 'Multi-modal NLP misinformation detection engine.',
     problem: 'Single-modality classifiers missed misinformation cues when text claims and media evidence diverged.',
@@ -50,7 +54,7 @@ const projectsData = [
   },
   {
     id: '04',
-    tag: '2026 • FULL STACK ENGINEER',
+    tag: '2026 ï¿½ FULL STACK ENGINEER',
     title: 'AIRMAP.VIKI',
     intro: 'AI-powered environmental tracking and eco-assistance.',
     problem: 'Existing environmental tracking apps lacked conversational AI capabilities, making it difficult for users to interpret complex AQI data and receive immediate, personalized eco-advice.',
@@ -122,6 +126,11 @@ const WorkPage: React.FC<WorkPageProps> = ({ setCurrentView }) => {
 
         <div className="space-y-40 md:space-y-64 lg:space-y-[28rem]">
           {projectsData.map((project, index) => (
+            project.id === '01' ? (
+              <InteractiveProjectView key={project.id} project={project as any} />
+            ) : project.id === '02' ? (
+              <SecurePipelineView key={project.id} project={project as any} />
+            ) : (
             <motion.div 
               key={project.id}
               variants={staggerContainer}
@@ -209,6 +218,7 @@ const WorkPage: React.FC<WorkPageProps> = ({ setCurrentView }) => {
                 </motion.div>
               )}
             </motion.div>
+            )
           ))}
         </div>
       </div>
