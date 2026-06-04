@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, Variants } from 'framer-motion';
 
 interface LoaderProps {
@@ -6,49 +6,19 @@ interface LoaderProps {
 }
 
 const Loader: React.FC<LoaderProps> = ({ onComplete }) => {
-  const [phase, setPhase] = useState<'text' | 'video' | 'exiting'>('text');
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const fallbackCalled = useRef(false);
+  const [phase, setPhase] = useState<'text' | 'exiting'>('text');
 
   useEffect(() => {
+    // Show the quote for 2.5 seconds, then exit
     const timer = setTimeout(() => {
-      setPhase('video');
-      if (videoRef.current) {
-        videoRef.current.play().catch((err) => {
-          console.error('Video autoplay failed:', err);
-          if (!fallbackCalled.current) {
-            fallbackCalled.current = true;
-            setPhase('exiting');
-            setTimeout(onComplete, 600);
-          }
-        });
-      }
-    }, 1500);
-
-    const failsafe = setTimeout(() => {
-      if (!fallbackCalled.current) {
-        fallbackCalled.current = true;
-        setPhase('exiting');
-        onComplete();
-      }
-    }, 6000);
+      setPhase('exiting');
+      setTimeout(onComplete, 600); // give it time to fade out
+    }, 2500);
 
     return () => {
       clearTimeout(timer);
-      clearTimeout(failsafe);
     };
   }, [onComplete]);
-
-  const handleTimeUpdate = () => {
-    if (videoRef.current && videoRef.current.currentTime >= 4.2) {
-      if (!fallbackCalled.current) {
-        fallbackCalled.current = true;
-        videoRef.current.pause();
-        setPhase('exiting');
-        setTimeout(onComplete, 400);
-      }
-    }
-  };
 
   // Word-by-word staggered reveal
   const containerVars: Variants = {
@@ -110,22 +80,6 @@ const Loader: React.FC<LoaderProps> = ({ onComplete }) => {
             'linear-gradient(to right, rgba(255,255,255,0.15) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.15) 1px, transparent 1px)',
           backgroundSize: '32px 32px',
         }}
-      />
-
-      {/* ═══ VIDEO ═══ */}
-      <motion.video
-        ref={videoRef}
-        src="/Untitled design.mp4"
-        preload="metadata"
-        muted
-        playsInline
-        disablePictureInPicture
-        onTimeUpdate={handleTimeUpdate}
-        className="absolute inset-0 w-full h-full object-contain md:object-cover z-0"
-        style={{ transform: 'translateZ(0)', willChange: 'opacity' }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: phase === 'video' ? 1 : 0 }}
-        transition={{ duration: 0.8 }}
       />
       
       {/* ═══ QUOTE ═══ */}

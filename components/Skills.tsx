@@ -55,8 +55,8 @@ const Crosshair = ({ position }: { position: string }) => {
 
   return (
     <div className={`absolute w-3 h-3 pointer-events-none z-20 ${positioning}`}>
-      <div className="absolute top-1/2 left-0 w-full h-[1px] bg-neutral-300" />
-      <div className="absolute top-0 left-1/2 w-[1px] h-full bg-neutral-300" />
+      <div className="absolute top-1/2 left-0 w-full h-[1px] bg-neutral-300 dark:bg-neutral-700 transition-colors duration-500" />
+      <div className="absolute top-0 left-1/2 w-[1px] h-full bg-neutral-300 dark:bg-neutral-700 transition-colors duration-500" />
     </div>
   );
 };
@@ -67,13 +67,21 @@ const Skills: React.FC = () => {
   return (
     <section 
       id={SectionId.SKILLS} 
-      className="min-h-screen py-24 bg-white relative text-black overflow-hidden border-t border-neutral-200"
+      className="min-h-screen py-24 bg-neutral-50 dark:bg-[#09090b] relative text-neutral-900 dark:text-neutral-100 overflow-hidden border-t border-neutral-200 dark:border-neutral-800 transition-colors duration-500"
     >
-      {/* Micro-grid background */}
+      {/* Micro-grid background Light */}
       <div 
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none opacity-100 dark:opacity-0 transition-opacity duration-500"
         style={{
-          backgroundImage: 'linear-gradient(to right, #f4f4f5 1px, transparent 1px), linear-gradient(to bottom, #f4f4f5 1px, transparent 1px)',
+          backgroundImage: 'linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px)',
+          backgroundSize: '32px 32px'
+        }}
+      />
+      {/* Micro-grid background Dark */}
+      <div 
+        className="absolute inset-0 pointer-events-none opacity-0 dark:opacity-100 transition-opacity duration-500"
+        style={{
+          backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px)',
           backgroundSize: '32px 32px'
         }}
       />
@@ -81,29 +89,29 @@ const Skills: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10 flex flex-col">
         
         {/* Section Header */}
-        <div className="mb-20 flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-neutral-200 pb-12 relative">
+        <div className="mb-20 flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-neutral-200 dark:border-neutral-800 pb-12 relative transition-colors duration-500">
           <Crosshair position="bottom-left" />
           <Crosshair position="bottom-right" />
           
           <div>
-            <span className="font-mono text-[10px] text-[#888888] tracking-[0.2em] uppercase block mb-4">
+            <span className="font-mono text-[10px] text-neutral-500 tracking-[0.2em] uppercase block mb-4 transition-colors duration-500">
               [ DIRECTORY // CAPABILITIES ]
             </span>
             <h2 
-              className="text-6xl md:text-8xl lg:text-[10rem] font-black uppercase tracking-tighter leading-none text-black"
+              className="text-4xl md:text-6xl lg:text-8xl font-black uppercase tracking-tighter leading-none text-neutral-900 dark:text-white transition-colors duration-500"
               style={{ fontFamily: "'Syne', sans-serif" }}
             >
               SKILLS
             </h2>
           </div>
           
-          <div className="max-w-sm text-[#888888] font-mono text-xs leading-relaxed uppercase tracking-wider">
+          <div className="max-w-sm text-neutral-500 dark:text-neutral-400 font-mono text-xs leading-relaxed uppercase tracking-wider transition-colors duration-500">
             Execution matrices spanning client applications, distributed backends, and cloud orchestration.
           </div>
         </div>
 
         {/* Bento Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-[1px] bg-neutral-200 border border-neutral-200 relative p-[1px]">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-[1px] bg-neutral-200 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 relative p-[1px] transition-colors duration-500">
           <Crosshair position="top-left" />
           <Crosshair position="top-right" />
           <Crosshair position="bottom-left" />
@@ -120,28 +128,29 @@ const Skills: React.FC = () => {
                 onMouseLeave={() => setHoveredCategory(null)}
                 animate={{
                   opacity: isDimmed ? 0.4 : 1,
-                  backgroundColor: isHovered ? '#f7f7f8' : '#ffffff',
+                  // We handle the background via classes to respect dark mode cleanly,
+                  // but Framer Motion's animate property can override it. We use Tailwind classes for hover instead.
                 }}
                 transition={{ duration: 0.3, ease: 'easeOut' }}
-                className="relative p-10 flex flex-col h-full overflow-hidden bg-white"
+                className={`relative p-10 flex flex-col h-full overflow-hidden transition-colors duration-500 ${isHovered ? 'bg-neutral-100 dark:bg-neutral-900' : 'bg-neutral-50 dark:bg-[#09090b]'}`}
               >
                 {/* Tech spec header */}
                 <div className="flex justify-between items-start mb-16">
-                  <span className="font-mono text-[10px] text-[#888888] tracking-widest">
+                  <span className="font-mono text-[10px] text-neutral-500 tracking-widest transition-colors duration-500">
                     {category.sysReq}
                   </span>
-                  <div className={`p-2 transition-colors duration-300 ${isHovered ? 'text-black' : 'text-[#888888]'}`}>
+                  <div className={`p-2 transition-colors duration-300 ${isHovered ? 'text-neutral-900 dark:text-white' : 'text-neutral-400 dark:text-neutral-600'}`}>
                     {category.icon}
                   </div>
                 </div>
 
                 {/* Category Title */}
                 <div className="mb-12">
-                  <h3 className="text-2xl font-bold uppercase tracking-tight text-black mb-4 flex items-center gap-2" style={{ fontFamily: "'Inter', sans-serif" }}>
-                    <div className={`w-2 h-2 rounded-full ${isHovered ? 'bg-black' : 'bg-transparent border border-black'} transition-colors duration-300`} />
+                  <h3 className="text-2xl font-bold uppercase tracking-tight text-neutral-900 dark:text-white mb-4 flex items-center gap-2 transition-colors duration-500" style={{ fontFamily: "'Inter', sans-serif" }}>
+                    <div className={`w-2 h-2 rounded-full transition-colors duration-300 ${isHovered ? 'bg-neutral-900 dark:bg-white' : 'bg-transparent border border-neutral-900 dark:border-white'}`} />
                     {category.id}
                   </h3>
-                  <p className="text-[#888888] text-sm font-mono tracking-tight leading-relaxed max-w-[200px]">
+                  <p className="text-neutral-500 dark:text-neutral-400 text-sm font-mono tracking-tight leading-relaxed max-w-[200px] transition-colors duration-500">
                     {category.description}
                   </p>
                 </div>
@@ -149,17 +158,17 @@ const Skills: React.FC = () => {
                 {/* Tech Stack List */}
                 <div className="mt-auto flex flex-col gap-6">
                   <div>
-                    <span className="block font-mono text-[9px] text-[#888888] uppercase tracking-[0.2em] mb-3 border-b border-neutral-100 pb-2">
+                    <span className="block font-mono text-[9px] text-neutral-400 dark:text-neutral-500 uppercase tracking-[0.2em] mb-3 border-b border-neutral-200 dark:border-neutral-800 pb-2 transition-colors duration-500">
                       Primary Matrix
                     </span>
                     <ul className="flex flex-col gap-1">
                       {category.primary.map(skill => (
                         <li 
                           key={skill} 
-                          className="text-black font-medium text-lg md:text-xl tracking-tight transition-transform duration-300 cursor-default"
+                          className="text-neutral-900 dark:text-white font-medium text-lg md:text-xl tracking-tight transition-all duration-300 cursor-default"
                           style={{ fontFamily: "'Inter', sans-serif" }}
                         >
-                          <span className={`inline-block mr-2 opacity-0 -translate-x-2 transition-all duration-300 ${isHovered ? 'opacity-100 translate-x-0' : ''}`}>›</span>
+                          <span className={`inline-block mr-2 opacity-0 -translate-x-2 transition-all duration-300 ${isHovered ? 'opacity-100 translate-x-0 text-neutral-900 dark:text-white' : ''}`}>›</span>
                           {skill}
                         </li>
                       ))}
@@ -167,14 +176,14 @@ const Skills: React.FC = () => {
                   </div>
 
                   <div>
-                    <span className="block font-mono text-[9px] text-[#888888] uppercase tracking-[0.2em] mb-3 border-b border-neutral-100 pb-2">
+                    <span className="block font-mono text-[9px] text-neutral-400 dark:text-neutral-500 uppercase tracking-[0.2em] mb-3 border-b border-neutral-200 dark:border-neutral-800 pb-2 transition-colors duration-500">
                       Secondary Support
                     </span>
                     <ul className="flex flex-wrap gap-x-4 gap-y-2">
                       {category.secondary.map(skill => (
                         <li 
                           key={skill} 
-                          className="text-[#888888] font-normal text-sm hover:text-black transition-colors duration-300 cursor-default"
+                          className="text-neutral-500 dark:text-neutral-400 font-normal text-sm hover:text-neutral-900 dark:hover:text-white transition-colors duration-300 cursor-default"
                         >
                           {skill}
                         </li>
@@ -185,7 +194,7 @@ const Skills: React.FC = () => {
 
                 {/* Hover line indicator */}
                 <motion.div 
-                  className="absolute bottom-0 left-0 h-[2px] bg-black w-full origin-left"
+                  className="absolute bottom-0 left-0 h-[2px] bg-neutral-900 dark:bg-white w-full origin-left transition-colors duration-500"
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: isHovered ? 1 : 0 }}
                   transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}

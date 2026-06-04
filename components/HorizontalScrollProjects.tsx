@@ -19,7 +19,7 @@ const renderMetricText = (text: string) =>
             METRIC_TOKEN_MATCH.test(part) ? (
                 <span
                     key={`${part}-${idx}`}
-                    className="font-mono text-cyan-200 bg-cyan-400/10 border border-cyan-400/20 rounded px-1.5 py-0.5"
+                    className="font-mono text-cyan-700 dark:text-cyan-200 bg-cyan-500/10 dark:bg-cyan-400/10 border border-cyan-500/20 dark:border-cyan-400/20 rounded px-1.5 py-0.5 transition-colors duration-500"
                 >
                     {part}
                 </span>
@@ -47,7 +47,7 @@ const ProjectCard: React.FC<{
 
     const glareX = useTransform(x, [-0.5, 0.5], ['90%', '10%']);
     const glareY = useTransform(y, [-0.5, 0.5], ['90%', '10%']);
-    const glareOpacity = useTransform(x, [-0.5, 0, 0.5], [0.08, 0.2, 0.08]);
+    const glareOpacity = useTransform(x, [-0.5, 0, 0.5], [0.03, 0.15, 0.03]);
     const glareBackground = useMotionTemplate`radial-gradient(circle at ${glareX} ${glareY}, rgba(34,211,238,${glareOpacity}) 0%, transparent 55%)`;
 
     const handleMouseMove = (e: React.MouseEvent) => {
@@ -87,7 +87,6 @@ const ProjectCard: React.FC<{
                     rotateX,
                     rotateY,
                     transformStyle: 'preserve-3d',
-                    willChange: 'transform',
                 }}
                 onMouseMove={handleMouseMove}
                 onMouseEnter={() => setIsHovered(true)}
@@ -95,15 +94,16 @@ const ProjectCard: React.FC<{
                 onClick={onClick}
             >
                 <div
-                    className="relative h-full rounded-3xl overflow-hidden"
+                    className="relative h-full rounded-3xl overflow-hidden shadow-md dark:shadow-none transition-shadow duration-500"
                     style={{ transform: 'translateZ(0)', transformStyle: 'preserve-3d' }}
                 >
-                    <div className="absolute inset-0 rounded-3xl p-[1px] bg-gradient-to-b from-cyan-300/60 via-white/20 to-amber-200/40 opacity-70">
+                    {/* Dark Mode Gradient Outline */}
+                    <div className="absolute inset-0 rounded-3xl p-[1px] bg-transparent dark:bg-gradient-to-b from-cyan-300/60 via-white/20 to-amber-200/40 opacity-0 dark:opacity-70 transition-opacity duration-500">
                         <div className="h-full w-full rounded-3xl bg-[#0b1118]" />
                     </div>
 
                     <div
-                        className="absolute inset-[1px] rounded-3xl border border-white/10 bg-[#0b1118] overflow-hidden"
+                        className="absolute inset-[1px] rounded-3xl border border-neutral-200 dark:border-white/10 bg-white dark:bg-[#0b1118] overflow-hidden transition-colors duration-500"
                         style={{ transform: 'translateZ(0)' }}
                     >
                         <div className="relative h-56 overflow-hidden">
@@ -115,34 +115,34 @@ const ProjectCard: React.FC<{
                                 style={{
                                     transform: isHovered ? 'scale(1.06)' : 'scale(1)',
                                     transition: 'transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
-                                    willChange: 'transform',
                                 }}
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#0b1118] via-[#0b1118]/50 to-transparent" />
-                            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 via-transparent to-amber-400/5" />
+                            {/* Inner Shadows */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-[#0b1118] via-white/50 dark:via-[#0b1118]/50 to-transparent transition-colors duration-500" />
+                            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 via-transparent to-amber-500/5 dark:to-amber-400/5" />
 
                             <div className="absolute top-4 left-4 z-20">
-                                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/45 backdrop-blur-md border border-white/20 text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-100">
+                                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/80 dark:bg-black/45 backdrop-blur-md border border-neutral-200 dark:border-white/20 text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-700 dark:text-cyan-100 transition-colors duration-500">
                                     {project.category}
                                 </span>
                             </div>
 
                             {project.caseStudy?.proofNote && (
                                 <div className="absolute bottom-4 left-4 right-4 z-20">
-                                    <span className="inline-block w-full truncate px-3 py-2 rounded-lg bg-black/60 backdrop-blur-md border border-cyan-300/25 text-[10px] uppercase tracking-[0.14em] text-cyan-100 font-mono">
+                                    <span className="inline-block w-full truncate px-3 py-2 rounded-lg bg-white/80 dark:bg-black/60 backdrop-blur-md border border-cyan-500/20 dark:border-cyan-300/25 text-[10px] uppercase tracking-[0.14em] text-cyan-700 dark:text-cyan-100 font-mono transition-colors duration-500">
                                         Proof | {project.caseStudy.proofNote}
                                     </span>
                                 </div>
                             )}
 
                             <motion.div
-                                className="absolute inset-0 flex items-center justify-center bg-black/35 backdrop-blur-[1px]"
+                                className="absolute inset-0 flex items-center justify-center bg-white/20 dark:bg-black/35 backdrop-blur-[1px] transition-colors duration-500"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: isHovered ? 1 : 0 }}
                                 transition={{ duration: 0.25 }}
                             >
                                 <motion.div
-                                    className="w-14 h-14 rounded-full border border-cyan-200/60 bg-black/40 flex items-center justify-center"
+                                    className="w-14 h-14 rounded-full border border-cyan-500/30 dark:border-cyan-200/60 bg-white/50 dark:bg-black/40 flex items-center justify-center"
                                     initial={{ scale: 0.6, opacity: 0 }}
                                     animate={{
                                         scale: isHovered ? 1 : 0.6,
@@ -150,7 +150,7 @@ const ProjectCard: React.FC<{
                                     }}
                                     transition={{ duration: 0.25 }}
                                 >
-                                    <ArrowUpRight className="w-5 h-5 text-cyan-100" />
+                                    <ArrowUpRight className="w-5 h-5 text-cyan-600 dark:text-cyan-100" />
                                 </motion.div>
                             </motion.div>
                         </div>
@@ -158,17 +158,17 @@ const ProjectCard: React.FC<{
                         <div className="relative p-6 h-[calc(100%-14rem)] flex flex-col" style={{ transform: 'translateZ(26px)' }}>
                             {isHovered && (
                                 <motion.div
-                                    className="absolute inset-0 pointer-events-none z-0 mix-blend-screen"
+                                    className="absolute inset-0 pointer-events-none z-0 mix-blend-multiply dark:mix-blend-screen"
                                     style={{ background: glareBackground }}
                                 />
                             )}
 
                             <div className="relative z-10 flex-1 flex flex-col">
-                                <h3 className="text-2xl font-orbitron font-bold text-white uppercase tracking-wide mb-3 leading-tight">
+                                <h3 className="text-2xl font-orbitron font-bold text-neutral-900 dark:text-white uppercase tracking-wide mb-3 leading-tight transition-colors duration-500">
                                     {project.title}
                                 </h3>
 
-                                <p className="text-neutral-300 font-exo text-sm leading-relaxed line-clamp-4 mb-5">
+                                <p className="text-neutral-600 dark:text-neutral-300 font-exo text-sm leading-relaxed line-clamp-4 mb-5 transition-colors duration-500">
                                     {renderMetricText(project.description)}
                                 </p>
 
@@ -176,7 +176,7 @@ const ProjectCard: React.FC<{
                                     {project.tech.map((tech) => (
                                         <span
                                             key={tech}
-                                            className="shrink-0 text-[10px] uppercase font-bold px-3 py-1.5 bg-white/5 text-neutral-200 border border-white/15 rounded-full"
+                                            className="shrink-0 text-[10px] uppercase font-bold px-3 py-1.5 bg-neutral-100 dark:bg-white/5 text-neutral-600 dark:text-neutral-200 border border-neutral-200 dark:border-white/15 rounded-full transition-colors duration-500"
                                         >
                                             {tech}
                                         </span>
@@ -189,7 +189,7 @@ const ProjectCard: React.FC<{
                                             href={project.github}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-cyan-300/35 bg-cyan-300/10 text-cyan-100 text-[10px] uppercase tracking-[0.16em] font-bold hover:bg-cyan-300/20 transition-colors duration-300 pointer-events-auto"
+                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-cyan-500/20 dark:border-cyan-300/35 bg-cyan-500/5 dark:bg-cyan-300/10 text-cyan-700 dark:text-cyan-100 text-[10px] uppercase tracking-[0.16em] font-bold hover:bg-cyan-500/10 dark:hover:bg-cyan-300/20 transition-colors duration-300 pointer-events-auto"
                                             onClick={(e) => e.stopPropagation()}
                                         >
                                             Source Code {'{}'} <Github className="w-3.5 h-3.5" />
@@ -201,7 +201,7 @@ const ProjectCard: React.FC<{
                                             href={project.liveUrl}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/25 bg-white/10 text-white text-[10px] uppercase tracking-[0.16em] font-bold hover:bg-white/20 transition-colors duration-300 pointer-events-auto"
+                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-neutral-300 dark:border-white/25 bg-neutral-100 dark:bg-white/10 text-neutral-700 dark:text-white text-[10px] uppercase tracking-[0.16em] font-bold hover:bg-neutral-200 dark:hover:bg-white/20 transition-colors duration-300 pointer-events-auto"
                                             onClick={(e) => e.stopPropagation()}
                                         >
                                             Live Demo <ExternalLink className="w-3.5 h-3.5" />
@@ -214,7 +214,7 @@ const ProjectCard: React.FC<{
                                             e.stopPropagation();
                                             onClick();
                                         }}
-                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-amber-200/35 bg-amber-200/10 text-amber-100 text-[10px] uppercase tracking-[0.16em] font-bold hover:bg-amber-200/20 transition-colors duration-300"
+                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-amber-500/20 dark:border-amber-200/35 bg-amber-500/5 dark:bg-amber-200/10 text-amber-700 dark:text-amber-100 text-[10px] uppercase tracking-[0.16em] font-bold hover:bg-amber-500/10 dark:hover:bg-amber-200/20 transition-colors duration-300"
                                     >
                                         Open Case Study <ArrowUpRight className="w-3.5 h-3.5" />
                                     </button>
@@ -222,7 +222,7 @@ const ProjectCard: React.FC<{
                             </div>
 
                             <motion.div
-                                className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-cyan-300 via-cyan-100 to-amber-200"
+                                className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-cyan-400 via-cyan-300 to-amber-300 dark:from-cyan-300 dark:via-cyan-100 dark:to-amber-200 opacity-80"
                                 initial={{ scaleX: 0 }}
                                 animate={{ scaleX: isHovered ? 1 : 0 }}
                                 transition={{ duration: 0.35 }}
@@ -233,7 +233,7 @@ const ProjectCard: React.FC<{
                 </div>
 
                 <motion.div
-                    className="absolute inset-0 rounded-3xl bg-cyan-200/15 blur-2xl -z-10"
+                    className="absolute inset-0 rounded-3xl bg-cyan-400/15 dark:bg-cyan-200/15 blur-2xl -z-10"
                     style={{
                         transform: 'translateZ(-50px) translateY(16px)',
                         opacity: isHovered ? 0.28 : 0.12,
@@ -283,7 +283,7 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -16 }}
                             onClick={() => scroll('left')}
-                            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-black/70 backdrop-blur-md border border-white/15 rounded-full flex items-center justify-center hover:border-cyan-300/60 hover:text-cyan-100 transition-all duration-300"
+                            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/80 dark:bg-black/70 backdrop-blur-md border border-neutral-200 dark:border-white/15 rounded-full flex items-center justify-center text-neutral-600 dark:text-neutral-300 hover:border-cyan-500/50 dark:hover:border-cyan-300/60 hover:text-cyan-600 dark:hover:text-cyan-100 shadow-sm dark:shadow-none transition-all duration-300"
                             aria-label="Scroll projects left"
                         >
                             <ChevronLeft size={20} />
@@ -298,7 +298,7 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: 16 }}
                             onClick={() => scroll('right')}
-                            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-black/70 backdrop-blur-md border border-white/15 rounded-full flex items-center justify-center hover:border-cyan-300/60 hover:text-cyan-100 transition-all duration-300"
+                            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/80 dark:bg-black/70 backdrop-blur-md border border-neutral-200 dark:border-white/15 rounded-full flex items-center justify-center text-neutral-600 dark:text-neutral-300 hover:border-cyan-500/50 dark:hover:border-cyan-300/60 hover:text-cyan-600 dark:hover:text-cyan-100 shadow-sm dark:shadow-none transition-all duration-300"
                             aria-label="Scroll projects right"
                         >
                             <ChevronRight size={20} />
@@ -328,7 +328,7 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/90 backdrop-blur-lg"
+                        className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-white/80 dark:bg-black/90 backdrop-blur-lg transition-colors duration-500"
                         onClick={() => setSelectedProject(null)}
                     >
                         <motion.div
@@ -336,12 +336,12 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -40 }}
                             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                            className="bg-[#0a1016] border border-white/10 max-w-5xl w-full relative overflow-hidden max-h-[90vh] rounded-2xl"
+                            className="bg-white dark:bg-[#0a1016] border border-neutral-200 dark:border-white/10 max-w-5xl w-full relative overflow-hidden max-h-[90vh] rounded-2xl shadow-xl dark:shadow-none transition-colors duration-500"
                             onClick={(e) => e.stopPropagation()}
                         >
                             <motion.button
                                 onClick={() => setSelectedProject(null)}
-                                className="absolute top-5 right-5 text-white bg-black/45 backdrop-blur-md p-2.5 rounded-full hover:bg-white hover:text-black transition-colors z-20 border border-white/15"
+                                className="absolute top-5 right-5 text-neutral-600 dark:text-white bg-white/80 dark:bg-black/45 backdrop-blur-md p-2.5 rounded-full hover:bg-neutral-100 dark:hover:bg-white hover:text-black transition-colors z-20 border border-neutral-200 dark:border-white/15"
                                 whileHover={{ scale: 1.06, rotate: 90 }}
                                 whileTap={{ scale: 0.95 }}
                                 aria-label="Close project details"
@@ -358,11 +358,11 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                                     animate={{ scale: 1 }}
                                     transition={{ duration: 0.5 }}
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-[#0a1016] via-[#0a1016]/50 to-transparent" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-[#0a1016] via-white/50 dark:via-[#0a1016]/50 to-transparent transition-colors duration-500" />
 
                                 <div className="absolute bottom-6 left-6 right-6">
                                     <motion.span
-                                        className="text-cyan-200 text-xs font-mono uppercase tracking-[0.2em]"
+                                        className="text-cyan-700 dark:text-cyan-200 text-xs font-mono uppercase tracking-[0.2em] transition-colors duration-500"
                                         initial={{ opacity: 0, y: 18 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.1 }}
@@ -370,7 +370,7 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                                         {selectedProject.category}
                                     </motion.span>
                                     <motion.h2
-                                        className="text-4xl md:text-5xl font-orbitron font-black text-white uppercase mt-2"
+                                        className="text-4xl md:text-5xl font-orbitron font-black text-neutral-900 dark:text-white uppercase mt-2 transition-colors duration-500"
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.2 }}
@@ -384,28 +384,28 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                                 {selectedProject.caseStudy ? (
                                     <div className="space-y-8 mb-10 font-exo">
                                         <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
-                                            <h4 className="text-cyan-200 text-[11px] uppercase font-bold tracking-[0.2em] mb-3">The Problem</h4>
-                                            <p className="leading-relaxed text-lg text-neutral-300">{selectedProject.caseStudy.problem}</p>
+                                            <h4 className="text-cyan-700 dark:text-cyan-200 text-[11px] uppercase font-bold tracking-[0.2em] mb-3 transition-colors duration-500">The Problem</h4>
+                                            <p className="leading-relaxed text-lg text-neutral-600 dark:text-neutral-300 transition-colors duration-500">{selectedProject.caseStudy.problem}</p>
                                         </motion.div>
 
                                         <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-                                            <h4 className="text-cyan-200 text-[11px] uppercase font-bold tracking-[0.2em] mb-3">Architecture & Solution</h4>
-                                            <p className="leading-relaxed text-lg text-neutral-300">{selectedProject.caseStudy.architecture}</p>
+                                            <h4 className="text-cyan-700 dark:text-cyan-200 text-[11px] uppercase font-bold tracking-[0.2em] mb-3 transition-colors duration-500">Architecture & Solution</h4>
+                                            <p className="leading-relaxed text-lg text-neutral-600 dark:text-neutral-300 transition-colors duration-500">{selectedProject.caseStudy.architecture}</p>
                                         </motion.div>
 
                                         {selectedProject.pipeline && (
                                             <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.32 }}>
-                                                <h4 className="text-cyan-200 text-[11px] uppercase font-bold tracking-[0.2em] mb-4">Pipeline Stages</h4>
+                                                <h4 className="text-cyan-700 dark:text-cyan-200 text-[11px] uppercase font-bold tracking-[0.2em] mb-4 transition-colors duration-500">Pipeline Stages</h4>
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                     {selectedProject.pipeline.map((step, idx) => (
-                                                        <div key={idx} className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-400/30 transition-colors group">
+                                                        <div key={idx} className="p-4 rounded-xl bg-neutral-50 dark:bg-white/5 border border-neutral-200 dark:border-white/10 hover:border-cyan-500/30 dark:hover:border-cyan-400/30 transition-colors group shadow-sm dark:shadow-none">
                                                             <div className="flex items-center gap-3 mb-2">
-                                                                <span className="w-6 h-6 rounded-full bg-cyan-400/10 border border-cyan-400/20 flex items-center justify-center text-[10px] font-bold text-cyan-200 group-hover:bg-cyan-400/20 transition-colors">
+                                                                <span className="w-6 h-6 rounded-full bg-cyan-500/10 dark:bg-cyan-400/10 border border-cyan-500/20 dark:border-cyan-400/20 flex items-center justify-center text-[10px] font-bold text-cyan-700 dark:text-cyan-200 group-hover:bg-cyan-500/20 dark:group-hover:bg-cyan-400/20 transition-colors">
                                                                     0{idx + 1}
                                                                 </span>
-                                                                <span className="text-sm font-bold text-white uppercase tracking-wider">{step.step}</span>
+                                                                <span className="text-sm font-bold text-neutral-900 dark:text-white uppercase tracking-wider transition-colors duration-500">{step.step}</span>
                                                             </div>
-                                                            <p className="text-xs text-neutral-400 leading-relaxed font-exo">
+                                                            <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed font-exo transition-colors duration-500">
                                                                 {step.description}
                                                             </p>
                                                         </div>
@@ -415,8 +415,8 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                                         )}
 
                                         <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
-                                            <h4 className="text-cyan-200 text-[11px] uppercase font-bold tracking-[0.2em] mb-3">Key Metrics</h4>
-                                            <ul className="list-disc pl-5 space-y-3 text-neutral-100 text-base">
+                                            <h4 className="text-cyan-700 dark:text-cyan-200 text-[11px] uppercase font-bold tracking-[0.2em] mb-3 transition-colors duration-500">Key Metrics</h4>
+                                            <ul className="list-disc pl-5 space-y-3 text-neutral-800 dark:text-neutral-100 text-base transition-colors duration-500">
                                                 {selectedProject.caseStudy.metrics.map((metric, idx) => (
                                                     <li key={idx} className="leading-relaxed">{renderMetricText(metric)}</li>
                                                 ))}
@@ -425,15 +425,15 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
 
                                         {selectedProject.caseStudy.hardestPart && (
                                             <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-                                                <h4 className="text-cyan-200 text-[11px] uppercase font-bold tracking-[0.2em] mb-3">The Biggest Challenge</h4>
-                                                <p className="leading-relaxed text-base text-neutral-300">{selectedProject.caseStudy.hardestPart}</p>
+                                                <h4 className="text-cyan-700 dark:text-cyan-200 text-[11px] uppercase font-bold tracking-[0.2em] mb-3 transition-colors duration-500">The Biggest Challenge</h4>
+                                                <p className="leading-relaxed text-base text-neutral-600 dark:text-neutral-300 transition-colors duration-500">{selectedProject.caseStudy.hardestPart}</p>
                                             </motion.div>
                                         )}
 
                                         {selectedProject.caseStudy.proofNote && (
                                             <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}>
-                                                <h4 className="text-cyan-200 text-[11px] uppercase font-bold tracking-[0.2em] mb-3">Proof Artifact</h4>
-                                                <p className="font-mono text-sm text-cyan-100 bg-cyan-400/10 border border-cyan-400/20 rounded-lg px-4 py-3">
+                                                <h4 className="text-cyan-700 dark:text-cyan-200 text-[11px] uppercase font-bold tracking-[0.2em] mb-3 transition-colors duration-500">Proof Artifact</h4>
+                                                <p className="font-mono text-sm text-cyan-700 dark:text-cyan-100 bg-cyan-500/10 dark:bg-cyan-400/10 border border-cyan-500/20 dark:border-cyan-400/20 rounded-lg px-4 py-3 transition-colors duration-500">
                                                     {selectedProject.caseStudy.proofNote}
                                                 </p>
                                             </motion.div>
@@ -441,7 +441,7 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                                     </div>
                                 ) : (
                                     <motion.p
-                                        className="font-exo text-neutral-300 leading-relaxed text-lg mb-8"
+                                        className="font-exo text-neutral-600 dark:text-neutral-300 leading-relaxed text-lg mb-8 transition-colors duration-500"
                                         initial={{ opacity: 0, y: 18 }}
                                         animate={{ opacity: 1, y: 0 }}
                                     >
@@ -455,14 +455,14 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: selectedProject.caseStudy ? 0.5 : 0.2 }}
                                 >
-                                    <h4 className="text-[11px] uppercase text-neutral-500 mb-4 font-bold tracking-[0.2em]">
+                                    <h4 className="text-[11px] uppercase text-neutral-500 mb-4 font-bold tracking-[0.2em] transition-colors duration-500">
                                         Tech Stack
                                     </h4>
                                     <div className="flex flex-wrap gap-3">
                                         {selectedProject.tech.map((tech, i) => (
                                             <motion.span
                                                 key={tech}
-                                                className="text-xs uppercase font-bold px-4 py-2 bg-white/5 text-neutral-100 border border-white/10 rounded-full"
+                                                className="text-xs uppercase font-bold px-4 py-2 bg-neutral-100 dark:bg-white/5 text-neutral-700 dark:text-neutral-100 border border-neutral-200 dark:border-white/10 rounded-full transition-colors duration-500"
                                                 initial={{ opacity: 0, scale: 0.86 }}
                                                 animate={{ opacity: 1, scale: 1 }}
                                                 transition={{ delay: (selectedProject.caseStudy ? 0.5 : 0.2) + i * 0.04 }}
@@ -474,7 +474,7 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                                 </motion.div>
 
                                 <motion.div
-                                    className="flex flex-wrap gap-3 pt-6 border-t border-white/10"
+                                    className="flex flex-wrap gap-3 pt-6 border-t border-neutral-200 dark:border-white/10 transition-colors duration-500"
                                     initial={{ opacity: 0, y: 18 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: selectedProject.caseStudy ? 0.58 : 0.28 }}
@@ -484,7 +484,7 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                                             href={selectedProject.github}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-cyan-300/15 border border-cyan-300/35 text-cyan-100 text-xs uppercase tracking-[0.16em] font-bold hover:bg-cyan-300/25 transition-colors"
+                                            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-cyan-500/10 dark:bg-cyan-300/15 border border-cyan-500/20 dark:border-cyan-300/35 text-cyan-700 dark:text-cyan-100 text-xs uppercase tracking-[0.16em] font-bold hover:bg-cyan-500/20 dark:hover:bg-cyan-300/25 transition-colors"
                                             whileHover={{ scale: 1.02 }}
                                             whileTap={{ scale: 0.98 }}
                                         >
@@ -497,7 +497,7 @@ const HorizontalScrollProjects: React.FC<HorizontalScrollProjectsProps> = ({ pro
                                             href={selectedProject.liveUrl}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white/10 border border-white/20 text-white text-xs uppercase tracking-[0.16em] font-bold hover:bg-white/20 transition-colors"
+                                            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-neutral-100 dark:bg-white/10 border border-neutral-300 dark:border-white/20 text-neutral-800 dark:text-white text-xs uppercase tracking-[0.16em] font-bold hover:bg-neutral-200 dark:hover:bg-white/20 transition-colors"
                                             whileHover={{ scale: 1.02 }}
                                             whileTap={{ scale: 0.98 }}
                                         >

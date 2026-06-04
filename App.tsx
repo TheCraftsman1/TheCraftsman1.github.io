@@ -89,7 +89,7 @@ const App: React.FC = () => {
       {/* Scroll Progress */}
       <ScrollProgress />
 
-      <div className={`relative min-h-screen bg-white z-10 text-neutral-900 selection:bg-neutral-900 selection:text-white overflow-x-hidden ${isLoading ? 'h-screen overflow-hidden' : ''}`}>
+      <div className={`relative min-h-screen bg-neutral-50 dark:bg-[#09090b] z-10 text-neutral-900 dark:text-neutral-100 selection:bg-neutral-900 selection:text-white dark:selection:bg-white dark:selection:text-neutral-900 overflow-x-hidden transition-colors duration-500 ${isLoading ? 'h-screen overflow-hidden' : ''}`}>
         
         <AnimatePresence>
           {(!isLoading && isVideoComplete) && (
@@ -165,7 +165,7 @@ const App: React.FC = () => {
         </main>
 
         {/* Footer */}
-        <footer className="py-8 bg-white border-t border-neutral-100">
+        <footer className="py-8 bg-neutral-50 dark:bg-[#09090b] border-t border-neutral-200 dark:border-neutral-800 transition-colors duration-500">
           <div className="max-w-7xl mx-auto px-6">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <div className="text-neutral-400 text-xs font-medium">

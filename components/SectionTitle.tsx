@@ -9,7 +9,7 @@ interface SectionTitleProps {
 }
 
 const letterVariants = {
-  hidden: { opacity: 0, y: 50, rotateX: -90 },
+  hidden: { opacity: 0, y: 30, rotateX: -45 },
   visible: {
     opacity: 1,
     y: 0,
@@ -29,14 +29,14 @@ const containerVariants = {
   }
 };
 
-const SectionTitle: React.FC<SectionTitleProps> = ({ title, subtitle, number, titleColor = "text-white" }) => {
+const SectionTitle: React.FC<SectionTitleProps> = ({ title, subtitle, number, titleColor = "text-neutral-900 dark:text-white" }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <div ref={ref} className="flex flex-col items-start border-l-4 border-gradient-to-b from-cyan-400 to-purple-600 pl-6 py-2 relative overflow-visible" style={{ borderImage: 'linear-gradient(to bottom, #00ffd5, #7c7cff) 1' }}>
+    <div ref={ref} className="flex flex-col items-start border-l-4 border-amber-500 dark:border-amber-500 pl-6 py-2 relative overflow-visible transition-colors duration-500">
       <motion.span
-        className="text-teal-400 font-exo font-bold uppercase tracking-[0.2em] text-sm mb-1 block"
+        className="text-amber-600 dark:text-amber-500 font-exo font-bold uppercase tracking-[0.2em] text-sm mb-2 block transition-colors duration-500"
         initial={{ opacity: 0, x: -20 }}
         animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
         transition={{ duration: 0.5, delay: 0.2 }}
@@ -45,19 +45,19 @@ const SectionTitle: React.FC<SectionTitleProps> = ({ title, subtitle, number, ti
       </motion.span>
 
       <motion.h2
-        className={`text-4xl md:text-5xl lg:text-7xl font-black ${titleColor} uppercase tracking-tighter flex flex-wrap leading-tight`}
+        className={`text-4xl md:text-5xl font-black ${titleColor} uppercase tracking-tighter flex flex-wrap leading-tight transition-colors duration-500`}
         style={{ fontFamily: "'Syne', sans-serif" }}
         variants={containerVariants}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
       >
         {title.split(' ').map((word, wordIdx) => (
-          <span key={wordIdx} className="mr-4 flex" style={{ perspective: 1000 }}>
+          <span key={wordIdx} className="mr-3 flex">
             {word.split('').map((char, charIdx) => (
               <motion.span
                 key={charIdx}
                 variants={letterVariants}
-                style={{ display: 'inline-block', transformStyle: 'preserve-3d' }}
+                style={{ display: 'inline-block' }}
               >
                 {char}
               </motion.span>

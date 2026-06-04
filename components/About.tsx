@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { SectionId } from '../types';
 import SectionTitle from './SectionTitle';
 import CountUp from 'react-countup';
@@ -81,23 +81,23 @@ const StatCard = ({ stat, index }: { stat: any, index: number }) => {
       onMouseLeave={handleMouseLeave}
       className={`relative group perspective-1000 ${index % 2 === 1 ? 'lg:translate-y-4' : ''}`}
     >
-      <div className="relative p-6 overflow-hidden rounded-2xl bg-gradient-to-b from-white/5 to-white/[0.02] backdrop-blur-md border border-white/10 hover:border-amber-500/30 transition-colors duration-500 min-h-[160px] flex flex-col justify-end shadow-2xl">
+      <div className="relative p-6 overflow-hidden rounded-2xl bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/10 hover:border-amber-500/30 dark:hover:border-amber-500/30 transition-colors duration-500 min-h-[160px] flex flex-col justify-end shadow-xl dark:shadow-2xl">
         
         {/* Rim Lighting Specular Highlight */}
         <motion.div 
-          className="absolute w-32 h-32 bg-white/20 blur-[50px] rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          className="absolute w-32 h-32 bg-amber-500/10 dark:bg-white/20 blur-[50px] rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
           style={{ left: glareX, top: glareY }}
         />
 
         {/* Iconic Background Watermark */}
-        <div className="absolute -right-4 -top-4 w-32 h-32 text-white opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-700 pointer-events-none group-hover:scale-110 ease-out transform-gpu">
+        <div className="absolute -right-4 -top-4 w-32 h-32 text-neutral-900 dark:text-white opacity-[0.03] dark:opacity-[0.03] group-hover:opacity-[0.08] dark:group-hover:opacity-[0.08] transition-opacity duration-700 pointer-events-none group-hover:scale-110 ease-out transform-gpu">
           {stat.icon}
         </div>
 
         {/* Glowing Circular Progress Ring */}
-        <div className="absolute right-4 top-4 w-12 h-12 opacity-80 group-hover:opacity-100 transition-opacity drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]">
+        <div className="absolute right-4 top-4 w-12 h-12 opacity-80 group-hover:opacity-100 transition-opacity drop-shadow-[0_0_8px_rgba(245,158,11,0.3)] dark:drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]">
           <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.05)" strokeWidth="8" fill="none" />
+            <circle cx="50" cy="50" r="40" stroke="currentColor" className="text-neutral-200 dark:text-white/5" strokeWidth="8" fill="none" />
             <motion.circle 
               cx="50" cy="50" r="40" 
               stroke={stat.progress === 1 ? "#14b8a6" : "#f59e0b"} 
@@ -107,24 +107,24 @@ const StatCard = ({ stat, index }: { stat: any, index: number }) => {
               initial={{ pathLength: 0 }}
               animate={isInView ? { pathLength: stat.progress } : { pathLength: 0 }}
               transition={{ duration: 1.5, delay: 0.5 + index * 0.2, ease: "easeOut" }}
-              className={stat.progress === 1 ? "drop-shadow-[0_0_10px_rgba(20,184,166,0.8)]" : ""}
+              className={stat.progress === 1 ? "drop-shadow-[0_0_10px_rgba(20,184,166,0.5)] dark:drop-shadow-[0_0_10px_rgba(20,184,166,0.8)]" : ""}
             />
           </svg>
         </div>
 
         {/* Content - Monospace Typography */}
         <div className="relative z-10 translate-z-[20px] transition-transform duration-300 ease-out group-hover:-translate-y-7">
-          <div className="text-4xl md:text-5xl font-bold tracking-tight text-white group-hover:text-amber-500 transition-colors drop-shadow-sm mb-2 font-mono">
+          <div className="text-4xl md:text-5xl font-bold tracking-tight text-neutral-900 dark:text-white group-hover:text-amber-500 transition-colors drop-shadow-sm mb-2 font-mono">
             <CountUp end={stat.value} duration={2.5} suffix={stat.suffix} enableScrollSpy scrollSpyOnce />
           </div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-neutral-400 group-hover:text-neutral-200 transition-colors">
+          <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-neutral-500 dark:text-neutral-400 group-hover:text-neutral-800 dark:group-hover:text-neutral-200 transition-colors">
             {stat.label}
           </p>
         </div>
 
         {/* Deep Dive Tooltip */}
         <div className="absolute bottom-5 left-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-20">
-          <div className="bg-black/90 backdrop-blur-md border border-amber-500/20 px-2.5 py-1 rounded text-[9.5px] font-mono text-amber-500 whitespace-nowrap shadow-[0_4px_15px_rgba(0,0,0,0.5)]">
+          <div className="bg-white/90 dark:bg-black/90 backdrop-blur-md border border-amber-500/20 px-2.5 py-1 rounded text-[9.5px] font-mono text-amber-600 dark:text-amber-500 whitespace-nowrap shadow-[0_4px_15px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_15px_rgba(0,0,0,0.5)]">
             {stat.tooltip}
           </div>
         </div>
@@ -159,41 +159,46 @@ const About: React.FC = () => {
     offset: ["start end", "center center"]
   });
   
-  // Create a springy value for the stroke-dashoffset based on scroll
-  // circumference = 2 * Math.PI * 40 = ~251.2
   const strokeOffset = useTransform(speedometerProgress, [0, 1], [251.2, 0]);
   const animatedStrokeOffset = useSpring(strokeOffset, { stiffness: 60, damping: 20 });
 
   return (
-    <section ref={sectionRef} id={SectionId.ABOUT} className="relative min-h-[100dvh] flex flex-col justify-center py-16 bg-neutral-950 overflow-hidden border-t border-white/5">
-      {/* Structural grid line overlay - Matched to Hero background theme */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#0a0a0a_80%)] pointer-events-none" />
+    <section ref={sectionRef} id={SectionId.ABOUT} className="relative min-h-[100dvh] flex flex-col justify-center py-16 bg-neutral-50 dark:bg-[#09090b] overflow-hidden border-t border-neutral-200 dark:border-white/5 transition-colors duration-500">
+      
+      {/* Light Mode Grid */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.05)_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none opacity-100 dark:opacity-0 transition-opacity duration-500" />
+      {/* Dark Mode Grid */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none opacity-0 dark:opacity-100 transition-opacity duration-500" />
+      
+      {/* Light Mode Radial Vignette */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#f8fafc_80%)] pointer-events-none opacity-100 dark:opacity-0 transition-opacity duration-500" />
+      {/* Dark Mode Radial Vignette */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#09090b_80%)] pointer-events-none opacity-0 dark:opacity-100 transition-opacity duration-500" />
 
-      {/* Floating Tech Orbitals (Depth/3D Parallax logic) */}
-      <motion.div style={{ y: y1, rotate: rotate1 }} className="absolute right-[10%] top-[20%] opacity-10 pointer-events-none z-0">
+      {/* Floating Tech Orbitals */}
+      <motion.div style={{ y: y1, rotate: rotate1 }} className="absolute right-[10%] top-[20%] opacity-20 dark:opacity-10 pointer-events-none z-0">
         <svg width="200" height="200" viewBox="0 0 100 100" fill="none">
           <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="0.5" strokeDasharray="4 4" className="text-amber-500"/>
-          <circle cx="50" cy="50" r="30" stroke="currentColor" strokeWidth="1" className="text-white"/>
-          <path d="M50 10 L50 90 M10 50 L90 50" stroke="currentColor" strokeWidth="0.5" className="text-white/50"/>
+          <circle cx="50" cy="50" r="30" stroke="currentColor" strokeWidth="1" className="text-neutral-400 dark:text-white"/>
+          <path d="M50 10 L50 90 M10 50 L90 50" stroke="currentColor" strokeWidth="0.5" className="text-neutral-300 dark:text-white/50"/>
           <circle cx="20" cy="50" r="2" fill="currentColor" className="text-amber-500"/>
         </svg>
       </motion.div>
 
-      <motion.div style={{ y: y2, rotate: rotate2 }} className="absolute left-[5%] bottom-[10%] opacity-10 pointer-events-none z-0">
+      <motion.div style={{ y: y2, rotate: rotate2 }} className="absolute left-[5%] bottom-[10%] opacity-20 dark:opacity-10 pointer-events-none z-0">
         <svg width="150" height="150" viewBox="0 0 100 100" fill="none">
           <rect x="25" y="25" width="50" height="50" stroke="currentColor" strokeWidth="1" className="text-amber-500" transform="rotate(45 50 50)"/>
-          <circle cx="50" cy="50" r="20" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" className="text-white"/>
+          <circle cx="50" cy="50" r="20" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" className="text-neutral-400 dark:text-white"/>
         </svg>
       </motion.div>
 
-      <motion.div style={{ y: y3 }} className="absolute right-[30%] bottom-[30%] opacity-[0.03] pointer-events-none z-0">
+      <motion.div style={{ y: y3 }} className="absolute right-[30%] bottom-[30%] opacity-[0.05] dark:opacity-[0.03] pointer-events-none z-0">
          <div className="w-[300px] h-[300px] bg-amber-500/30 rounded-full blur-[100px]"></div>
       </motion.div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10 w-full">
         {/* Subtle Watermark pushed into background */}
-        <div className="absolute top-[2%] -right-[5%] text-[25vw] font-black leading-none text-white/[0.015] select-none pointer-events-none z-0 tracking-tighter" style={{ fontFamily: "'Syne', sans-serif" }}>
+        <div className="absolute top-[2%] -right-[5%] text-[25vw] font-black leading-none text-neutral-900/[0.03] dark:text-white/[0.015] select-none pointer-events-none z-0 tracking-tighter transition-colors duration-500" style={{ fontFamily: "'Syne', sans-serif" }}>
           V K
         </div>
         
@@ -213,19 +218,19 @@ const About: React.FC = () => {
               
               {/* --- BIO-SYNC BACKGROUND GEOMETRY (HUD) --- */}
               <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none scale-[1.35]">
-                <motion.svg style={{ rotate: hudRotate1 }} className="absolute w-full h-full text-white/5" viewBox="0 0 100 100">
+                <motion.svg style={{ rotate: hudRotate1 }} className="absolute w-full h-full text-neutral-400/20 dark:text-white/5" viewBox="0 0 100 100">
                   <circle cx="50" cy="50" r="48" stroke="currentColor" strokeWidth="0.5" fill="none" strokeDasharray="4 8" vectorEffect="non-scaling-stroke" />
                 </motion.svg>
                 <motion.svg style={{ rotate: hudRotate2 }} className="absolute w-[90%] h-[90%] text-amber-500/20" viewBox="0 0 100 100">
                   <circle cx="50" cy="50" r="48" stroke="currentColor" strokeWidth="0.5" fill="none" strokeDasharray="20 10" vectorEffect="non-scaling-stroke" />
                 </motion.svg>
-                <motion.svg style={{ rotate: hudRotate3 }} className="absolute w-[80%] h-[80%] text-white/10" viewBox="0 0 100 100">
+                <motion.svg style={{ rotate: hudRotate3 }} className="absolute w-[80%] h-[80%] text-neutral-300/30 dark:text-white/10" viewBox="0 0 100 100">
                   <circle cx="50" cy="50" r="48" stroke="currentColor" strokeWidth="1" fill="none" strokeDasharray="1 4" vectorEffect="non-scaling-stroke" />
                 </motion.svg>
                 
-                {/* Embedded Arsenal Stat - 200+ DSA Progress integrated into HUD */}
+                {/* Embedded Arsenal Stat */}
                 <div className="absolute w-[110%] h-[110%] -rotate-90">
-                  <svg className="w-full h-full drop-shadow-[0_0_5px_rgba(245,158,11,0.5)]" viewBox="0 0 100 100">
+                  <svg className="w-full h-full drop-shadow-[0_0_5px_rgba(245,158,11,0.3)] dark:drop-shadow-[0_0_5px_rgba(245,158,11,0.5)]" viewBox="0 0 100 100">
                     <motion.circle 
                       cx="50" cy="50" r="49" 
                       stroke="#f59e0b" // amber-500
@@ -239,46 +244,44 @@ const About: React.FC = () => {
                   </svg>
                   {/* Floating Stat Pointer */}
                   <motion.div 
-                    className="absolute top-[8%] right-[15%] rotate-90 origin-bottom-left bg-black/80 backdrop-blur-md border border-amber-500/30 rounded-md px-3 py-1 flex flex-col items-center justify-center z-20 shadow-lg"
+                    className="absolute top-[8%] right-[15%] rotate-90 origin-bottom-left bg-white/90 dark:bg-black/80 backdrop-blur-md border border-amber-500/30 rounded-md px-3 py-1 flex flex-col items-center justify-center z-20 shadow-lg"
                     initial={{ opacity: 0, scale: 0.8 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.8, duration: 0.5 }}
                   >
-                     <span className="text-amber-500 font-black text-sm leading-none"><CountUp end={200} duration={2.5} suffix="+" enableScrollSpy scrollSpyOnce /></span>
-                     <span className="text-white/60 text-[8px] font-bold uppercase tracking-[0.2em]">DSA</span>
+                     <span className="text-amber-600 dark:text-amber-500 font-black text-sm leading-none"><CountUp end={200} duration={2.5} suffix="+" enableScrollSpy scrollSpyOnce /></span>
+                     <span className="text-neutral-500 dark:text-white/60 text-[8px] font-bold uppercase tracking-[0.2em]">DSA</span>
                   </motion.div>
                 </div>
               </div>
 
-              {/* Floating name badge - Anchored to geometry */}
+              {/* Floating name badge */}
               <motion.div
-                className="absolute z-20 bottom-4 right-4 sm:-right-8 lg:-right-12 bg-black/70 backdrop-blur-xl border border-white/10 rounded-xl px-6 py-4 shadow-2xl flex items-center justify-center group/badge"
+                className="absolute z-20 bottom-4 right-4 sm:-right-8 lg:-right-12 bg-white/80 dark:bg-black/70 backdrop-blur-xl border border-neutral-200 dark:border-white/10 rounded-xl px-6 py-4 shadow-[0_10px_30px_rgba(0,0,0,0.1)] dark:shadow-2xl flex items-center justify-center group/badge transition-colors duration-500"
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.5, duration: 0.6 }}
               >
-                {/* Connecting Line linking to the mask/hud */}
-                <div className="absolute -left-8 lg:-left-12 top-1/2 w-8 lg:w-12 h-[1px] bg-gradient-to-r from-transparent to-white/30 group-hover/badge:to-amber-500/50 transition-colors" />
-                <div className="absolute -left-8 lg:-left-12 top-1/2 w-[3px] h-[3px] rounded-full bg-white/50 group-hover/badge:bg-amber-500 transition-colors -translate-y-[1px]" />
+                {/* Connecting Line */}
+                <div className="absolute -left-8 lg:-left-12 top-1/2 w-8 lg:w-12 h-[1px] bg-gradient-to-r from-transparent to-neutral-300 dark:to-white/30 group-hover/badge:to-amber-500/50 transition-colors" />
+                <div className="absolute -left-8 lg:-left-12 top-1/2 w-[3px] h-[3px] rounded-full bg-neutral-400 dark:bg-white/50 group-hover/badge:bg-amber-500 transition-colors -translate-y-[1px]" />
                 
-                <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 to-transparent rounded-xl opacity-0 group-hover/badge:opacity-100 transition-opacity duration-500"/>
+                <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 dark:from-amber-500/10 to-transparent rounded-xl opacity-0 group-hover/badge:opacity-100 transition-opacity duration-500"/>
                 <div>
-                   <p className="text-xl font-black uppercase tracking-tight text-white relative z-10" style={{ fontFamily: "'Syne', sans-serif" }}>Vishnu K.</p>
-                   <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-amber-500 mt-0.5 relative z-10">Full Stack Engineer</p>
+                   <p className="text-xl font-black uppercase tracking-tight text-neutral-900 dark:text-white relative z-10 transition-colors duration-500" style={{ fontFamily: "'Syne', sans-serif" }}>Vishnu K.</p>
+                   <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-amber-600 dark:text-amber-500 mt-0.5 relative z-10 transition-colors duration-500">Full Stack Engineer</p>
                 </div>
               </motion.div>
 
               {/* Advanced Masked Image Container */}
               <div className="relative w-full aspect-[4/5] z-10">
-                {/* Decorative border that perfectly traces the hexagon path */}
-                <svg className="absolute inset-0 w-full h-full pointer-events-none scale-[1.03] opacity-30 group-hover:scale-[1.08] group-hover:opacity-100 group-hover:text-amber-500 text-white/40 transition-all duration-700 drop-shadow-[0_0_15px_rgba(245,158,11,0.3)] z-10">
+                <svg className="absolute inset-0 w-full h-full pointer-events-none scale-[1.03] opacity-30 group-hover:scale-[1.08] group-hover:opacity-100 group-hover:text-amber-500 text-neutral-400 dark:text-white/40 transition-all duration-700 drop-shadow-[0_0_10px_rgba(245,158,11,0.1)] dark:drop-shadow-[0_0_15px_rgba(245,158,11,0.3)] z-10">
                   <path d="M50 0 L100 25 L100 75 L50 100 L0 75 L0 25 Z" fill="none" stroke="currentColor" strokeWidth="0.5" vectorEffect="non-scaling-stroke" />
                   <path d="M50 0 L100 25 L100 75 L50 100 L0 75 L0 25 Z" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="10 20" className="opacity-0 group-hover:opacity-100 transition-opacity duration-700" vectorEffect="non-scaling-stroke" />
                 </svg>
 
-                {/* The masked clip-path image */}
                 <div className="relative w-full h-full overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] brightness-90 group-hover:brightness-110 group-hover:drop-shadow-[0_0_30px_rgba(245,158,11,0.2)]"
                      style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}>
                   <img
@@ -301,32 +304,30 @@ const About: React.FC = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="space-y-8"
             >
-              {/* Typography Hierarchy Fix: Subheading contrast and sizing against body */}
               <ScrollReveal animation="fade-up">
                 <div className="relative mb-6">
                   {/* Small decorative line */}
                   <div className="w-12 h-1 bg-amber-500 mb-6 rounded-full" />
                   <h3
-                    className="text-4xl md:text-5xl lg:text-6xl font-black text-white uppercase leading-[0.95] tracking-tighter"
+                    className="text-4xl md:text-5xl lg:text-6xl font-black text-neutral-900 dark:text-white uppercase leading-[0.95] tracking-tighter transition-colors duration-500"
                     style={{ fontFamily: "'Syne', 'Inter', sans-serif" }}
                   >
                     Building with<br />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600 drop-shadow-[0_0_15px_rgba(245,158,11,0.4)]">precision</span> &<br />
-                    <span className="text-white">purpose.</span>
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-amber-600 dark:from-amber-400 dark:to-amber-600 drop-shadow-[0_0_15px_rgba(245,158,11,0.2)] dark:drop-shadow-[0_0_15px_rgba(245,158,11,0.4)]">precision</span> &<br />
+                    <span className="text-neutral-900 dark:text-white transition-colors duration-500">purpose.</span>
                   </h3>
                 </div>
               </ScrollReveal>
 
-              {/* Bio paragraph - Improved contrast against dark mode */}
               <ScrollReveal delay={200} animation="fade-up">
-                <div className="relative bg-white/5 border border-white/10 backdrop-blur-sm p-6 rounded-2xl border-l-4 border-l-amber-500">
-                  <p className="text-neutral-300 text-lg leading-relaxed font-light">
-                    I approach software development like a race — <strong className="text-white font-medium bg-amber-500/10 px-1 py-0.5 rounded">precision, efficiency, and constant optimization</strong>. As a Computer Science student, I build high-performance applications that <strong className="text-white font-medium">solve real-world problems</strong>. My goal is to bridge the gap between complex backend logic and stunning frontend experiences.
+                <div className="relative bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/10 backdrop-blur-sm p-6 rounded-2xl border-l-4 border-l-amber-500 shadow-sm dark:shadow-none transition-colors duration-500">
+                  <p className="text-neutral-600 dark:text-neutral-300 text-lg leading-relaxed font-light transition-colors duration-500">
+                    I approach software development like a race — <strong className="text-neutral-900 dark:text-white font-medium bg-amber-500/10 px-1 py-0.5 rounded transition-colors duration-500">precision, efficiency, and constant optimization</strong>. As a Computer Science student, I build high-performance applications that <strong className="text-neutral-900 dark:text-white font-medium transition-colors duration-500">solve real-world problems</strong>. My goal is to bridge the gap between complex backend logic and stunning frontend experiences.
                   </p>
                 </div>
               </ScrollReveal>
 
-              {/* Social links — Glass blocks */}
+              {/* Social links */}
               <div className="flex flex-wrap gap-4 pt-4">
                 {[
                   { href: 'https://github.com/TheCraftsman1', label: 'GitHub', icon: (
@@ -344,7 +345,7 @@ const About: React.FC = () => {
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2.5 px-6 py-3 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl text-neutral-300 hover:bg-amber-500 hover:text-black hover:border-amber-400 transition-all duration-300 group"
+                    className="flex items-center gap-2.5 px-6 py-3 bg-white dark:bg-white/5 backdrop-blur-md border border-neutral-200 dark:border-white/10 rounded-xl text-neutral-600 dark:text-neutral-300 hover:bg-amber-500 hover:text-white dark:hover:text-black hover:border-amber-400 dark:hover:border-amber-400 transition-all duration-300 group shadow-sm dark:shadow-none"
                     whileHover={{ y: -2 }}
                     whileTap={{ scale: 0.97 }}
                   >
