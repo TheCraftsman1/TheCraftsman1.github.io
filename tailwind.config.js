@@ -26,7 +26,8 @@ export default {
             fontFamily: {
                 orbitron: ['Inter', 'sans-serif'],
                 exo: ['Inter', 'sans-serif'],
-                sans: ['Inter', 'sans-serif'],
+                sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+                mono: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
             },
             backgroundImage: {
                 'grid-pattern': "linear-gradient(to right, #e2e8f0 1px, transparent 1px), linear-gradient(to bottom, #e2e8f0 1px, transparent 1px)",

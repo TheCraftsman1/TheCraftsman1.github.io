@@ -1,11 +1,15 @@
 import React from 'react';
 
-export const Github = ({ className, size, ...props }: any) => {
+export interface GithubProps extends React.SVGProps<SVGSVGElement> {
+  size?: number | string;
+}
+
+export const Github: React.FC<GithubProps> = ({ className, size = 24, ...props }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width={size || 24}
-      height={size || 24}
+      width={size}
+      height={size}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -20,3 +24,5 @@ export const Github = ({ className, size, ...props }: any) => {
     </svg>
   );
 };
+
+export default Github;

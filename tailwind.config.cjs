@@ -25,7 +25,8 @@ module.exports = {
             fontFamily: {
                 orbitron: ['Inter', 'sans-serif'],
                 exo: ['Inter', 'sans-serif'],
-                sans: ['Inter', 'sans-serif'],
+                sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+                mono: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
             },
         },
     },
