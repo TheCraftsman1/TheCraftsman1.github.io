@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth dark">
+<html lang="en" class="scroll-smooth">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#070707" id="theme-color-meta" />
   <title>Vishnu Kanchipati | Creative Developer & Full Stack Engineer</title>
   <meta name="description" content="Vishnu Kanchipati — Creative Developer building world-class digital experiences with React, Three.js, and modern web technologies. View my portfolio of projects and get in touch." />
   <meta name="keywords" content="Vishnu Kanchipati, Full Stack Developer, Portfolio, React, Three.js, Web Developer" />
@@ -11,22 +12,57 @@
   <meta property="og:title" content="Vishnu Kanchipati | Creative Developer Portfolio" />
   <meta property="og:description" content="High-fidelity digital experiences bridging UI/UX engineering with robust architectures." />
   <meta property="og:type" content="website" />
+
+  <!-- Anti-FOUC Early Theme Script -->
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem('portfolio-theme') || localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var isDark = stored === 'dark' || (!stored && prefersDark) || !stored;
+        if (stored === 'light') {
+          isDark = false;
+        }
+        if (isDark) {
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light');
+          document.documentElement.style.colorScheme = 'dark';
+        } else {
+          document.documentElement.classList.remove('dark');
+          document.documentElement.classList.add('light');
+          document.documentElement.style.colorScheme = 'light';
+        }
+      } catch (e) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Syne:wght@400;500;600;700;800;900&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@400;500;600;700;800;900&display=swap"
     rel="stylesheet" media="print" onload="this.media='all'">
   <noscript>
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Syne:wght@400;500;600;700;800;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@400;500;600;700;800;900&display=swap"
       rel="stylesheet">
   </noscript>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
   <style>
     body {
-      background-color: #09090b;
-      color: #fafafa;
       overflow-x: hidden;
       font-family: 'Inter', sans-serif;
+    }
+
+    .dark body {
+      background-color: #070707;
+      color: #fafafa;
+    }
+
+    body {
+      background-color: #FAFAFA;
+      color: #09090b;
     }
 
     .scrollbar-hide::-webkit-scrollbar {
@@ -40,23 +76,23 @@
 
     /* Custom selection color */
     ::-moz-selection {
-      background-color: #6366f1;
-      color: white;
+      background-color: #fba01d;
+      color: #000000;
     }
 
     ::selection {
-      background-color: #6366f1;
-      color: white;
+      background-color: #fba01d;
+      color: #000000;
     }
   </style>
-  <script type="module" crossorigin src="/assets/index-kV6GpOWW.js"></script>
+  <script type="module" crossorigin src="/assets/index-D2vtuRfH.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/react-vendor-Bzgz95E1.js">
-  <link rel="modulepreload" crossorigin href="/assets/motion-vendor-DAnv4tlY.js">
-  <link rel="modulepreload" crossorigin href="/assets/three-vendor-CSWil_Xw.js">
-  <link rel="stylesheet" crossorigin href="/assets/index-CIBp2cNS.css">
+  <link rel="modulepreload" crossorigin href="/assets/motion-vendor-De4GIJgQ.js">
+  <link rel="modulepreload" crossorigin href="/assets/three-vendor-1mJdvVbV.js">
+  <link rel="stylesheet" crossorigin href="/assets/index-C2URSceC.css">
 </head>
 
-<body>
+<body class="transition-colors duration-300">
   <div id="root"></div>
 </body>
 
