@@ -147,15 +147,21 @@ const About: React.FC = () => {
               <div className="relative w-full aspect-[4/5] z-10">
                 <div className="relative w-full h-full overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] brightness-95 group-hover:brightness-110 group-hover:drop-shadow-[0_0_30px_rgba(251,160,29,0.3)]"
                      style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}>
-                  <img
-                    src="/vishnu_about.jpg"
-                    alt="Vishnu Kanchipati"
-                    loading="lazy"
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = '/journey-photo.jpg';
-                    }}
-                    className="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-1000 scale-[1.05] group-hover:scale-[1.12]"
-                  />
+                  <picture>
+                    <source srcSet="/vishnu_about.webp" type="image/webp" />
+                    <img
+                      src="/vishnu_about.jpg"
+                      alt="Vishnu Kanchipati"
+                      loading="lazy"
+                      decoding="async"
+                      width={819}
+                      height={1024}
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).src = '/journey-photo_No_bg.png';
+                      }}
+                      className="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-1000 scale-[1.05] group-hover:scale-[1.12]"
+                    />
+                  </picture>
                 </div>
               </div>
             </div>

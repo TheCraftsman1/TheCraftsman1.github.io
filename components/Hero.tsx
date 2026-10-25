@@ -311,9 +311,8 @@ export function FramelessTechItem({
 
 export const LiquidGlassTechCard = FramelessTechItem;
 
-const PORTRAIT_URL = "/vishnu_hero_no_bg.png";
-const FALLBACK_PORTRAIT_URL =
-  "https://plain-apac-prod-public.komododecks.com/202610/19/BQd74KEIpRWFVPUhnLtf/image.png";
+const PORTRAIT_URL = "/vishnu_hero_no_bg.webp";
+const FALLBACK_PORTRAIT_URL = "/vishnu_hero_no_bg.png";
 
 export interface PerspectiveTunnelPortfolioProps {
   brandName?: string;
@@ -794,27 +793,33 @@ export default function PerspectiveTunnelPortfolio({
                     <div
                       className="relative flex items-center justify-center pointer-events-none"
                     >
-                      <img
-                        src={imgSrc}
-                        fetchPriority="high"
-                        loading="eager"
-                        decoding="async"
-                        width={450}
-                        height={450}
-                        onError={() => {
-                          if (imgSrc !== FALLBACK_PORTRAIT_URL) {
-                            setImgSrc(FALLBACK_PORTRAIT_URL);
-                          }
-                        }}
-                        alt="Vishnu Kanchipati Portrait"
-                        className="h-[310px] sm:h-[380px] lg:h-[450px] w-auto max-w-none object-cover pointer-events-none select-none"
-                        style={{
-                          transform: isMobile ? "translateY(16px)" : "translateY(22px)",
-                          filter: isDark
-                            ? "drop-shadow(0 20px 30px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 30px rgba(251, 160, 29, 0.3)) contrast(1.05) brightness(1.02)"
-                            : "drop-shadow(0 15px 25px rgba(0, 0, 0, 0.35)) drop-shadow(0 0 20px rgba(251, 160, 29, 0.22)) contrast(1.03) brightness(1.02)",
-                        }}
-                      />
+                      <picture>
+                        <source srcSet="/vishnu_hero_no_bg.webp" type="image/webp" />
+                        <img
+                          src={imgSrc}
+                          fetchPriority="high"
+                          loading="eager"
+                          decoding="async"
+                          width={450}
+                          height={450}
+                          onError={() => {
+                            if (imgSrc !== FALLBACK_PORTRAIT_URL) {
+                              setImgSrc(FALLBACK_PORTRAIT_URL);
+                            }
+                          }}
+                          alt="Vishnu Kanchipati Portrait"
+                          className="h-[310px] sm:h-[380px] lg:h-[450px] w-auto max-w-none object-cover pointer-events-none select-none"
+                          style={{
+                            transform: isMobile ? "translate3d(0, 16px, 0)" : "translate3d(0, 22px, 0)",
+                            WebkitTransform: isMobile ? "translate3d(0, 16px, 0)" : "translate3d(0, 22px, 0)",
+                            WebkitBackfaceVisibility: "hidden",
+                            willChange: "transform",
+                            filter: isDark
+                              ? "drop-shadow(0 20px 30px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 30px rgba(251, 160, 29, 0.3)) contrast(1.05) brightness(1.02)"
+                              : "drop-shadow(0 15px 25px rgba(0, 0, 0, 0.35)) drop-shadow(0 0 20px rgba(251, 160, 29, 0.22)) contrast(1.03) brightness(1.02)",
+                          }}
+                        />
+                      </picture>
                     </div>
                   </div>
 

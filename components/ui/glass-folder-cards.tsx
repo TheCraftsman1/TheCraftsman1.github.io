@@ -59,6 +59,8 @@ export type FolderFile = {
   image?: string
   /** Rendered as a link when the folder is open. */
   href?: string
+  /** Optional architectural description */
+  desc?: string
 }
 
 export type FolderMenuItem = {
@@ -421,7 +423,7 @@ function pump() {
         const c = document.createElement("canvas")
         c.width = head.job.width
         c.height = head.job.height
-        c.getContext("2d")?.putImageData(new ImageData(head.job.pixels as unknown as Uint8ClampedArray, c.width, c.height), 0, 0)
+        c.getContext("2d")?.putImageData(new ImageData(head.job.pixels as any, c.width, c.height), 0, 0)
         head.done(c)
       }
     }
@@ -734,7 +736,22 @@ export default function GlassFolder({
           {/* back panel and its artwork */}
           <div className="gf-back" style={{ clipPath: "path('" + BACK_PATH + "')" }} aria-hidden="true">
             {image ? (
-              <img className="gf-art" src={image} alt="" width={W + 24} height={H + 24} draggable={false} />
+              <img
+                className="gf-art"
+                src={image}
+                alt=""
+                width={W + 24}
+                height={H + 24}
+                loading="lazy"
+                decoding="async"
+                draggable={false}
+                onError={(e) => {
+                  const target = e.currentTarget as HTMLImageElement;
+                  if (target.src.endsWith('.webp')) {
+                    target.src = target.src.replace(/\.webp$/, '.png');
+                  }
+                }}
+              />
             ) : art !== "none" ? (
               <ArtCanvas className="gf-art" art={art} seed={seed} w={W + 24} h={H + 24} density={density} priority={0} />
             ) : null}
@@ -792,7 +809,22 @@ export default function GlassFolder({
                 <>
                   {picture ? (
                     file.image ? (
-                      <img className="gf-sheet-art" src={file.image} alt="" width={SHEET_W} height={SHEET_H} draggable={false} />
+                      <img
+                        className="gf-sheet-art"
+                        src={file.image}
+                        alt=""
+                        width={SHEET_W}
+                        height={SHEET_H}
+                        loading="lazy"
+                        decoding="async"
+                        draggable={false}
+                        onError={(e) => {
+                          const target = e.currentTarget as HTMLImageElement;
+                          if (target.src.endsWith('.webp')) {
+                            target.src = target.src.replace(/\.webp$/, '.png');
+                          }
+                        }}
+                      />
                     ) : (
                       <ArtCanvas
                         className="gf-sheet-art"

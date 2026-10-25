@@ -80,6 +80,13 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project, isOpen
   const [isPlaying, setIsPlaying] = useState(true);
   const videoRef = React.useRef<HTMLVideoElement>(null);
 
+  const handleImageErrorFallback = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const target = e.currentTarget;
+    if (target.src.endsWith('.webp')) {
+      target.src = target.src.replace(/\.webp$/, '.png');
+    }
+  };
+
   const togglePlay = () => {
     if (!videoRef.current) return;
     if (isPlaying) {
@@ -163,7 +170,14 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project, isOpen
                   isDark ? 'opacity-20 blur-[110px]' : 'opacity-15 blur-[120px]'
                 }`}
               >
-                <img src={heroImage} alt="" className="w-full h-full object-cover saturate-200" />
+                <img
+                  src={heroImage}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  onError={handleImageErrorFallback}
+                  className="w-full h-full object-cover saturate-200"
+                />
               </div>
             )}
 
@@ -493,6 +507,7 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project, isOpen
                                 <video
                                   ref={videoRef}
                                   src={project.media[0].url}
+                                  preload="metadata"
                                   autoPlay
                                   loop
                                   muted={isMuted}
@@ -503,6 +518,9 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project, isOpen
                                 <img
                                   src={heroImage}
                                   alt={project.name}
+                                  loading="lazy"
+                                  decoding="async"
+                                  onError={handleImageErrorFallback}
                                   className="w-full h-full object-cover cursor-zoom-in group-hover:scale-105 transition-transform duration-500"
                                   onClick={() => setFullscreenImage(heroImage)}
                                 />
@@ -593,6 +611,7 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project, isOpen
                             <div className="relative w-full h-full">
                               <video
                                 src={project.media[0].url}
+                                preload="metadata"
                                 controls
                                 autoPlay
                                 loop
@@ -604,6 +623,9 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project, isOpen
                             <img
                               src={heroImage}
                               alt={project.name}
+                              loading="lazy"
+                              decoding="async"
+                              onError={handleImageErrorFallback}
                               className="w-full h-full object-cover cursor-zoom-in group-hover:scale-105 transition-transform duration-500"
                               onClick={() => setFullscreenImage(heroImage)}
                             />
@@ -734,6 +756,9 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project, isOpen
                                 <img
                                   src={slide.image}
                                   alt={slide.title}
+                                  loading="lazy"
+                                  decoding="async"
+                                  onError={handleImageErrorFallback}
                                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                 />
                                 {slide.tag && (
@@ -910,6 +935,7 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project, isOpen
                         {project.media[activeMediaIndex].type === 'video' ? (
                           <video
                             src={project.media[activeMediaIndex].url}
+                            preload="metadata"
                             controls
                             autoPlay
                             loop
@@ -920,6 +946,9 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project, isOpen
                           <img
                             src={project.media[activeMediaIndex].url}
                             alt={project.media[activeMediaIndex].caption}
+                            loading="lazy"
+                            decoding="async"
+                            onError={handleImageErrorFallback}
                             className="max-h-[460px] w-full object-contain cursor-zoom-in"
                             onClick={() => setFullscreenImage(project.media[activeMediaIndex].url)}
                           />
@@ -973,6 +1002,9 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project, isOpen
                               <img
                                 src={item.url}
                                 alt={item.caption}
+                                loading="lazy"
+                                decoding="async"
+                                onError={handleImageErrorFallback}
                                 className="w-full h-full object-cover"
                               />
                             )}
@@ -1110,6 +1142,7 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project, isOpen
                   >
                     <video
                       src={fullscreenImage}
+                      preload="metadata"
                       controls
                       autoPlay
                       playsInline
@@ -1120,6 +1153,9 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project, isOpen
                   <img
                     src={fullscreenImage}
                     alt="Fullscreen preview"
+                    loading="eager"
+                    decoding="async"
+                    onError={handleImageErrorFallback}
                     className="max-w-full max-h-[95vh] object-contain rounded-2xl shadow-2xl"
                   />
                 )}

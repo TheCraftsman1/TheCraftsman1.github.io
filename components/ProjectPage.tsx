@@ -43,6 +43,13 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
 
   const [activeMediaIndex, setActiveMediaIndex] = useState(0);
   const [heroMediaIndex, setHeroMediaIndex] = useState(0);
+
+  const handleImageErrorFallback = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const target = e.currentTarget;
+    if (target.src.endsWith('.webp')) {
+      target.src = target.src.replace(/\.webp$/, '.png');
+    }
+  };
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
   const [isMuted, setIsMuted] = useState(true);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -108,7 +115,14 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
             isDark ? 'opacity-20 blur-[130px]' : 'opacity-15 blur-[140px]'
           }`}
         >
-          <img src={heroImage} alt="" className="w-full h-full object-cover saturate-200" />
+          <img
+            src={heroImage}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            onError={handleImageErrorFallback}
+            className="w-full h-full object-cover saturate-200"
+          />
         </div>
       )}
 
@@ -385,6 +399,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
                         <video
                           ref={videoRef}
                           src={project.media[heroMediaIndex].url}
+                          preload="metadata"
                           autoPlay
                           loop
                           muted={isMuted}
@@ -395,6 +410,9 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
                         <img
                           src={project.media?.[heroMediaIndex]?.url || heroImage}
                           alt={project.media?.[heroMediaIndex]?.caption || project.name}
+                          loading="lazy"
+                          decoding="async"
+                          onError={handleImageErrorFallback}
                           className="w-full h-full object-cover cursor-zoom-in group-hover:scale-105 transition-transform duration-500"
                           onClick={() => setFullscreenImage(project.media?.[heroMediaIndex]?.url || heroImage)}
                         />
@@ -493,7 +511,14 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
                               <span>VID</span>
                             </div>
                           ) : (
-                            <img src={item.url} alt={item.caption} className="w-full h-full object-cover" />
+                            <img
+                              src={item.url}
+                              alt={item.caption}
+                              loading="lazy"
+                              decoding="async"
+                              onError={handleImageErrorFallback}
+                              className="w-full h-full object-cover"
+                            />
                           )}
                         </button>
                       ))}
@@ -548,6 +573,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
                     <div className="relative w-full h-full">
                       <video
                         src={project.media[heroMediaIndex].url}
+                        preload="metadata"
                         controls
                         autoPlay
                         loop
@@ -559,6 +585,9 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
                     <img
                       src={project.media?.[heroMediaIndex]?.url || heroImage}
                       alt={project.media?.[heroMediaIndex]?.caption || project.name}
+                      loading="lazy"
+                      decoding="async"
+                      onError={handleImageErrorFallback}
                       className="w-full h-full object-cover cursor-zoom-in group-hover:scale-105 transition-transform duration-500"
                       onClick={() => setFullscreenImage(project.media?.[heroMediaIndex]?.url || heroImage)}
                     />
@@ -635,6 +664,9 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
                             <img
                               src={item.url}
                               alt={item.caption}
+                              loading="lazy"
+                              decoding="async"
+                              onError={handleImageErrorFallback}
                               className="w-full h-full object-cover"
                             />
                           )}
@@ -843,6 +875,9 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
                       <img
                         src={slide.image}
                         alt={slide.title}
+                        loading="lazy"
+                        decoding="async"
+                        onError={handleImageErrorFallback}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                       {slide.tag && (
@@ -931,6 +966,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
                 {project.media[activeMediaIndex].type === 'video' ? (
                   <video
                     src={project.media[activeMediaIndex].url}
+                    preload="metadata"
                     controls
                     autoPlay
                     loop
@@ -941,6 +977,9 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
                   <img
                     src={project.media[activeMediaIndex].url}
                     alt={project.media[activeMediaIndex].caption}
+                    loading="lazy"
+                    decoding="async"
+                    onError={handleImageErrorFallback}
                     className="max-h-full w-full object-contain cursor-zoom-in"
                     onClick={() => setFullscreenImage(project.media[activeMediaIndex].url)}
                   />
@@ -994,6 +1033,9 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
                       <img
                         src={item.url}
                         alt={item.caption}
+                        loading="lazy"
+                        decoding="async"
+                        onError={handleImageErrorFallback}
                         className="w-full h-full object-cover"
                       />
                     )}
@@ -1219,6 +1261,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
               >
                 <video
                   src={fullscreenImage}
+                  preload="metadata"
                   controls
                   autoPlay
                   playsInline
@@ -1229,6 +1272,9 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
               <img
                 src={fullscreenImage}
                 alt="Fullscreen preview"
+                loading="eager"
+                decoding="async"
+                onError={handleImageErrorFallback}
                 className="max-w-full max-h-[95vh] object-contain rounded-2xl shadow-2xl"
               />
             )}

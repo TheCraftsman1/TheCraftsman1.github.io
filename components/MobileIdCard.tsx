@@ -158,18 +158,30 @@ export const MobileIdCard: React.FC<MobileIdCardProps> = ({ imgSrc, onImageError
               />
 
               {/* Seated Portrait Photo */}
-              <img
-                src={imgSrc}
-                alt="Vishnu Kanchipati"
-                onError={onImageError}
-                className="h-[148px] w-auto max-w-none object-cover pointer-events-none select-none relative z-10"
-                style={{
-                  transform: 'translateY(8px)',
-                  filter: isDark
-                    ? 'drop-shadow(0 12px 18px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 16px rgba(251, 160, 29, 0.3)) contrast(1.05)'
-                    : 'drop-shadow(0 10px 14px rgba(0, 0, 0, 0.3)) drop-shadow(0 0 12px rgba(251, 160, 29, 0.2)) contrast(1.03)',
-                }}
-              />
+              <picture>
+                <source srcSet="/vishnu_hero_mobile.webp" type="image/webp" />
+                <source srcSet="/vishnu_hero_no_bg.webp" type="image/webp" />
+                <img
+                  src={imgSrc}
+                  alt="Vishnu Kanchipati"
+                  width={288}
+                  height={360}
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
+                  onError={onImageError}
+                  className="h-[148px] w-auto max-w-none object-cover pointer-events-none select-none relative z-10"
+                  style={{
+                    transform: 'translate3d(0, 8px, 0)',
+                    WebkitTransform: 'translate3d(0, 8px, 0)',
+                    WebkitBackfaceVisibility: 'hidden',
+                    willChange: 'transform',
+                    filter: isDark
+                      ? 'drop-shadow(0 12px 18px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 16px rgba(251, 160, 29, 0.3)) contrast(1.05)'
+                      : 'drop-shadow(0 10px 14px rgba(0, 0, 0, 0.3)) drop-shadow(0 0 12px rgba(251, 160, 29, 0.2)) contrast(1.03)',
+                  }}
+                />
+              </picture>
 
               {/* Inner Rim */}
               <div className="absolute inset-1.5 rounded-full border border-white/20 pointer-events-none z-20" />
