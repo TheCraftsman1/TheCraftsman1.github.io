@@ -15,6 +15,7 @@ import {
   Volume2, 
   VolumeX, 
   CheckCircle2, 
+  Download,
   FileCode, 
   Sparkles,
   X,
@@ -254,6 +255,24 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
               >
                 {project.description}
               </p>
+              {project.id === 'vikify' && (
+                <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-3">
+                  <a
+                    href="/downloads/Vikify-2.0.apk"
+                    download
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#fba01d] px-4 py-2.5 text-sm font-bold text-zinc-950 transition-colors hover:bg-amber-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fba01d]"
+                  >
+                    <Download aria-hidden="true" className="h-4 w-4" />
+                    Download Vikify 2.0 APK
+                  </a>
+                  <a
+                    href="https://github.com/TheCraftsman1/vikify/releases/download/v2.0-android-source/Vikify-2.0-source.zip"
+                    className="text-sm font-medium underline underline-offset-4"
+                  >
+                    Source code
+                  </a>
+                </div>
+              )}
             </div>
 
             {/* Concrete Transformation 1: Inline Monospace Engineering Telemetry Strip (No Chunky Cards) */}
