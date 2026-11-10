@@ -1,32 +1,57 @@
 import { useRef, useState } from 'react';
-import { ArrowDown, ArrowLeft, ArrowUpRight, Download, Expand, Headphones, LibraryBig, Waves } from 'lucide-react';
+import { ArrowDown, ArrowLeft, ArrowUpRight, Compass, Download, Expand, Headphones, LibraryBig, Mic2, Music2, UserRound } from 'lucide-react';
 import './VikifyProject.css';
 
 const downloadUrl = '/downloads/Vikify-2.0.apk';
 const sourceUrl = 'https://github.com/TheCraftsman1/vikify/releases/download/v2.0-android-source/Vikify-2.0-source.zip';
 const media = '/projects/vikify/showcase';
 
-const screens = [
+const [player, ...screens] = [
   {
     title: 'Now Playing',
-    caption: 'Artwork sets the color of the player. The track stays front and center.',
-    image: `${media}/player.webp`,
-    color: 'amber',
-    icon: Waves,
+    image: `${media}/now-playing.webp`,
   },
   {
-    title: 'Your daily rotation',
-    caption: 'Personalized mixes sit alongside the collections you make yourself.',
-    image: `${media}/home.png`,
+    title: 'Synced lyrics',
+    caption: 'Follow the words as they light up in time with the track.',
+    image: `${media}/lyrics.webp`,
+    color: 'plum',
+    icon: Music2,
+  },
+  {
+    title: 'Explore',
+    caption: 'Browse by mood, moment, or genre when you want something different.',
+    image: `${media}/explore.webp`,
+    color: 'green',
+    icon: Compass,
+  },
+  {
+    title: 'DJ Studio beta',
+    caption: 'Start with a mix of recent favorites or send the DJ a request.',
+    image: `${media}/dj-studio.webp`,
+    color: 'blue',
+    icon: Headphones,
+  },
+  {
+    title: 'Your library',
+    caption: 'Find downloads, local music, playlists, and listening highlights in one place.',
+    image: `${media}/library.webp`,
     color: 'green',
     icon: LibraryBig,
   },
   {
-    title: 'DJ Studio',
-    caption: 'Tell the DJ what mood you’re in or ask for a specific track.',
-    image: `${media}/dj.png`,
+    title: 'Artist pages',
+    caption: 'Jump from an artist’s latest release to their top songs.',
+    image: `${media}/artist.webp`,
+    color: 'plum',
+    icon: Mic2,
+  },
+  {
+    title: 'First launch',
+    caption: 'Give Vikify a name to call you and get straight to the app.',
+    image: `${media}/welcome.webp`,
     color: 'blue',
-    icon: Headphones,
+    icon: UserRound,
   },
 ] as const;
 
@@ -35,9 +60,14 @@ function DownloadLink() {
 }
 
 export default function VikifyProject({ onBack }: { onBack: () => void }) {
-  const [selectedScreen, setSelectedScreen] = useState<(typeof screens)[number]>(screens[0]);
+  const [selectedScreen, setSelectedScreen] = useState<{ title: string; image: string }>(player);
   const dialog = useRef<HTMLDialogElement>(null);
   const gallery = useRef<HTMLElement>(null);
+
+  function openScreen(screen: { title: string; image: string }) {
+    setSelectedScreen(screen);
+    dialog.current?.showModal();
+  }
 
   return (
     <div className="vk-project">
@@ -62,7 +92,9 @@ export default function VikifyProject({ onBack }: { onBack: () => void }) {
         <div className="vk-stage">
           <div className="vk-record" aria-hidden="true" />
           <div className="vk-stage-type" aria-hidden="true">ON<br />REPEAT</div>
-          <img className="vk-hero-image" src={screens[0].image} alt="Vikify Now Playing screen with warm album-driven colors" fetchPriority="high" />
+          <button type="button" className="vk-hero-screen" aria-label="Enlarge Now Playing screenshot" onClick={() => openScreen(player)}>
+            <img src={player.image} alt="Vikify Now Playing with colorful album art and playback controls" fetchPriority="high" />
+          </button>
           <div className="vk-stage-caption"><span>Vikify for Android</span><span>Now Playing</span></div>
         </div>
       </section>
@@ -75,10 +107,7 @@ export default function VikifyProject({ onBack }: { onBack: () => void }) {
         <div className="vk-grid">
           {screens.map((screen) => (
             <article className={`vk-screen vk-screen-${screen.color}`} key={screen.title}>
-              <button type="button" aria-label={`Enlarge ${screen.title} screenshot`} onClick={() => {
-                setSelectedScreen(screen);
-                dialog.current?.showModal();
-              }}>
+              <button type="button" aria-label={`Enlarge ${screen.title} screenshot`} onClick={() => openScreen(screen)}>
                 <span className="vk-screen-expand"><Expand size={16} aria-hidden="true" /></span>
                 <img src={screen.image} alt={`Vikify ${screen.title} interface`} loading="lazy" decoding="async" />
               </button>
