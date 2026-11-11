@@ -138,9 +138,9 @@ export const VIKIFY_SCREENS: ScreenAsset[] = [
   },
 ];
 
-const APK_URL = '/downloads/Vikify-2.0.apk';
+const APK_URL = '/downloads/Vikify-2.0.1.apk';
 const SOURCE_URL =
-  'https://github.com/TheCraftsman1/vikify/releases/download/v2.0-android-source/Vikify-2.0-source.zip';
+  'https://github.com/TheCraftsman1/vikify/releases/download/v2.0.1-android-source/Vikify-2.0.1-source.zip';
 const LOGO_URL = '/projects/vikify/showcase/waveform-white.webp';
 const scenes = ['palette', 'lyrics', 'dj'] as const;
 type Scene = (typeof scenes)[number];
@@ -446,7 +446,7 @@ export const VikifyShowcase: React.FC<VikifyShowcaseProps> = ({
           >
             <div className="vs-hero-copy">
               <p className="vs-release">
-                <span /> Vikify · Android · 2.0
+                <span /> Vikify · Android · 2.0.1
               </p>
               <h1 id="vs-title">
                 Sound becomes
@@ -935,7 +935,7 @@ export const VikifyShowcase: React.FC<VikifyShowcaseProps> = ({
                 Source code <ArrowUpRight size={16} />
               </a>
             </div>
-            <p className="vs-build">Android 8.0+ · 54.8 MB · Release 2.0</p>
+            <p className="vs-build">Android 8.0+ · 54.8 MB · Release 2.0.1</p>
             {nextProject && (
               <button
                 className="vs-next-project"
