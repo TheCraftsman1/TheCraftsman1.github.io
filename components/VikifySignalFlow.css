@@ -1,0 +1,89 @@
+.vs-flow {
+  --flow-signal: #93d9d2;
+  --flow-green: #9cddb4;
+  border: 1px solid #ffffff14;
+  border-radius: 28px;
+  padding: clamp(18px, 3vw, 36px);
+  color: #f4f4f5;
+  background: radial-gradient(ellipse at 50% 60%, #ffffff04, transparent 65%), #090a0c;
+  box-shadow: inset 0 1px 0 #ffffff0b;
+  font-family: 'Plus Jakarta Sans', Inter, sans-serif;
+}
+.vs-flow-toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 26px; }
+.vs-flow-simulation { display: flex; align-items: center; gap: 7px; color: #93939d; font-size: .72rem; }
+.vs-flow-toggle { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 44px; padding: 8px 12px; border: 1px solid #ffffff1c; border-radius: 99px; background: linear-gradient(#ffffff0a, #ffffff03); color: #e4e4e7; font-size: .75rem; font-weight: 600; transition: border-color .2s ease, background .2s ease; }
+.vs-flow-toggle:hover { border-color: #ffffff45; background: #ffffff0d; }
+.vs-flow-toggle:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+.vs-flow-switch { display: flex; align-items: center; flex: none; width: 29px; height: 18px; padding: 2px; border-radius: 99px; background: #ffffff16; box-shadow: inset 0 1px 3px #0008; }
+.vs-flow-switch > span { width: 14px; height: 14px; border-radius: 50%; background: linear-gradient(#fff, #b8b8c0); box-shadow: 0 1px 3px #0008; transition: transform .2s ease; }
+.vs-flow-toggle[aria-pressed='true'] .vs-flow-switch { background: #93d9d24a; }
+.vs-flow-toggle[aria-pressed='true'] .vs-flow-switch > span { transform: translateX(11px); }
+.vs-flow-graph { display: grid; grid-template-columns: minmax(0, 1fr) 64px minmax(0, 1.2fr) 64px minmax(0, 1fr); align-items: center; min-height: 272px; }
+.vs-flow-sources { display: grid; grid-template-rows: repeat(2, 92px); gap: 24px; }
+.vs-flow-support { display: grid; grid-template-rows: repeat(3, 80px); gap: 16px; }
+.vs-flow-node { position: relative; display: flex; align-items: center; gap: 12px; min-width: 0; padding: 14px; border: 1px solid #ffffff13; border-radius: 17px; background: linear-gradient(135deg, #ffffff06, #ffffff02); box-shadow: inset 0 1px 0 #ffffff07; transition: border-color .35s ease, background .35s ease; }
+.vs-flow-node strong { display: block; font-size: .85rem; font-weight: 650; line-height: 1.3; }
+.vs-flow-source strong { font-family: Montserrat, sans-serif; font-size: .95rem; font-weight: 700; letter-spacing: -.025em; }
+.vs-flow-source > div { min-width: 0; }
+.vs-flow-source > div > span { display: block; margin-top: 5px; color: #85858e; font-size: .68rem; }
+.vs-flow-icon { display: grid; place-items: center; flex: none; width: 38px; height: 38px; border: 1px solid #ffffff12; border-radius: 11px; color: #d7d7de; background: linear-gradient(145deg, #ffffff0d, #ffffff02); box-shadow: inset 0 1px 0 #ffffff12, 0 4px 9px #0003; }
+.vs-flow-icon svg { display: block; }
+.vs-flow-node-dot { position: absolute; top: 13px; right: 13px; width: 5px; height: 5px; border-radius: 50%; background: #43434a; }
+.vs-flow-node-active { border-color: #93d9d24a; background: linear-gradient(135deg, #93d9d20b, #ffffff02); }
+.vs-flow-node-active .vs-flow-node-dot { background: var(--flow-signal); box-shadow: 0 0 9px #93d9d264; }
+.vs-flow-node-active .vs-flow-icon { color: var(--flow-signal); }
+.vs-flow-bridge { height: 272px; width: 100%; }
+.vs-flow-bridge svg { width: 100%; height: 100%; overflow: visible; }
+.vs-flow-svg-mobile { display: none; }
+.vs-flow-wire { stroke: #ffffff18; stroke-width: 1; stroke-dasharray: 4 7; fill: none; vector-effect: non-scaling-stroke; transition: stroke .35s ease; }
+.vs-flow-wire-active { stroke: var(--flow-signal); animation: vs-flow-packets 2.4s linear infinite; }
+.vs-flow-wire-support { stroke: #aebfc06b; animation-duration: 3.6s; }
+.vs-flow-player { min-width: 0; padding: 22px; border: 1px solid #9cddb43a; border-radius: 22px; background: radial-gradient(ellipse at 10% 0, #9cddb40b, transparent 75%), #111514; box-shadow: inset 0 1px 0 #ffffff14, 0 16px 36px #0004; }
+.vs-flow-player-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.vs-flow-player .vs-flow-icon { color: var(--flow-green); border-color: #9cddb426; }
+.vs-flow-playing { display: inline-flex; align-items: center; gap: 5px; color: var(--flow-green); font-size: .67rem; font-weight: 650; }
+.vs-flow-playing i, .vs-flow-status-dot { display: block; width: 5px; height: 5px; border-radius: 50%; background: var(--flow-green); box-shadow: 0 0 8px #9cddb450; }
+.vs-flow-player > strong { display: block; margin-top: 23px; font: 750 clamp(1.2rem, 2vw, 1.65rem)/1.1 Montserrat, sans-serif; letter-spacing: -.035em; }
+.vs-flow-player > span { display: block; margin-top: 8px; font-size: .7rem; color: #9baba2; }
+.vs-flow-wave { display: flex; align-items: end; height: 36px; gap: 5px; margin-top: 23px; }
+.vs-flow-wave i { flex: 1; border-radius: 99px; background: linear-gradient(#b6cabea6, #b6cabe14); }
+.vs-flow-status { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 28px; padding-top: 18px; border-top: 1px solid #ffffff0d; color: #a1a1aa; font-size: .72rem; line-height: 1.6; }
+.vs-flow-status-note { margin-left: auto; color: #6e6e78; }
+@keyframes vs-flow-packets { to { stroke-dashoffset: -44; } }
+@media (max-width: 1000px) {
+  .vs-flow-graph { grid-template-columns: minmax(0, 1fr) 42px minmax(0, 1.15fr) 42px minmax(0, 1fr); }
+  .vs-flow-node { padding: 11px; gap: 8px; }
+  .vs-flow-icon { width: 32px; height: 32px; border-radius: 9px; }
+  .vs-flow-source strong { font-size: .82rem; }
+  .vs-flow-node strong { font-size: .78rem; }
+  .vs-flow-player { padding: 17px; }
+}
+@media (max-width: 760px) {
+  .vs-flow-graph { display: flex; flex-direction: column; align-items: stretch; }
+  .vs-flow-sources { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: 100px; gap: 0; }
+  .vs-flow-sources > .vs-flow-node { margin-inline: 3px; }
+  .vs-flow-source { flex-direction: column; justify-content: center; align-items: flex-start; gap: 7px; }
+  .vs-flow-source > div > span { font-size: .62rem; margin-top: 3px; }
+  .vs-flow-node-dot { top: 12px; right: 12px; }
+  .vs-flow-bridge { height: 50px; }
+  .vs-flow-svg-desktop { display: none; }
+  .vs-flow-svg-mobile { display: block; }
+  .vs-flow-player { padding: 20px; }
+  .vs-flow-player > strong { margin-top: 15px; font-size: 1.6rem; }
+  .vs-flow-wave { margin-top: 15px; }
+  .vs-flow-support { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: minmax(100px, auto); gap: 0; }
+  .vs-flow-support > .vs-flow-node { flex-direction: column; justify-content: center; padding: 9px 5px; margin-inline: 3px; text-align: center; gap: 8px; border-radius: 13px; }
+  .vs-flow-support strong { font-size: .65rem; }
+  .vs-flow-status-note { width: 100%; margin-left: 13px; }
+}
+@media (max-width: 380px) {
+  .vs-flow-toolbar { align-items: stretch; }
+  .vs-flow-toggle { width: 100%; font-size: .68rem; }
+  .vs-flow-icon { width: 29px; height: 29px; }
+  .vs-flow-icon svg { width: 18px; height: 18px; }
+  .vs-flow-source strong { font-size: .75rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vs-flow-wire-active { animation: none; }
+  .vs-flow-node, .vs-flow-wire, .vs-flow-toggle, .vs-flow-switch > span { transition: none; }
+}
