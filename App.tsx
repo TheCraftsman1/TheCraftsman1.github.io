@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import EditorialPortfolio from './components/EditorialPortfolio';
 import ProjectPage from './components/ProjectPage';
-import VikifyProject from './components/VikifyProject';
 import { ThemeProvider } from './context/ThemeContext';
 import { getProjectById } from './data/projectsData';
 
@@ -71,9 +70,7 @@ const App: React.FC = () => {
   return (
     <ThemeProvider>
       <main className={`relative min-h-screen w-full ${currentProjectId === 'vikify' ? 'overflow-x-clip' : 'overflow-x-hidden'} bg-[#FAFAFA] dark:bg-[#070707] text-zinc-900 dark:text-white selection:bg-[#fba01d] selection:text-black transition-colors duration-300`}>
-        {currentProjectId === 'vikify' ? (
-          <VikifyProject onBack={navigateToHome} />
-        ) : currentProjectId ? (
+        {currentProjectId ? (
           <ProjectPage
             projectId={currentProjectId}
             onBack={navigateToHome}
